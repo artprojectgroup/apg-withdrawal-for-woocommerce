@@ -1,0 +1,318 @@
+@charset "UTF-8";
+@import url(../fonts/stylesheet.css);
+
+.imagen:hover,
+.estrellas .star-rating .star:hover,
+div.informacion a:hover {
+	-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=80)";
+	filter: alpha(opacity=80);
+	-moz-opacity: 0.8;
+	-khtml-opacity: 0.8;
+	opacity: 0.8;
+}
+
+.estrellas div {
+	display: inline !important;
+}
+
+.estrellas .star-rating .star {
+	font-size: 18px;
+}
+
+div.informacion .estrellas .star-rating .star {
+	color: #fff;
+}
+
+.genericon,
+div.informacion .estrellas .star-rating .star,
+div.informacion .artprojectgroup {
+	width: 15px;
+	height: 15px;
+	font-size: 15px;
+}
+
+.genericon-x-alt::before {
+	content: "𝕏";
+	display: block;
+	line-height: 11px;
+}
+
+.woocommerce table.form-table.apg-table .select2-container {
+	min-width: auto !important;
+}
+
+table.apg-table,
+.cabecera {
+	clear: none;
+	width: 79%;
+	max-width: 760px;
+}
+
+.imagen {
+	border-left: 4px solid #d9001d;
+	max-width: 100%;
+	display: block;
+}
+
+.imagen-texto {
+	background: linear-gradient(135deg, #101254 0%, #1f2b8f 100%);
+	padding: 28px 32px;
+	color: #fff;
+	box-sizing: border-box;
+}
+
+.imagen-texto h1,
+.imagen-texto p {
+	color: #fff;
+	margin: 0;
+}
+
+.imagen-texto p {
+	margin-top: 8px;
+	font-size: 14px;
+}
+
+div.informacion {
+	background-color: #101254;
+	float: right;
+	padding: 10px;
+	width: 15%;
+	max-width: 220px;
+	text-align: center;
+	border-left: 4px solid #d9001d;
+	color: #fff;
+	position: sticky;
+	top: 50px;
+}
+
+div.informacion div.fila {
+	padding: 10px 10px 0;
+	margin: 10px auto 0;
+	max-width: 190px;
+}
+
+div.informacion div.fila,
+div.informacion div.columna:nth-child(2n) {
+	border-top: 1px solid #fff;
+}
+
+div.informacion div.fila:first-child {
+	border: none;
+	margin-top: 0;
+}
+
+div.informacion div.columna.final {
+	display: none;
+}
+
+div.informacion div.fila.final {
+	padding: 10px;
+	margin: 0 auto 10px;
+}
+
+div.informacion a {
+	text-decoration: none;
+	color: #fff;
+}
+
+table.apg-table textarea,
+table.apg-table input[type="text"],
+table.apg-table input[type="number"],
+table.apg-table input[type="email"],
+table.apg-table select {
+	min-width: auto;
+	max-width: 100%;
+	width: 100% !important;
+}
+
+.apg-withdrawal-form-wrapper {
+	max-width: 760px;
+	margin: 2rem auto;
+}
+
+.woocommerce-MyAccount-content .apg-withdrawal-form-wrapper {
+	max-width: 100%;
+	margin: 0;
+}
+
+.apg-withdrawal-form,
+.apg-withdrawal-confirmation {
+	margin: 0;
+}
+
+.apg-withdrawal-form h2,
+.apg-withdrawal-confirmation h2 {
+	margin-bottom: 1rem;
+}
+
+.apg-withdrawal-checkbox label.checkbox {
+	display: flex;
+	gap: 8px;
+	align-items: center;
+}
+
+.apg-withdrawal-products-row select,
+.apg-withdrawal-products-row .select2-container {
+	width: 100%;
+}
+
+.apg-withdrawal-review {
+	margin: 0 0 16px 18px;
+}
+
+.apg-withdrawal-products-row .description {
+	display: block;
+	margin-top: 0.5rem;
+}
+
+.apg-status {
+	display: inline-block;
+	padding: 3px 8px;
+	border-radius: 3px;
+	font-size: 12px;
+	font-weight: 600;
+}
+
+.apg-status-pending {
+	background: #fcf9e8;
+	color: #8a6d00;
+}
+
+.apg-status-accepted {
+	background: #edfaef;
+	color: #00611c;
+}
+
+.apg-status-rejected {
+	background: #fcf0f1;
+	color: #8a1c1f;
+}
+
+.apg-status-completed {
+	background: #e7f1fc;
+	color: #1d4e7a;
+}
+
+.apg-withdrawal-meta-table {
+	width: 100%;
+	border-collapse: collapse;
+}
+
+.apg-withdrawal-meta-table th,
+.apg-withdrawal-meta-table td {
+	padding: 8px 0;
+	border-bottom: 1px solid #f0f0f0;
+	text-align: left;
+	vertical-align: top;
+}
+
+.apg-withdrawal-meta-table th {
+	width: 180px;
+}
+
+.apg-withdrawal-details-box {
+	background: #f6f7f7;
+	border: 1px solid #dcdcde;
+	padding: 12px 16px;
+}
+
+.apg-withdrawal-deadline-notice {
+	font-size: 13px;
+	color: #646970;
+	margin-bottom: 1.25rem;
+}
+
+.apg-withdrawal-legal-text {
+	font-size: 13px;
+	color: #646970;
+	margin-bottom: 1rem;
+	line-height: 1.6;
+}
+
+.apg-withdrawal-legal-notice {
+	font-size: 12px;
+	color: #646970;
+	border-left: 3px solid #c3c4c7;
+	padding-left: 10px;
+	margin-bottom: 1rem;
+}
+
+.apg-withdrawal-expired-notice {
+	border-left-color: #dba617;
+	background: #fcf9e8;
+	color: #614200;
+	padding: 12px 16px;
+}
+
+.apg-withdrawal-product-warning {
+	margin-bottom: 1rem;
+	padding: 12px 16px;
+	border-left: 4px solid #dba617;
+	background: #fcf9e8;
+	color: #614200;
+	font-size: 13px;
+}
+
+.woocommerce-MyAccount-content a.button.apg_withdrawal_expired {
+	opacity: 0.75;
+	font-style: italic;
+}
+
+.apg-withdrawal-orders-expired-note {
+	font-size: 12px;
+	color: #646970;
+	margin-top: 0.5rem;
+}
+
+.apg-withdrawal-log-table th {
+	font-weight: 600;
+	padding-right: 12px;
+}
+
+.apg-withdrawal-log-table thead th {
+	border-bottom: 2px solid #dcdcde;
+}
+
+.apg-withdrawal-export-wrap {
+	float: left;
+	margin: 0 6px;
+	line-height: 2.2;
+}
+
+@media screen and (max-width: 806px) {
+	.wrap.woocommerce {
+		display: flex;
+		flex-direction: column;
+	}
+
+	#formulario {
+		order: 2;
+	}
+
+	div.informacion {
+		order: 3;
+		display: table;
+		float: none;
+		margin: 0 0 10px;
+		width: min(calc(100vw - 20px), 760px);
+		max-width: 760px;
+		box-sizing: border-box;
+		position: static;
+	}
+
+	table.apg-table,
+	.cabecera {
+		width: 100%;
+	}
+
+	div.informacion div.fila {
+		display: table-row;
+		width: 100%;
+	}
+
+	div.informacion div.columna {
+		display: table-cell;
+		width: 50%;
+		padding: 10px;
+	}
+}

@@ -1,0 +1,21 @@
+@charset "UTF-8";
+
+.apg-withdrawal-checkbox label.checkbox {
+	display: flex;
+	gap: 8px;
+	align-items: center;
+}
+
+.apg-withdrawal-products-row select,
+.apg-withdrawal-products-row .select2-container {
+	width: 100%;
+}
+
+.apg-withdrawal-products-row .description {
+	display: block;
+}
+
+.woocommerce-MyAccount-content a.button.apg_withdrawal_expired {
+	opacity: 0.75;
+	font-style: italic;
+}

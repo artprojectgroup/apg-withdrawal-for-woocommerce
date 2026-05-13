@@ -1,0 +1,187 @@
+<?php
+/**
+ * Funciones comunes del plugin WC - APG Withdrawal.
+ *
+ * @package WC_APG_Withdrawal
+ */
+
+defined( 'ABSPATH' ) || exit;
+
+global $apg_withdrawal;
+
+/**
+ * Datos estáticos del plugin usados en la administración.
+ *
+ * @var array{
+ *   plugin:string,
+ *   plugin_uri:string,
+ *   donacion:string,
+ *   soporte:string,
+ *   plugin_url:string,
+ *   ajustes:string,
+ *   puntuacion:string
+ * }
+ */
+$apg_withdrawal = array(
+	'plugin'     => 'WC - APG Withdrawal',
+	'plugin_uri' => 'wc-apg-withdrawal',
+	'donacion'   => 'https://artprojectgroup.es/tienda/donacion',
+	'soporte'    => 'https://artprojectgroup.es/tienda/soporte-tecnico',
+	'plugin_url' => 'https://artprojectgroup.es/plugins-para-woocommerce/wc-apg-withdrawal',
+	'ajustes'    => 'admin.php?page=wc-apg-withdrawal',
+	'puntuacion' => 'https://www.wordpress.org/support/view/plugin-reviews/wc-apg-withdrawal',
+);
+
+/**
+ * Renders an admin notice indicating WooCommerce is required.
+ *
+ * @return void
+ */
+function apg_withdrawal_requiere_wc() {
+	?>
+	<div class="notice notice-error">
+		<p><?php esc_html_e( 'WC - APG Withdrawal requires WooCommerce to be installed and active.', 'wc-apg-withdrawal' ); ?></p>
+	</div>
+	<?php
+}
+
+/**
+ * Returns the plugin settings merged with defaults.
+ *
+ * @return array Plugin settings array.
+ */
+function apg_withdrawal_get_settings() {
+	$defaults = array(
+		'notification_email' => get_option( 'admin_email' ),
+		'page_id'            => '0',
+		'create_page'        => '1',
+		'store_ip'           => '1',
+		'store_user_agent'   => '1',
+		'grace_days'         => '0',
+		'withdrawal_days'    => '14',
+		'deadline_source'    => 'completed',
+		'button_text'        => __( 'Confirm withdrawal', 'wc-apg-withdrawal' ),
+		'order_status_map'   => array(
+			'accepted'  => array(),
+			'rejected'  => array(),
+			'completed' => array(),
+		),
+		'email_on_status'    => array(
+			'accepted'  => '0',
+			'rejected'  => '1',
+			'completed' => '1',
+		),
+	);
+
+	return wp_parse_args( get_option( 'apg_withdrawal_settings', array() ), $defaults );
+}
+
+/**
+ * Returns the withdrawal form page ID from settings.
+ *
+ * @return int Page ID.
+ */
+function apg_withdrawal_get_page_id() {
+	$settings = apg_withdrawal_get_settings();
+
+	return absint( $settings['page_id'] );
+}
+
+/**
+ * Recupera información del plugin desde la API de WordPress.org y
+ * devuelve el HTML de las estrellas de valoración enlazadas.
+ *
+ * Usa un transient para cachear la respuesta 24 h.
+ *
+ * @global array $apg_withdrawal
+ *
+ * @param string $nombre Slug del plugin en WordPress.org.
+ * @return string HTML con las estrellas de valoración (o texto alternativo si falla).
+ */
+function apg_withdrawal_plugin( $nombre ) {
+	global $apg_withdrawal;
+
+	$respuesta = get_transient( 'apg_withdrawal_plugin' );
+	if ( false === $respuesta ) {
+		$respuesta = wp_remote_get( 'https://api.wordpress.org/plugins/info/1.2/?action=plugin_information&request[slug]=' . $nombre );
+		set_transient( 'apg_withdrawal_plugin', $respuesta, 24 * HOUR_IN_SECONDS );
+	}
+	if ( ! is_wp_error( $respuesta ) ) {
+		$plugin = json_decode( wp_remote_retrieve_body( $respuesta ) );
+	} else {
+		/* translators: %s plugin name */
+		return '<a title="' . sprintf( esc_attr__( 'Please, rate %s:', 'wc-apg-withdrawal' ), $apg_withdrawal['plugin'] ) . '" href="' . $apg_withdrawal['puntuacion'] . '?rate=5#postform" class="estrellas">' . esc_attr__( 'Unknown rating', 'wc-apg-withdrawal' ) . '</a>';
+	}
+
+	$rating = array(
+		'rating' => ( isset( $plugin->rating ) ) ? $plugin->rating : 0,
+		'type'   => 'percent',
+		'number' => ( isset( $plugin->num_ratings ) ) ? $plugin->num_ratings : 0,
+	);
+	ob_start();
+	wp_star_rating( $rating );
+	$estrellas = ob_get_contents();
+	ob_end_clean();
+
+	/* translators: %s plugin name */
+	return '<a title="' . sprintf( esc_attr__( 'Please, rate %s:', 'wc-apg-withdrawal' ), $apg_withdrawal['plugin'] ) . '" href="' . $apg_withdrawal['puntuacion'] . '?rate=5#postform" class="estrellas">' . $estrellas . '</a>';
+}
+
+/**
+ * Añade enlaces personalizados (donación, redes, rating, etc.)
+ * en la fila del plugin dentro de "Plugins" (admin).
+ *
+ * Hook: `plugin_row_meta`.
+ *
+ * @global array $apg_withdrawal
+ *
+ * @param string[] $enlaces Lista existente de enlaces.
+ * @param string   $archivo Ruta del archivo principal del plugin mostrado.
+ * @return string[] Enlaces con los adicionales del plugin si aplica.
+ */
+function apg_withdrawal_enlaces( $enlaces, $archivo ) {
+	global $apg_withdrawal;
+
+	if ( $archivo === apg_withdrawal_DIRECCION ) {
+		$plugin    = apg_withdrawal_plugin( $apg_withdrawal['plugin_uri'] );
+		$enlaces[] = '<a href="' . $apg_withdrawal['donacion'] . '" target="_blank" title="' . esc_attr__( 'Make a donation by ', 'wc-apg-withdrawal' ) . 'APG"><span class="genericon genericon-cart"></span></a>';
+		$enlaces[] = '<a href="' . esc_url( $apg_withdrawal['plugin_url'] ) . '" target="_blank" title="' . esc_attr( $apg_withdrawal['plugin'] ) . '"><strong class="artprojectgroup">APG</strong></a>';
+		$enlaces[] = '<a href="https://www.facebook.com/artprojectgroup" title="' . esc_attr__( 'Follow us on ', 'wc-apg-withdrawal' ) . 'Facebook" target="_blank"><span class="genericon genericon-facebook-alt"></span></a> <a href="https://x.com/artprojectgroup" title="' . esc_attr__( 'Follow us on ', 'wc-apg-withdrawal' ) . 'X" target="_blank"><span class="genericon genericon-x-alt"></span></a> <a href="https://es.linkedin.com/in/artprojectgroup" title="' . esc_attr__( 'Follow us on ', 'wc-apg-withdrawal' ) . 'LinkedIn" target="_blank"><span class="genericon genericon-linkedin"></span></a>';
+		$enlaces[] = '<a href="https://profiles.wordpress.org/artprojectgroup/" title="' . esc_attr__( 'More plugins on ', 'wc-apg-withdrawal' ) . 'WordPress" target="_blank"><span class="genericon genericon-wordpress"></span></a>';
+		$enlaces[] = '<a href="mailto:info@artprojectgroup.es" title="' . esc_attr__( 'Contact with us by ', 'wc-apg-withdrawal' ) . 'e-mail"><span class="genericon genericon-mail"></span></a>';
+		$enlaces[] = $plugin;
+	}
+
+	return $enlaces;
+}
+add_filter( 'plugin_row_meta', 'apg_withdrawal_enlaces', 10, 2 );
+
+/**
+ * Añade los enlaces "Ajustes" y "Soporte" en la fila de acciones del plugin.
+ *
+ * Hook: `plugin_action_links_{plugin_basename}`.
+ *
+ * @global array $apg_withdrawal
+ *
+ * @param string[] $enlaces Enlaces actuales de acción del plugin.
+ * @return string[] Enlaces actualizados con Ajustes y Soporte al principio.
+ */
+function apg_withdrawal_enlace_de_ajustes( $enlaces ) {
+	global $apg_withdrawal;
+
+	$nuevos = array(
+		'<a href="' . esc_url( $apg_withdrawal['soporte'] ) . '" title="' . esc_attr__( 'Support of ', 'wc-apg-withdrawal' ) . esc_attr( $apg_withdrawal['plugin'] ) . '">' . esc_html__( 'Support', 'wc-apg-withdrawal' ) . '</a>',
+		'<a href="' . esc_url( admin_url( $apg_withdrawal['ajustes'] ) ) . '" title="' . esc_attr__( 'Settings of ', 'wc-apg-withdrawal' ) . esc_attr( $apg_withdrawal['plugin'] ) . '">' . esc_html__( 'Settings', 'wc-apg-withdrawal' ) . '</a>',
+		'<a href="' . esc_url( admin_url( 'edit.php?post_type=apg_withdrawal' ) ) . '" title="' . esc_attr__( 'Withdrawals', 'wc-apg-withdrawal' ) . '">' . esc_html__( 'Withdrawals', 'wc-apg-withdrawal' ) . '</a>',
+	);
+
+	return array_merge( $nuevos, $enlaces );
+}
+
+/**
+ * Basename del plugin usado para construir el hook de acción.
+ *
+ * @var string
+ */
+$plugin = apg_withdrawal_DIRECCION;
+add_filter( "plugin_action_links_$plugin", 'apg_withdrawal_enlace_de_ajustes' );
