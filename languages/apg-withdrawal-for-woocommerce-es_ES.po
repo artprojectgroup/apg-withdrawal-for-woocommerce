@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: WC - APG Withdrawal\n"
+"Project-Id-Version: APG Withdrawal for WooCommerce\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-05-09 14:41+0000\n"
 "PO-Revision-Date: 2026-05-09 16:14+0000\n"
@@ -13,7 +13,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Loco https://localise.biz/\n"
 "X-Loco-Version: 2.8.4; wp-7.0-RC3; php-8.4.10\n"
-"X-Domain: wc-apg-withdrawal"
+"X-Domain: apg-withdrawal-for-woocommerce"
 
 #. 1: product name, 2: quantity.
 #: includes/clases/woocommerce.php:85 includes/clases/formulario.php:842
@@ -91,7 +91,7 @@ msgstr ""
 "formulario para clientes, integración en Mi cuenta y registro de "
 "solicitudes para el administrador."
 
-#: wc-apg-withdrawal.php:188
+#: apg-withdrawal-for-woocommerce.php:188
 msgid "Add withdrawal"
 msgstr "Añadir desistimiento"
 
@@ -128,7 +128,7 @@ msgid "An error occurred while processing the withdrawal request."
 msgstr ""
 "Se ha producido un error al procesar la solicitud de desistimiento."
 
-#: wc-apg-withdrawal.php:122
+#: apg-withdrawal-for-woocommerce.php:122
 msgid "APG Withdrawal"
 msgstr "APG Desistimiento"
 
@@ -190,7 +190,7 @@ msgstr "Fecha de completado"
 msgid "Cancel"
 msgstr "Cancelar"
 
-#: wc-apg-withdrawal.php:408 includes/admin/funciones-apg.php:63
+#: apg-withdrawal-for-woocommerce.php:408 includes/admin/funciones-apg.php:63
 msgid "Confirm withdrawal"
 msgstr "Confirmar desistimiento"
 
@@ -269,7 +269,7 @@ msgstr "Contenido digital"
 msgid "Documentation and Support:"
 msgstr "Documentación y soporte:"
 
-#: wc-apg-withdrawal.php:189
+#: apg-withdrawal-for-woocommerce.php:189
 msgid "Edit withdrawal"
 msgstr "Editar desistimiento"
 
@@ -358,8 +358,8 @@ msgid "https://artprojectgroup.es/"
 msgstr "https://artprojectgroup.es/"
 
 #. URI of the plugin
-msgid "https://wordpress.org/plugins/wc-apg-withdrawal/"
-msgstr "https://wordpress.org/plugins/wc-apg-withdrawal/"
+msgid "https://wordpress.org/plugins/apg-withdrawal-for-woocommerce/"
+msgstr "https://wordpress.org/plugins/apg-withdrawal-for-woocommerce/"
 
 #: includes/clases/formulario.php:510
 msgid ""
@@ -641,7 +641,7 @@ msgstr "Alcance"
 msgid "Scope:"
 msgstr "Alcance:"
 
-#: wc-apg-withdrawal.php:191
+#: apg-withdrawal-for-woocommerce.php:191
 msgid "Search withdrawals"
 msgstr "Buscar desistimientos"
 
@@ -871,7 +871,7 @@ msgstr "Usuario"
 msgid "User agent"
 msgstr "Agente de usuario"
 
-#: wc-apg-withdrawal.php:190
+#: apg-withdrawal-for-woocommerce.php:190
 msgid "View withdrawal"
 msgstr "Ver desistimiento"
 
@@ -884,14 +884,14 @@ msgid "View withdrawal request in admin"
 msgstr "Ver solicitud de desistimiento en el administrador"
 
 #. Name of the plugin
-msgid "WC - APG Withdrawal"
-msgstr "WC - APG Desistimiento"
+msgid "APG Withdrawal for WooCommerce"
+msgstr "APG Desistimiento para WooCommerce"
 
 #: includes/admin/funciones-apg.php:43
 msgid ""
-"WC - APG Withdrawal requires WooCommerce to be installed and active."
+"APG Withdrawal for WooCommerce requires WooCommerce to be installed and active."
 msgstr ""
-"WC - APG Withdrawal requiere que WooCommerce esté instalado y activo."
+"APG Withdrawal for WooCommerce requiere que WooCommerce esté instalado y activo."
 
 #: templates/emails/apg-withdrawal-status.php:19
 #: templates/emails/plain/apg-withdrawal-status.php:19
@@ -928,8 +928,8 @@ msgstr ""
 msgid "We have correctly received your withdrawal request."
 msgstr "Hemos recibido correctamente su solicitud de desistimiento."
 
-#: wc-apg-withdrawal.php:123 wc-apg-withdrawal.php:185
-#: wc-apg-withdrawal.php:249 includes/clases/producto.php:18
+#: apg-withdrawal-for-woocommerce.php:123 apg-withdrawal-for-woocommerce.php:185
+#: apg-withdrawal-for-woocommerce.php:249 includes/clases/producto.php:18
 #: includes/clases/woocommerce.php:381 includes/clases/pedidos.php:69
 #: includes/clases/pedidos.php:74
 msgid "Withdrawal"
@@ -957,15 +957,15 @@ msgstr "Desistimiento excluido"
 msgid "Withdrawal page"
 msgstr "Página de desistimiento"
 
-#: wc-apg-withdrawal.php:300 includes/clases/formulario.php:378
+#: apg-withdrawal-for-woocommerce.php:300 includes/clases/formulario.php:378
 msgid "Withdrawal request"
 msgstr "Solicitud de desistimiento"
 
-#: wc-apg-withdrawal.php
+#: apg-withdrawal-for-woocommerce.php
 msgid "Withdrawal request *"
 msgstr "Solicitud de desistimiento *"
 
-#: wc-apg-withdrawal.php
+#: apg-withdrawal-for-woocommerce.php
 msgid "* The standard withdrawal period for this order may have expired. You may still submit a request and it will be reviewed by the store."
 msgstr "* El plazo ordinario de desistimiento para este pedido puede haber expirado. Puede enviar igualmente su solicitud y será revisada por la tienda."
 
@@ -1016,8 +1016,8 @@ msgstr "Tipo de desistimiento"
 msgid "Withdrawal window (days)"
 msgstr "Período de desistimiento (días)"
 
-#: wc-apg-withdrawal.php:184 wc-apg-withdrawal.php:186
-#: wc-apg-withdrawal.php:187
+#: apg-withdrawal-for-woocommerce.php:184 apg-withdrawal-for-woocommerce.php:186
+#: apg-withdrawal-for-woocommerce.php:187
 msgid "Withdrawals"
 msgstr "Desistimientos"
 

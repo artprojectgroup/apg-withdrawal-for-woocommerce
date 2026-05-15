@@ -2,7 +2,7 @@
 /**
  * Clasificación de productos para el derecho de desistimiento.
  *
- * @package WC_APG_Withdrawal
+ * @package APG_Withdrawal_For_WooCommerce
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -15,7 +15,7 @@ defined( 'ABSPATH' ) || exit;
  */
 function apg_withdrawal_product_tab( $tabs ) {
 	$tabs['apg_withdrawal'] = array(
-		'label'    => __( 'Withdrawal', 'wc-apg-withdrawal' ),
+		'label'    => __( 'Withdrawal', 'apg-withdrawal-for-woocommerce' ),
 		'target'   => 'apg_withdrawal_product_data',
 		'class'    => array(),
 		'priority' => 80,
@@ -37,11 +37,11 @@ function apg_withdrawal_product_tab_content() {
 	$current = $current ?: 'allowed';
 
 	$types = array(
-		'allowed'      => __( 'Withdrawal allowed (default)', 'wc-apg-withdrawal' ),
-		'excluded'     => __( 'Withdrawal excluded', 'wc-apg-withdrawal' ),
-		'digital'      => __( 'Digital content', 'wc-apg-withdrawal' ),
-		'personalized' => __( 'Personalised product', 'wc-apg-withdrawal' ),
-		'manual'       => __( 'Manual review required', 'wc-apg-withdrawal' ),
+		'allowed'      => __( 'Withdrawal allowed (default)', 'apg-withdrawal-for-woocommerce' ),
+		'excluded'     => __( 'Withdrawal excluded', 'apg-withdrawal-for-woocommerce' ),
+		'digital'      => __( 'Digital content', 'apg-withdrawal-for-woocommerce' ),
+		'personalized' => __( 'Personalised product', 'apg-withdrawal-for-woocommerce' ),
+		'manual'       => __( 'Manual review required', 'apg-withdrawal-for-woocommerce' ),
 	);
 
 	echo '<div id="apg_withdrawal_product_data" class="panel woocommerce_options_panel">';
@@ -50,8 +50,8 @@ function apg_withdrawal_product_tab_content() {
 	woocommerce_wp_select(
 		array(
 			'id'          => '_apg_withdrawal_type',
-			'label'       => __( 'Withdrawal type', 'wc-apg-withdrawal' ),
-			'description' => __( 'Defines whether the right of withdrawal applies to this product. Shown as a notice to the customer in the withdrawal form.', 'wc-apg-withdrawal' ),
+			'label'       => __( 'Withdrawal type', 'apg-withdrawal-for-woocommerce' ),
+			'description' => __( 'Defines whether the right of withdrawal applies to this product. Shown as a notice to the customer in the withdrawal form.', 'apg-withdrawal-for-woocommerce' ),
 			'desc_tip'    => true,
 			'value'       => $current,
 			'options'     => $types,

@@ -1,10 +1,10 @@
 /**
- * Frontend interactivity for the WC - APG Withdrawal form.
+ * Frontend interactivity for the APG Withdrawal for WooCommerce form.
  *
  * Reads configuration from the global `apgWithdrawal` object that is
  * localised by PHP via wp_localize_script() in apg_withdrawal_render_form().
  *
- * @package WC_APG_Withdrawal
+ * @package APG_Withdrawal_For_WooCommerce
  */
 ( function () {
 	'use strict';

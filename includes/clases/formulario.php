@@ -2,7 +2,7 @@
 /**
  * Render del formulario público.
  *
- * @package WC_APG_Withdrawal
+ * @package APG_Withdrawal_For_WooCommerce
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -165,14 +165,14 @@ function apg_withdrawal_render_confirmation_form( $name, $email, $order_id, $sco
 	ob_start();
 	?>
 	<form class="apg-withdrawal-confirmation" method="post" action="<?php echo esc_url( $form_action ); ?>">
-		<h2><?php esc_html_e( 'Review your withdrawal request', 'wc-apg-withdrawal' ); ?></h2>
+		<h2><?php esc_html_e( 'Review your withdrawal request', 'apg-withdrawal-for-woocommerce' ); ?></h2>
 		<p class="apg-withdrawal-legal-text">
-			<?php esc_html_e( 'By submitting this request you communicate your wish to withdraw from the contract in accordance with consumer protection legislation.', 'wc-apg-withdrawal' ); ?>
-			<?php esc_html_e( 'Receipt of this request does not automatically imply that the right of withdrawal applies; the applicable legal exceptions may apply.', 'wc-apg-withdrawal' ); ?>
+			<?php esc_html_e( 'By submitting this request you communicate your wish to withdraw from the contract in accordance with consumer protection legislation.', 'apg-withdrawal-for-woocommerce' ); ?>
+			<?php esc_html_e( 'Receipt of this request does not automatically imply that the right of withdrawal applies; the applicable legal exceptions may apply.', 'apg-withdrawal-for-woocommerce' ); ?>
 		</p>
 		<?php if ( $expired_warning ) : ?>
 		<div class="woocommerce-info apg-withdrawal-expired-notice">
-			<?php esc_html_e( 'According to the available information, the ordinary withdrawal period for this order may have expired. You may still submit your request and it will be reviewed by the store.', 'wc-apg-withdrawal' ); ?>
+			<?php esc_html_e( 'According to the available information, the ordinary withdrawal period for this order may have expired. You may still submit your request and it will be reviewed by the store.', 'apg-withdrawal-for-woocommerce' ); ?>
 		</div>
 		<?php endif; ?>
 		<input type="hidden" name="apg_withdrawal_confirm_inline" value="1">
@@ -188,25 +188,25 @@ function apg_withdrawal_render_confirmation_form( $name, $email, $order_id, $sco
 		<?php wp_nonce_field( 'apg_withdrawal_confirm_action', 'apg_withdrawal_confirm_nonce' ); ?>
 		<div class="woocommerce-address-fields">
 			<div class="woocommerce-address-fields__field-wrapper">
-				<p class="form-row form-row-wide"><strong><?php esc_html_e( 'Customer:', 'wc-apg-withdrawal' ); ?></strong><br><?php echo esc_html( $name ); ?></p>
-				<p class="form-row form-row-wide"><strong><?php esc_html_e( 'Email:', 'wc-apg-withdrawal' ); ?></strong><br><?php echo esc_html( $email ); ?></p>
+				<p class="form-row form-row-wide"><strong><?php esc_html_e( 'Customer:', 'apg-withdrawal-for-woocommerce' ); ?></strong><br><?php echo esc_html( $name ); ?></p>
+				<p class="form-row form-row-wide"><strong><?php esc_html_e( 'Email:', 'apg-withdrawal-for-woocommerce' ); ?></strong><br><?php echo esc_html( $email ); ?></p>
 				<?php if ( $phone ) : ?>
-				<p class="form-row form-row-wide"><strong><?php esc_html_e( 'Phone:', 'wc-apg-withdrawal' ); ?></strong><br><?php echo esc_html( $phone ); ?></p>
+				<p class="form-row form-row-wide"><strong><?php esc_html_e( 'Phone:', 'apg-withdrawal-for-woocommerce' ); ?></strong><br><?php echo esc_html( $phone ); ?></p>
 				<?php endif; ?>
-				<p class="form-row form-row-wide"><strong><?php esc_html_e( 'Order:', 'wc-apg-withdrawal' ); ?></strong><br><?php echo esc_html( $current_order ? apg_withdrawal_get_order_option_label( $current_order ) : $order_id ); ?></p>
-				<p class="form-row form-row-wide"><strong><?php esc_html_e( 'Scope:', 'wc-apg-withdrawal' ); ?></strong><br><?php echo esc_html( 'partial' === $scope ? __( 'Specific products only', 'wc-apg-withdrawal' ) : __( 'Full order', 'wc-apg-withdrawal' ) ); ?></p>
+				<p class="form-row form-row-wide"><strong><?php esc_html_e( 'Order:', 'apg-withdrawal-for-woocommerce' ); ?></strong><br><?php echo esc_html( $current_order ? apg_withdrawal_get_order_option_label( $current_order ) : $order_id ); ?></p>
+				<p class="form-row form-row-wide"><strong><?php esc_html_e( 'Scope:', 'apg-withdrawal-for-woocommerce' ); ?></strong><br><?php echo esc_html( 'partial' === $scope ? __( 'Specific products only', 'apg-withdrawal-for-woocommerce' ) : __( 'Full order', 'apg-withdrawal-for-woocommerce' ) ); ?></p>
 				<?php if ( 'partial' === $scope && $selected_products ) : ?>
-					<p class="form-row form-row-wide"><strong><?php esc_html_e( 'Products:', 'wc-apg-withdrawal' ); ?></strong><br><?php echo esc_html( implode( ', ', apg_withdrawal_get_selected_product_labels( $current_order, $selected_products ) ) ); ?></p>
+					<p class="form-row form-row-wide"><strong><?php esc_html_e( 'Products:', 'apg-withdrawal-for-woocommerce' ); ?></strong><br><?php echo esc_html( implode( ', ', apg_withdrawal_get_selected_product_labels( $current_order, $selected_products ) ) ); ?></p>
 				<?php endif; ?>
 				<?php if ( $details ) : ?>
-					<p class="form-row form-row-wide"><strong><?php esc_html_e( 'Additional details:', 'wc-apg-withdrawal' ); ?></strong><br><?php echo nl2br( esc_html( $details ) ); ?></p>
+					<p class="form-row form-row-wide"><strong><?php esc_html_e( 'Additional details:', 'apg-withdrawal-for-woocommerce' ); ?></strong><br><?php echo nl2br( esc_html( $details ) ); ?></p>
 				<?php endif; ?>
 				<p class="form-row apg-withdrawal-legal-notice">
-					<?php esc_html_e( 'Receipt of this request does not imply automatic acceptance of the right of withdrawal; the legally applicable exceptions may apply.', 'wc-apg-withdrawal' ); ?>
+					<?php esc_html_e( 'Receipt of this request does not imply automatic acceptance of the right of withdrawal; the legally applicable exceptions may apply.', 'apg-withdrawal-for-woocommerce' ); ?>
 				</p>
 				<p class="form-row">
 					<button type="submit" class="button alt wp-element-button"><?php echo esc_html( $settings['button_text'] ); ?></button>
-					<button type="button" class="button apg-withdrawal-back-btn"><?php esc_html_e( 'Cancel', 'wc-apg-withdrawal' ); ?></button>
+					<button type="button" class="button apg-withdrawal-back-btn"><?php esc_html_e( 'Cancel', 'apg-withdrawal-for-woocommerce' ); ?></button>
 				</p>
 			</div>
 		</div>
@@ -243,7 +243,7 @@ function apg_withdrawal_render_field( $key, $args, $value = null ) {
 	$type     = $args['type'];
 	$classes  = implode( ' ', array_map( 'sanitize_html_class', (array) $args['class'] ) );
 	$input_classes = implode( ' ', array_map( 'sanitize_html_class', (array) $args['input_class'] ) );
-	$required_text = $args['required'] ? '&nbsp;<span class="required" aria-hidden="true">*</span>' : '&nbsp;<span class="optional">(' . esc_html__( 'optional', 'wc-apg-withdrawal' ) . ')</span>';
+	$required_text = $args['required'] ? '&nbsp;<span class="required" aria-hidden="true">*</span>' : '&nbsp;<span class="optional">(' . esc_html__( 'optional', 'apg-withdrawal-for-woocommerce' ) . ')</span>';
 	$label_class   = $args['required'] ? 'required_field' : '';
 	$attr_required = $args['required'] ? ' aria-required="true" required' : '';
 	$attr_auto     = $args['autocomplete'] ? ' autocomplete="' . esc_attr( $args['autocomplete'] ) . '"' : '';
@@ -378,7 +378,7 @@ function apg_withdrawal_render_form( $atts = array() ) {
 				<?php
 				printf(
 					/* translators: %d number of days of the withdrawal window. */
-					esc_html__( 'The right of withdrawal may be exercised within %d calendar days from receipt of the order.', 'wc-apg-withdrawal' ),
+					esc_html__( 'The right of withdrawal may be exercised within %d calendar days from receipt of the order.', 'apg-withdrawal-for-woocommerce' ),
 					absint( $settings['withdrawal_days'] )
 				);
 				?>
@@ -386,7 +386,7 @@ function apg_withdrawal_render_form( $atts = array() ) {
 			<form method="post" action="<?php echo esc_url( $form_action ); ?>" class="apg-withdrawal-form">
 				<input type="hidden" name="apg_withdrawal_step" value="confirm">
 				<?php wp_nonce_field( 'apg_withdrawal_preview_action', 'apg_withdrawal_preview_nonce' ); ?>
-				<h2><?php esc_html_e( 'Withdrawal request', 'wc-apg-withdrawal' ); ?></h2>
+				<h2><?php esc_html_e( 'Withdrawal request', 'apg-withdrawal-for-woocommerce' ); ?></h2>
 				<div class="woocommerce-info apg-withdrawal-product-warning" style="display:none;" aria-live="polite"></div>
 				<div class="woocommerce-address-fields">
 					<div class="woocommerce-address-fields__field-wrapper">
@@ -395,7 +395,7 @@ function apg_withdrawal_render_form( $atts = array() ) {
 							'name',
 							array(
 								'type'         => 'text',
-								'label'        => __( 'Full name', 'wc-apg-withdrawal' ),
+								'label'        => __( 'Full name', 'apg-withdrawal-for-woocommerce' ),
 								'required'     => true,
 								'class'        => array( 'form-row-wide' ),
 								'input_class'  => array( 'input-text' ),
@@ -409,7 +409,7 @@ function apg_withdrawal_render_form( $atts = array() ) {
 							'email',
 							array(
 								'type'         => 'email',
-								'label'        => __( 'Email', 'wc-apg-withdrawal' ),
+								'label'        => __( 'Email', 'apg-withdrawal-for-woocommerce' ),
 								'required'     => true,
 								'class'        => array( 'form-row-wide' ),
 								'input_class'  => array( 'input-text' ),
@@ -423,7 +423,7 @@ function apg_withdrawal_render_form( $atts = array() ) {
 							'phone',
 							array(
 								'type'         => 'tel',
-								'label'        => __( 'Phone', 'wc-apg-withdrawal' ),
+								'label'        => __( 'Phone', 'apg-withdrawal-for-woocommerce' ),
 								'required'     => false,
 								'class'        => array( 'form-row-wide' ),
 								'input_class'  => array( 'input-text' ),
@@ -435,7 +435,7 @@ function apg_withdrawal_render_form( $atts = array() ) {
 
 						if ( $orders ) {
 							$order_options = array(
-								'' => __( 'Select an order', 'wc-apg-withdrawal' ),
+								'' => __( 'Select an order', 'apg-withdrawal-for-woocommerce' ),
 							);
 
 							foreach ( $orders as $order ) {
@@ -450,7 +450,7 @@ function apg_withdrawal_render_form( $atts = array() ) {
 								'order_id',
 								array(
 									'type'        => 'select',
-									'label'       => __( 'Order number', 'wc-apg-withdrawal' ),
+									'label'       => __( 'Order number', 'apg-withdrawal-for-woocommerce' ),
 									'required'    => true,
 									'class'       => array( 'form-row-wide' ),
 									'input_class' => array( 'apg-withdrawal-selectwoo', 'wc-enhanced-select' ),
@@ -464,7 +464,7 @@ function apg_withdrawal_render_form( $atts = array() ) {
 								'order_id',
 								array(
 									'type'              => 'text',
-									'label'             => __( 'Order number', 'wc-apg-withdrawal' ),
+									'label'             => __( 'Order number', 'apg-withdrawal-for-woocommerce' ),
 									'required'          => true,
 									'class'             => array( 'form-row-wide' ),
 									'input_class'       => array( 'input-text' ),
@@ -479,12 +479,12 @@ function apg_withdrawal_render_form( $atts = array() ) {
 							'scope',
 							array(
 								'type'        => 'select',
-								'label'       => __( 'Withdrawal scope', 'wc-apg-withdrawal' ),
+								'label'       => __( 'Withdrawal scope', 'apg-withdrawal-for-woocommerce' ),
 								'class'       => array( 'form-row-wide' ),
 								'input_class' => array( 'apg-withdrawal-selectwoo', 'wc-enhanced-select' ),
 								'options'     => array(
-									'full'    => __( 'Full order', 'wc-apg-withdrawal' ),
-									'partial' => __( 'Specific products only', 'wc-apg-withdrawal' ),
+									'full'    => __( 'Full order', 'apg-withdrawal-for-woocommerce' ),
+									'partial' => __( 'Specific products only', 'apg-withdrawal-for-woocommerce' ),
 								),
 								'priority'    => 40,
 							),
@@ -492,7 +492,7 @@ function apg_withdrawal_render_form( $atts = array() ) {
 						);
 						?>
 							<p class="form-row form-row-wide apg-withdrawal-products-row" id="products_field" data-priority="50" <?php echo 'partial' === $scope ? '' : 'style="display:none;"'; ?>>
-							<label for="products"><?php esc_html_e( 'Products to withdraw', 'wc-apg-withdrawal' ); ?></label>
+							<label for="products"><?php esc_html_e( 'Products to withdraw', 'apg-withdrawal-for-woocommerce' ); ?></label>
 							<span class="woocommerce-input-wrapper">
 								<select class="apg-withdrawal-selectwoo wc-enhanced-select" id="products" name="products[]" multiple="multiple" size="5">
 									<?php foreach ( $order_products as $item_id => $product_label ) : ?>
@@ -500,14 +500,14 @@ function apg_withdrawal_render_form( $atts = array() ) {
 									<?php endforeach; ?>
 								</select>
 							</span>
-							<span class="description"><?php esc_html_e( 'Choose one or more products from the selected order.', 'wc-apg-withdrawal' ); ?></span>
+							<span class="description"><?php esc_html_e( 'Choose one or more products from the selected order.', 'apg-withdrawal-for-woocommerce' ); ?></span>
 						</p>
 						<?php
 						echo apg_withdrawal_render_field( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Internal function returns sanitized HTML
 							'details',
 							array(
 								'type'        => 'textarea',
-								'label'       => __( 'Additional details', 'wc-apg-withdrawal' ),
+								'label'       => __( 'Additional details', 'apg-withdrawal-for-woocommerce' ),
 								'class'       => array( 'form-row-wide' ),
 								'input_class' => array( 'input-text' ),
 								'priority'    => 60,
@@ -519,12 +519,12 @@ function apg_withdrawal_render_form( $atts = array() ) {
 						<p class="form-row form-row-wide apg-withdrawal-checkbox" id="acceptance_field">
 							<label class="checkbox" for="acceptance">
 								<input type="checkbox" name="acceptance" id="acceptance" value="1" aria-required="true" required<?php checked( ! empty( $acceptance ) ); ?>>
-								<?php esc_html_e( 'I understand that the next step will submit my withdrawal request after confirmation.', 'wc-apg-withdrawal' ); ?><span class="required" aria-hidden="true">&nbsp;*</span>
+								<?php esc_html_e( 'I understand that the next step will submit my withdrawal request after confirmation.', 'apg-withdrawal-for-woocommerce' ); ?><span class="required" aria-hidden="true">&nbsp;*</span>
 							</label>
 						</p>
-						<p class="description form-row form-row-wide"><?php esc_html_e( 'The next step will show a confirmation screen before the request is submitted.', 'wc-apg-withdrawal' ); ?></p>
+						<p class="description form-row form-row-wide"><?php esc_html_e( 'The next step will show a confirmation screen before the request is submitted.', 'apg-withdrawal-for-woocommerce' ); ?></p>
 						<p class="form-row">
-							<button type="submit" class="button alt wp-element-button"><?php esc_html_e( 'Open withdrawal confirmation', 'wc-apg-withdrawal' ); ?></button>
+							<button type="submit" class="button alt wp-element-button"><?php esc_html_e( 'Open withdrawal confirmation', 'apg-withdrawal-for-woocommerce' ); ?></button>
 						</p>
 					</div>
 				</div>
@@ -548,17 +548,17 @@ function apg_withdrawal_render_form( $atts = array() ) {
 						'ajaxUrl'          => admin_url( 'admin-ajax.php' ),
 						'ordersWarning'    => $orders_warning,
 						'i18n'             => array(
-							'noResults'        => __( 'No results found', 'wc-apg-withdrawal' ),
+							'noResults'        => __( 'No results found', 'apg-withdrawal-for-woocommerce' ),
 							/* translators: %s: email address entered by the user. */
-							'noOrdersForEmail' => __( 'No orders were found in the store for the email address %s.', 'wc-apg-withdrawal' ),
-							'chooseProducts'   => __( 'Choose products...', 'wc-apg-withdrawal' ),
+							'noOrdersForEmail' => __( 'No orders were found in the store for the email address %s.', 'apg-withdrawal-for-woocommerce' ),
+							'chooseProducts'   => __( 'Choose products...', 'apg-withdrawal-for-woocommerce' ),
 						),
 						'warningMessages'  => array(
-							'excluded'     => __( "According to this product's configuration, the right of withdrawal may not apply under the legally provided exceptions. Your request will be reviewed by the store.", 'wc-apg-withdrawal' ),
-							'digital'      => __( 'This order contains digital content. If execution began with your prior express consent and you acknowledged the loss of the right of withdrawal at purchase, this right may no longer apply.', 'wc-apg-withdrawal' ),
-							'personalized' => __( 'This order contains personalised products. The right of withdrawal does not apply to goods made to your specifications or clearly personalised.', 'wc-apg-withdrawal' ),
-							'manual'       => __( 'This request requires manual review. The store will evaluate whether the right of withdrawal applies to this order.', 'wc-apg-withdrawal' ),
-							'expired'      => __( 'According to the available information, the ordinary withdrawal period for this order may have expired. You may still submit your request and it will be reviewed by the store.', 'wc-apg-withdrawal' ),
+							'excluded'     => __( "According to this product's configuration, the right of withdrawal may not apply under the legally provided exceptions. Your request will be reviewed by the store.", 'apg-withdrawal-for-woocommerce' ),
+							'digital'      => __( 'This order contains digital content. If execution began with your prior express consent and you acknowledged the loss of the right of withdrawal at purchase, this right may no longer apply.', 'apg-withdrawal-for-woocommerce' ),
+							'personalized' => __( 'This order contains personalised products. The right of withdrawal does not apply to goods made to your specifications or clearly personalised.', 'apg-withdrawal-for-woocommerce' ),
+							'manual'       => __( 'This request requires manual review. The store will evaluate whether the right of withdrawal applies to this order.', 'apg-withdrawal-for-woocommerce' ),
+							'expired'      => __( 'According to the available information, the ordinary withdrawal period for this order may have expired. You may still submit your request and it will be reviewed by the store.', 'apg-withdrawal-for-woocommerce' ),
 						),
 					)
 				);
@@ -579,13 +579,13 @@ function apg_withdrawal_render_form( $atts = array() ) {
  */
 function apg_withdrawal_get_notice_message( $message ) {
 	$messages = array(
-		'success' => __( 'Your withdrawal request has been registered.', 'wc-apg-withdrawal' ),
-		'nonce'   => __( 'Security validation failed. Please try again.', 'wc-apg-withdrawal' ),
-		'fields'  => __( 'Please complete all required fields before continuing.', 'wc-apg-withdrawal' ),
-		'email'   => __( 'The email address is not valid.', 'wc-apg-withdrawal' ),
-		'order'   => __( 'The order could not be matched with the email address provided.', 'wc-apg-withdrawal' ),
-		'expired' => __( 'The withdrawal period for this order appears to have expired.', 'wc-apg-withdrawal' ),
-		'general' => __( 'An error occurred while processing the withdrawal request.', 'wc-apg-withdrawal' ),
+		'success' => __( 'Your withdrawal request has been registered.', 'apg-withdrawal-for-woocommerce' ),
+		'nonce'   => __( 'Security validation failed. Please try again.', 'apg-withdrawal-for-woocommerce' ),
+		'fields'  => __( 'Please complete all required fields before continuing.', 'apg-withdrawal-for-woocommerce' ),
+		'email'   => __( 'The email address is not valid.', 'apg-withdrawal-for-woocommerce' ),
+		'order'   => __( 'The order could not be matched with the email address provided.', 'apg-withdrawal-for-woocommerce' ),
+		'expired' => __( 'The withdrawal period for this order appears to have expired.', 'apg-withdrawal-for-woocommerce' ),
+		'general' => __( 'An error occurred while processing the withdrawal request.', 'apg-withdrawal-for-woocommerce' ),
 	);
 
 	return isset( $messages[ $message ] ) ? $messages[ $message ] : $messages['general'];
@@ -651,7 +651,7 @@ function apg_withdrawal_ajax_get_guest_orders() {
 		foreach ( $order->get_items() as $item_id => $item ) {
 			$products_map[ $order_id ][ (string) $item_id ] = sprintf(
 				/* translators: 1: product name, 2: quantity. */
-				__( '%1$s x %2$d', 'wc-apg-withdrawal' ),
+				__( '%1$s x %2$d', 'apg-withdrawal-for-woocommerce' ),
 				$item->get_name(),
 				$item->get_quantity()
 			);
@@ -663,7 +663,7 @@ function apg_withdrawal_ajax_get_guest_orders() {
 			'orders'      => $orders_data,
 			'productsMap' => $products_map,
 			'warningMap'  => $warning_map,
-			'placeholder' => __( 'Select an order', 'wc-apg-withdrawal' ),
+			'placeholder' => __( 'Select an order', 'apg-withdrawal-for-woocommerce' ),
 		)
 	);
 }

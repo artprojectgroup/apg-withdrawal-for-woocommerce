@@ -2,7 +2,7 @@
 /**
  * Integración con la lista y edición de pedidos WooCommerce.
  *
- * @package WC_APG_Withdrawal
+ * @package APG_Withdrawal_For_WooCommerce
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -66,12 +66,12 @@ function apg_withdrawal_add_orders_column( $columns ) {
 	foreach ( $columns as $key => $label ) {
 		$new[ $key ] = $label;
 		if ( 'order_status' === $key ) {
-			$new['apg_withdrawal'] = __( 'Withdrawal', 'wc-apg-withdrawal' );
+			$new['apg_withdrawal'] = __( 'Withdrawal', 'apg-withdrawal-for-woocommerce' );
 		}
 	}
 
 	if ( ! isset( $new['apg_withdrawal'] ) ) {
-		$new['apg_withdrawal'] = __( 'Withdrawal', 'wc-apg-withdrawal' );
+		$new['apg_withdrawal'] = __( 'Withdrawal', 'apg-withdrawal-for-woocommerce' );
 	}
 
 	return $new;
@@ -103,10 +103,10 @@ function apg_withdrawal_render_orders_column( $column, $order_or_id ) {
 	}
 
 	$status_labels = array(
-		'pending'   => __( 'Pending', 'wc-apg-withdrawal' ),
-		'accepted'  => __( 'Accepted', 'wc-apg-withdrawal' ),
-		'rejected'  => __( 'Rejected', 'wc-apg-withdrawal' ),
-		'completed' => __( 'Completed', 'wc-apg-withdrawal' ),
+		'pending'   => __( 'Pending', 'apg-withdrawal-for-woocommerce' ),
+		'accepted'  => __( 'Accepted', 'apg-withdrawal-for-woocommerce' ),
+		'rejected'  => __( 'Rejected', 'apg-withdrawal-for-woocommerce' ),
+		'completed' => __( 'Completed', 'apg-withdrawal-for-woocommerce' ),
 	);
 
 	foreach ( $withdrawals as $withdrawal ) {
@@ -144,9 +144,9 @@ function apg_withdrawal_render_filter_dropdown() {
 	$current = isset( $_GET['apg_withdrawal_filter'] ) ? sanitize_key( wp_unslash( $_GET['apg_withdrawal_filter'] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Filter read; admin list table context, no state change
 	?>
 	<select name="apg_withdrawal_filter" id="apg_withdrawal_filter">
-		<option value=""><?php esc_html_e( 'All withdrawal statuses', 'wc-apg-withdrawal' ); ?></option>
-		<option value="has" <?php selected( $current, 'has' ); ?>><?php esc_html_e( 'Has withdrawal request', 'wc-apg-withdrawal' ); ?></option>
-		<option value="none" <?php selected( $current, 'none' ); ?>><?php esc_html_e( 'No withdrawal request', 'wc-apg-withdrawal' ); ?></option>
+		<option value=""><?php esc_html_e( 'All withdrawal statuses', 'apg-withdrawal-for-woocommerce' ); ?></option>
+		<option value="has" <?php selected( $current, 'has' ); ?>><?php esc_html_e( 'Has withdrawal request', 'apg-withdrawal-for-woocommerce' ); ?></option>
+		<option value="none" <?php selected( $current, 'none' ); ?>><?php esc_html_e( 'No withdrawal request', 'apg-withdrawal-for-woocommerce' ); ?></option>
 	</select>
 	<?php
 }
@@ -258,7 +258,7 @@ function apg_withdrawal_add_order_metabox() {
 	foreach ( apg_withdrawal_get_order_edit_screens() as $screen ) {
 		add_meta_box(
 			'apg-withdrawal-order-requests',
-			__( 'Withdrawal requests', 'wc-apg-withdrawal' ),
+			__( 'Withdrawal requests', 'apg-withdrawal-for-woocommerce' ),
 			'apg_withdrawal_render_order_metabox',
 			$screen,
 			'side'
@@ -288,15 +288,15 @@ function apg_withdrawal_render_order_metabox( $post_or_order ) {
 	$withdrawals = apg_withdrawal_get_order_linked_withdrawals( $order_id );
 
 	if ( empty( $withdrawals ) ) {
-		echo '<p>' . esc_html__( 'No withdrawal requests for this order.', 'wc-apg-withdrawal' ) . '</p>';
+		echo '<p>' . esc_html__( 'No withdrawal requests for this order.', 'apg-withdrawal-for-woocommerce' ) . '</p>';
 		return;
 	}
 
 	$status_labels = array(
-		'pending'   => __( 'Pending', 'wc-apg-withdrawal' ),
-		'accepted'  => __( 'Accepted', 'wc-apg-withdrawal' ),
-		'rejected'  => __( 'Rejected', 'wc-apg-withdrawal' ),
-		'completed' => __( 'Completed', 'wc-apg-withdrawal' ),
+		'pending'   => __( 'Pending', 'apg-withdrawal-for-woocommerce' ),
+		'accepted'  => __( 'Accepted', 'apg-withdrawal-for-woocommerce' ),
+		'rejected'  => __( 'Rejected', 'apg-withdrawal-for-woocommerce' ),
+		'completed' => __( 'Completed', 'apg-withdrawal-for-woocommerce' ),
 	);
 
 	echo '<ul style="margin:0;padding:0;list-style:none;">';

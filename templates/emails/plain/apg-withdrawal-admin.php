@@ -2,7 +2,7 @@
 /**
  * Email de notificación al administrador - texto plano.
  *
- * @package WC_APG_Withdrawal
+ * @package APG_Withdrawal_For_WooCommerce
  * @var string $email_heading
  * @var string $additional_content
  * @var array  $data
@@ -16,28 +16,28 @@ defined( 'ABSPATH' ) || exit;
 echo '= ' . esc_html( $email_heading ) . " =\n\n";
 
 $apg_withdrawal_scope_label = 'partial' === ( $data['scope'] ?? 'full' )
-	? __( 'Specific products only', 'wc-apg-withdrawal' )
-	: __( 'Full order', 'wc-apg-withdrawal' );
+	? __( 'Specific products only', 'apg-withdrawal-for-woocommerce' )
+	: __( 'Full order', 'apg-withdrawal-for-woocommerce' );
 
-echo esc_html__( 'A new withdrawal request has been submitted.', 'wc-apg-withdrawal' ) . "\n\n";
+echo esc_html__( 'A new withdrawal request has been submitted.', 'apg-withdrawal-for-woocommerce' ) . "\n\n";
 
-echo esc_html__( 'Request details:', 'wc-apg-withdrawal' ) . "\n";
+echo esc_html__( 'Request details:', 'apg-withdrawal-for-woocommerce' ) . "\n";
 echo esc_html( str_repeat( '-', 40 ) ) . "\n";
 
 // translators: %d request number.
-printf( esc_html__( 'Request number', 'wc-apg-withdrawal' ) . ': #%d' . "\n", absint( $data['post_id'] ?? 0 ) );
-printf( esc_html__( 'Customer', 'wc-apg-withdrawal' ) . ': %s' . "\n", esc_html( $data['name'] ?? '' ) );
-printf( esc_html__( 'Email', 'wc-apg-withdrawal' ) . ': %s' . "\n", esc_html( $data['customer_email'] ?? '' ) );
+printf( esc_html__( 'Request number', 'apg-withdrawal-for-woocommerce' ) . ': #%d' . "\n", absint( $data['post_id'] ?? 0 ) );
+printf( esc_html__( 'Customer', 'apg-withdrawal-for-woocommerce' ) . ': %s' . "\n", esc_html( $data['name'] ?? '' ) );
+printf( esc_html__( 'Email', 'apg-withdrawal-for-woocommerce' ) . ': %s' . "\n", esc_html( $data['customer_email'] ?? '' ) );
 
 if ( $data['phone'] ?? '' ) {
-	printf( esc_html__( 'Phone', 'wc-apg-withdrawal' ) . ': %s' . "\n", esc_html( $data['phone'] ?? '' ) );
+	printf( esc_html__( 'Phone', 'apg-withdrawal-for-woocommerce' ) . ': %s' . "\n", esc_html( $data['phone'] ?? '' ) );
 }
 
-printf( esc_html__( 'Order', 'wc-apg-withdrawal' ) . ': %s' . "\n", esc_html( $data['order_ref'] ?? '' ) );
-printf( esc_html__( 'Scope', 'wc-apg-withdrawal' ) . ': %s' . "\n", esc_html( $apg_withdrawal_scope_label ) );
+printf( esc_html__( 'Order', 'apg-withdrawal-for-woocommerce' ) . ': %s' . "\n", esc_html( $data['order_ref'] ?? '' ) );
+printf( esc_html__( 'Scope', 'apg-withdrawal-for-woocommerce' ) . ': %s' . "\n", esc_html( $apg_withdrawal_scope_label ) );
 
 if ( $data['details'] ?? '' ) {
-	printf( esc_html__( 'Details', 'wc-apg-withdrawal' ) . ': %s' . "\n", esc_html( $data['details'] ?? '' ) );
+	printf( esc_html__( 'Details', 'apg-withdrawal-for-woocommerce' ) . ': %s' . "\n", esc_html( $data['details'] ?? '' ) );
 }
 
 echo "\n";
@@ -45,7 +45,7 @@ echo "\n";
 $apg_withdrawal_edit_url = get_edit_post_link( absint( $data['post_id'] ?? 0 ), '' );
 
 if ( $apg_withdrawal_edit_url ) {
-	printf( esc_html__( 'View withdrawal request', 'wc-apg-withdrawal' ) . ': %s' . "\n", esc_url( $apg_withdrawal_edit_url ) );
+	printf( esc_html__( 'View withdrawal request', 'apg-withdrawal-for-woocommerce' ) . ': %s' . "\n", esc_url( $apg_withdrawal_edit_url ) );
 }
 
 if ( $additional_content ) {

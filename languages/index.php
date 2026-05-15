@@ -2,5 +2,5 @@
 /**
  * Silence is golden.
  *
- * @package WC_APG_Withdrawal
+ * @package APG_Withdrawal_For_WooCommerce
  */

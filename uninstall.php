@@ -2,7 +2,7 @@
 /**
  * Limpieza al desinstalar el plugin.
  *
- * @package WC_APG_Withdrawal
+ * @package APG_Withdrawal_For_WooCommerce
  */
 
 defined( 'WP_UNINSTALL_PLUGIN' ) || exit;

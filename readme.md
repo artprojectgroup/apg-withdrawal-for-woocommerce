@@ -1,4 +1,4 @@
-# WC - APG Desistimiento
+# APG Desistimiento para WooCommerce
 Contributors: artprojectgroup
 
 Donate link: https://artprojectgroup.es/tienda/donacion
@@ -24,7 +24,7 @@ License URI: https://www.gnu.org/licenses/gpl-3.0.html
 Añade a WooCommerce un flujo de trabajo de desistimiento online con formulario de cliente, integración en Mi cuenta y registro de solicitudes en el panel de administración.
 
 ## Description
-**WC - APG Desistimiento** añade a tu tienda WooCommerce un flujo de trabajo completo de desistimiento online conforme a la legislación de protección al consumidor de la UE.
+**APG Desistimiento para WooCommerce** añade a tu tienda WooCommerce un flujo de trabajo completo de desistimiento online conforme a la legislación de protección al consumidor de la UE.
 
 ### Características
 * Formulario de desistimiento para el cliente mediante el shortcode `[apg_withdrawal_form]`.
@@ -46,13 +46,13 @@ Añade a WooCommerce un flujo de trabajo de desistimiento online con formulario 
 * *Español*: por [**Art Project Group**](https://artprojectgroup.es/).
 
 ### Más información
-Puedes obtener más información sobre **WC - APG Desistimiento** en nuestro [sitio web oficial](https://artprojectgroup.es/plugins-para-woocommerce/wc-apg-withdrawal) y seguir el desarrollo en [GitHub](https://github.com/artprojectgroup/wc-apg-withdrawal).
+Puedes obtener más información sobre **APG Desistimiento para WooCommerce** en nuestro [sitio web oficial](https://artprojectgroup.es/plugins-para-woocommerce/apg-withdrawal-for-woocommerce) y seguir el desarrollo en [GitHub](https://github.com/artprojectgroup/apg-withdrawal-for-woocommerce).
 
 ## Instalación
 1. Instala el plugin de una de estas formas:
- * Sube la carpeta `wc-apg-withdrawal` al directorio `/wp-content/plugins/` vía FTP.
+ * Sube la carpeta `apg-withdrawal-for-woocommerce` al directorio `/wp-content/plugins/` vía FTP.
  * Sube el archivo ZIP completo vía *Plugins -> Añadir nuevo -> Subir* en el panel de administración de WordPress.
- * Busca **WC - APG Desistimiento** en *Plugins -> Añadir nuevo* y pulsa el botón *Instalar ahora*.
+ * Busca **APG Desistimiento para WooCommerce** en *Plugins -> Añadir nuevo* y pulsa el botón *Instalar ahora*.
 2. Activa el plugin a través del menú *Plugins* en el panel de administración de WordPress.
 3. Configura el plugin en *WooCommerce -> Desistimiento* o a través del enlace *Ajustes* en la página de plugins.
 4. Añade el shortcode `[apg_withdrawal_form]` a la página configurada como página de desistimiento en los ajustes.
@@ -68,7 +68,7 @@ Sí. El plugin es totalmente compatible con WooCommerce High-Performance Order S
 Sí. El formulario admite tanto clientes registrados (con datos rellenados previamente y selector de pedidos) como invitados (con búsqueda de pedidos por correo electrónico).
 
 ### ¿Dónde puedo obtener soporte?
-**WC - APG Desistimiento** es un plugin gratuito. **Art Project Group** no proporciona soporte técnico gratuito, pero ofrece un servicio de [soporte técnico](https://artprojectgroup.es/tienda/ticket-de-soporte) de pago para instalación y configuración.
+**APG Desistimiento para WooCommerce** es un plugin gratuito. **Art Project Group** no proporciona soporte técnico gratuito, pero ofrece un servicio de [soporte técnico](https://artprojectgroup.es/tienda/ticket-de-soporte) de pago para instalación y configuración.
 
 ## Changelog
 ### 0.1.0

@@ -2,7 +2,7 @@
 /**
  * Email de acuse de recibo al cliente.
  *
- * @package WC_APG_Withdrawal
+ * @package APG_Withdrawal_For_WooCommerce
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -20,8 +20,8 @@ if ( ! class_exists( 'APG_Withdrawal_Email_Customer', false ) ) :
 		public function __construct() {
 			$this->id             = 'apg_withdrawal_customer';
 			$this->customer_email = true;
-			$this->title          = __( 'Withdrawal request received (customer)', 'wc-apg-withdrawal' );
-			$this->description    = __( 'Sent to the customer when a withdrawal request is submitted.', 'wc-apg-withdrawal' );
+			$this->title          = __( 'Withdrawal request received (customer)', 'apg-withdrawal-for-woocommerce' );
+			$this->description    = __( 'Sent to the customer when a withdrawal request is submitted.', 'apg-withdrawal-for-woocommerce' );
 			$this->template_html  = 'emails/apg-withdrawal-customer.php';
 			$this->template_plain = 'emails/plain/apg-withdrawal-customer.php';
 			$this->template_base  = apg_withdrawal_PLUGIN_DIR . 'templates/';
@@ -42,7 +42,7 @@ if ( ! class_exists( 'APG_Withdrawal_Email_Customer', false ) ) :
 			return sprintf(
 				/* translators: %s email heading. */
 				'[{site_title}] %s',
-				__( 'Withdrawal request received', 'wc-apg-withdrawal' )
+				__( 'Withdrawal request received', 'apg-withdrawal-for-woocommerce' )
 			);
 		}
 
@@ -52,7 +52,7 @@ if ( ! class_exists( 'APG_Withdrawal_Email_Customer', false ) ) :
 		 * @return string Default heading string.
 		 */
 		public function get_default_heading() {
-			return __( 'Withdrawal request received', 'wc-apg-withdrawal' );
+			return __( 'Withdrawal request received', 'apg-withdrawal-for-woocommerce' );
 		}
 
 		/**
@@ -83,7 +83,7 @@ if ( ! class_exists( 'APG_Withdrawal_Email_Customer', false ) ) :
 							if ( in_array( (string) $item_id, array_map( 'strval', $stored_items ), true ) ) {
 								$products_list[] = sprintf(
 									/* translators: 1: product name, 2: quantity. */
-									__( '%1$s x %2$d', 'wc-apg-withdrawal' ),
+									__( '%1$s x %2$d', 'apg-withdrawal-for-woocommerce' ),
 									$item->get_name(),
 									$item->get_quantity()
 								);

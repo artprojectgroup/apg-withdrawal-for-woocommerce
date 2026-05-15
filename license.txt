@@ -1,4 +1,4 @@
-WC - APG Withdrawal
+APG Withdrawal for WooCommerce
 
 Copyright 2026 by the contributors
 
@@ -19,10 +19,10 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 This program incorporates work covered by the following copyright and
 permission notices:
 
-  WC - APG Withdrawal is Copyright (c) 2026 Art Project Group
-  https://artprojectgroup.es - https://artprojectgroup.es/plugins-para-woocommerce/wc-apg-withdrawal
+  APG Withdrawal for WooCommerce is Copyright (c) 2026 Art Project Group
+  https://artprojectgroup.es - https://artprojectgroup.es/plugins-para-woocommerce/apg-withdrawal-for-woocommerce
 
-  WC - APG Withdrawal is released under the GPL
+  APG Withdrawal for WooCommerce is released under the GPL
 
 =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 

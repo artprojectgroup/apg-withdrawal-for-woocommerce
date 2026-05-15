@@ -2,7 +2,7 @@
 /**
  * Email de actualización de estado al cliente - texto plano.
  *
- * @package WC_APG_Withdrawal
+ * @package APG_Withdrawal_For_WooCommerce
  * @var string   $email_heading
  * @var string   $additional_content
  * @var array    $data
@@ -16,23 +16,23 @@ defined( 'ABSPATH' ) || exit;
 echo '= ' . esc_html( $email_heading ) . " =\n\n";
 
 $apg_withdrawal_status_messages = array(
-	'accepted'  => __( 'We are pleased to inform you that your withdrawal request has been accepted. We will contact you with instructions for returning the product.', 'wc-apg-withdrawal' ),
-	'rejected'  => __( 'After reviewing your request, we regret to inform you that it has been rejected due to the legally applicable exceptions for this type of product or service.', 'wc-apg-withdrawal' ),
-	'completed' => __( 'We are writing to confirm that the processing of your withdrawal request has been completed and the applicable refund has been arranged.', 'wc-apg-withdrawal' ),
+	'accepted'  => __( 'We are pleased to inform you that your withdrawal request has been accepted. We will contact you with instructions for returning the product.', 'apg-withdrawal-for-woocommerce' ),
+	'rejected'  => __( 'After reviewing your request, we regret to inform you that it has been rejected due to the legally applicable exceptions for this type of product or service.', 'apg-withdrawal-for-woocommerce' ),
+	'completed' => __( 'We are writing to confirm that the processing of your withdrawal request has been completed and the applicable refund has been arranged.', 'apg-withdrawal-for-woocommerce' ),
 );
 
 $apg_withdrawal_status_message = $apg_withdrawal_status_messages[ $data['status'] ?? '' ] ?? '';
 
 /* translators: %s customer name */
-printf( esc_html__( 'Hello %s,', 'wc-apg-withdrawal' ), esc_html( $data['name'] ?? '' ) );
+printf( esc_html__( 'Hello %s,', 'apg-withdrawal-for-woocommerce' ), esc_html( $data['name'] ?? '' ) );
 echo "\n\n";
 
-echo esc_html__( 'We are writing to inform you of an update to your withdrawal request.', 'wc-apg-withdrawal' ) . "\n\n";
+echo esc_html__( 'We are writing to inform you of an update to your withdrawal request.', 'apg-withdrawal-for-woocommerce' ) . "\n\n";
 
 echo esc_html( str_repeat( '-', 40 ) ) . "\n";
-printf( esc_html__( 'Request number', 'wc-apg-withdrawal' ) . ': #%d' . "\n", absint( $data['post_id'] ?? 0 ) );
-printf( esc_html__( 'Order', 'wc-apg-withdrawal' ) . ': %s' . "\n", esc_html( $data['order_ref'] ?? '' ) );
-printf( esc_html__( 'New status', 'wc-apg-withdrawal' ) . ': %s' . "\n", esc_html( $data['status_label'] ?? '' ) );
+printf( esc_html__( 'Request number', 'apg-withdrawal-for-woocommerce' ) . ': #%d' . "\n", absint( $data['post_id'] ?? 0 ) );
+printf( esc_html__( 'Order', 'apg-withdrawal-for-woocommerce' ) . ': %s' . "\n", esc_html( $data['order_ref'] ?? '' ) );
+printf( esc_html__( 'New status', 'apg-withdrawal-for-woocommerce' ) . ': %s' . "\n", esc_html( $data['status_label'] ?? '' ) );
 echo esc_html( str_repeat( '-', 40 ) ) . "\n\n";
 
 if ( $apg_withdrawal_status_message ) {

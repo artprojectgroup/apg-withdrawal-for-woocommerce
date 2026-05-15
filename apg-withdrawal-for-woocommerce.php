@@ -1,9 +1,9 @@
 <?php
 /*
-Plugin Name: WC - APG Withdrawal
+Plugin Name: APG Withdrawal for WooCommerce
 Requires Plugins: woocommerce
 Version: 0.1.0
-Plugin URI: https://wordpress.org/plugins/wc-apg-withdrawal/
+Plugin URI: https://wordpress.org/plugins/apg-withdrawal-for-woocommerce/
 Description: Add to WooCommerce an online withdrawal workflow compliant with EU requirements.
 Author URI: https://artprojectgroup.es/
 Author: Art Project Group
@@ -15,10 +15,10 @@ Requires PHP: 7.4
 WC requires at least: 7.0
 WC tested up to: 10.8.0
 
-Text Domain: wc-apg-withdrawal
+Text Domain: apg-withdrawal-for-woocommerce
 Domain Path: /languages
 
-@package WC_APG_Withdrawal
+@package APG_Withdrawal_For_WooCommerce
 @category Core
 @author Art Project Group
 */
@@ -128,17 +128,17 @@ if ( is_plugin_active( 'woocommerce/woocommerce.php' ) || is_network_only_plugin
 		public function apg_withdrawal_admin_menu() {
 			add_submenu_page(
 				'woocommerce',
-				esc_attr__( 'Withdrawals', 'wc-apg-withdrawal' ),
-				esc_attr__( 'Withdrawals', 'wc-apg-withdrawal' ),
+				esc_attr__( 'Withdrawals', 'apg-withdrawal-for-woocommerce' ),
+				esc_attr__( 'Withdrawals', 'apg-withdrawal-for-woocommerce' ),
 				'manage_woocommerce',
 				'edit.php?post_type=apg_withdrawal'
 			);
 			add_submenu_page(
 				'woocommerce',
-				esc_attr__( 'APG Withdrawal', 'wc-apg-withdrawal' ),
-				esc_attr__( 'Withdrawal', 'wc-apg-withdrawal' ),
+				esc_attr__( 'APG Withdrawal', 'apg-withdrawal-for-woocommerce' ),
+				esc_attr__( 'Withdrawal', 'apg-withdrawal-for-woocommerce' ),
 				'manage_woocommerce',
-				'wc-apg-withdrawal',
+				'apg-withdrawal-for-woocommerce',
 				array( $this, 'apg_withdrawal_tab' )
 			);
 			add_filter(
@@ -164,7 +164,7 @@ if ( is_plugin_active( 'woocommerce/woocommerce.php' ) || is_network_only_plugin
 		 * @return array<int,string> Screen IDs with the withdrawal settings page added.
 		 */
 		public function apg_withdrawal_screen_id( $woocommerce_screen_ids ) {
-			$woocommerce_screen_ids[] = 'woocommerce_page_wc-apg-withdrawal';
+			$woocommerce_screen_ids[] = 'woocommerce_page_apg-withdrawal-for-woocommerce';
 
 			return $woocommerce_screen_ids;
 		}
@@ -211,14 +211,14 @@ if ( is_plugin_active( 'woocommerce/woocommerce.php' ) || is_network_only_plugin
 		 */
 		public function apg_withdrawal_registra_cpt() {
 			$labels = array(
-				'name'          => esc_html__( 'Withdrawals', 'wc-apg-withdrawal' ),
-				'singular_name' => esc_html__( 'Withdrawal', 'wc-apg-withdrawal' ),
-				'menu_name'     => esc_html__( 'Withdrawals', 'wc-apg-withdrawal' ),
-				'all_items'     => esc_html__( 'Withdrawals', 'wc-apg-withdrawal' ),
-				'add_new_item'  => esc_html__( 'Add withdrawal', 'wc-apg-withdrawal' ),
-				'edit_item'     => esc_html__( 'Edit withdrawal', 'wc-apg-withdrawal' ),
-				'view_item'     => esc_html__( 'View withdrawal', 'wc-apg-withdrawal' ),
-				'search_items'  => esc_html__( 'Search withdrawals', 'wc-apg-withdrawal' ),
+				'name'          => esc_html__( 'Withdrawals', 'apg-withdrawal-for-woocommerce' ),
+				'singular_name' => esc_html__( 'Withdrawal', 'apg-withdrawal-for-woocommerce' ),
+				'menu_name'     => esc_html__( 'Withdrawals', 'apg-withdrawal-for-woocommerce' ),
+				'all_items'     => esc_html__( 'Withdrawals', 'apg-withdrawal-for-woocommerce' ),
+				'add_new_item'  => esc_html__( 'Add withdrawal', 'apg-withdrawal-for-woocommerce' ),
+				'edit_item'     => esc_html__( 'Edit withdrawal', 'apg-withdrawal-for-woocommerce' ),
+				'view_item'     => esc_html__( 'View withdrawal', 'apg-withdrawal-for-woocommerce' ),
+				'search_items'  => esc_html__( 'Search withdrawals', 'apg-withdrawal-for-woocommerce' ),
 			);
 
 			register_post_type(
@@ -276,7 +276,7 @@ if ( is_plugin_active( 'woocommerce/woocommerce.php' ) || is_network_only_plugin
 				unset( $items['customer-logout'] );
 			}
 
-			$items['withdrawal'] = esc_html__( 'Withdrawal', 'wc-apg-withdrawal' );
+			$items['withdrawal'] = esc_html__( 'Withdrawal', 'apg-withdrawal-for-woocommerce' );
 
 			return array_merge( $items, $logout );
 		}
@@ -327,12 +327,12 @@ if ( is_plugin_active( 'woocommerce/woocommerce.php' ) || is_network_only_plugin
 				$this->apg_withdrawal_has_expired_action = true;
 				$actions['apg_withdrawal_expired'] = array(
 					'url'  => $url,
-					'name' => esc_html__( 'Withdrawal request *', 'wc-apg-withdrawal' ),
+					'name' => esc_html__( 'Withdrawal request *', 'apg-withdrawal-for-woocommerce' ),
 				);
 			} else {
 				$actions['apg_withdrawal'] = array(
 					'url'  => $url,
-					'name' => esc_html__( 'Withdrawal request', 'wc-apg-withdrawal' ),
+					'name' => esc_html__( 'Withdrawal request', 'apg-withdrawal-for-woocommerce' ),
 				);
 			}
 
@@ -351,7 +351,7 @@ if ( is_plugin_active( 'woocommerce/woocommerce.php' ) || is_network_only_plugin
 			}
 			?>
 <p class="apg-withdrawal-orders-expired-note">
-    <?php esc_html_e( '* The standard withdrawal period for this order may have expired. You may still submit a request and it will be reviewed by the store.', 'wc-apg-withdrawal' ); ?>
+    <?php esc_html_e( '* The standard withdrawal period for this order may have expired. You may still submit a request and it will be reviewed by the store.', 'apg-withdrawal-for-woocommerce' ); ?>
 </p>
 <?php
 		}
@@ -387,7 +387,7 @@ if ( is_plugin_active( 'woocommerce/woocommerce.php' ) || is_network_only_plugin
 				return;
 			}
 
-			$is_plugin_screen = false !== strpos( $screen->id, 'wc-apg-withdrawal' );
+			$is_plugin_screen = false !== strpos( $screen->id, 'apg-withdrawal-for-woocommerce' );
 			$is_plugin_cpt    = 'apg_withdrawal' === $screen->post_type;
 			$is_order_screen  = 'shop_order' === $screen->post_type
 								|| in_array( $screen->id, array( 'woocommerce_page_wc-orders', 'edit-shop_order' ), true );
@@ -463,7 +463,7 @@ if ( is_plugin_active( 'woocommerce/woocommerce.php' ) || is_network_only_plugin
 			'grace_days'               => '0',
 			'withdrawal_days'          => '14',
 			'deadline_source'          => 'completed',
-			'button_text'              => __( 'Confirm withdrawal', 'wc-apg-withdrawal' ),
+			'button_text'              => __( 'Confirm withdrawal', 'apg-withdrawal-for-woocommerce' ),
 			'delete_data_on_uninstall' => '1',
 			'order_status_map'         => array(
 				'accepted'  => array(),

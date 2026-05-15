@@ -2,7 +2,7 @@
 /**
  * Helpers WooCommerce.
  *
- * @package WC_APG_Withdrawal
+ * @package APG_Withdrawal_For_WooCommerce
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -82,7 +82,7 @@ function apg_withdrawal_get_order_products( $order ) {
 	foreach ( $order->get_items() as $item_id => $item ) {
 		$products[ (string) $item_id ] = sprintf(
 			/* translators: 1: product name, 2: quantity. */
-			__( '%1$s x %2$d', 'wc-apg-withdrawal' ),
+			__( '%1$s x %2$d', 'apg-withdrawal-for-woocommerce' ),
 			$item->get_name(),
 			$item->get_quantity()
 		);
@@ -326,12 +326,12 @@ function apg_withdrawal_add_order_note( $order, $post_id, $scope, $details ) {
 		return;
 	}
 
-	$scope_label = 'partial' === $scope ? __( 'Specific products only', 'wc-apg-withdrawal' ) : __( 'Full order', 'wc-apg-withdrawal' );
+	$scope_label = 'partial' === $scope ? __( 'Specific products only', 'apg-withdrawal-for-woocommerce' ) : __( 'Full order', 'apg-withdrawal-for-woocommerce' );
 
 	$order->add_order_note(
 		sprintf(
 			/* translators: 1: scope label, 2: log id. */
-			__( 'Withdrawal request received (%1$s). Log ID: #%2$d', 'wc-apg-withdrawal' ),
+			__( 'Withdrawal request received (%1$s). Log ID: #%2$d', 'apg-withdrawal-for-woocommerce' ),
 			$scope_label,
 			$post_id
 		),
@@ -343,7 +343,7 @@ function apg_withdrawal_add_order_note( $order, $post_id, $scope, $details ) {
 		$order->add_order_note(
 			sprintf(
 				/* translators: %s customer details. */
-				__( 'Withdrawal details: %s', 'wc-apg-withdrawal' ),
+				__( 'Withdrawal details: %s', 'apg-withdrawal-for-woocommerce' ),
 				$details
 			),
 			0,
@@ -377,9 +377,9 @@ function apg_withdrawal_maybe_create_page() {
 
 	$page_id = wp_insert_post(
 		array(
-			'post_title'   => __( 'Withdrawal', 'wc-apg-withdrawal' ),
+			'post_title'   => __( 'Withdrawal', 'apg-withdrawal-for-woocommerce' ),
 			'post_name'    => 'withdrawal-form',
-			'post_content' => '<!-- wp:paragraph --><p>' . esc_html__( 'Use this page to exercise your right of withdrawal for WooCommerce orders.', 'wc-apg-withdrawal' ) . '</p><!-- /wp:paragraph --><!-- wp:shortcode -->[apg_withdrawal_form]<!-- /wp:shortcode -->',
+			'post_content' => '<!-- wp:paragraph --><p>' . esc_html__( 'Use this page to exercise your right of withdrawal for WooCommerce orders.', 'apg-withdrawal-for-woocommerce' ) . '</p><!-- /wp:paragraph --><!-- wp:shortcode -->[apg_withdrawal_form]<!-- /wp:shortcode -->',
 			'post_status'  => 'publish',
 			'post_type'    => 'page',
 		),

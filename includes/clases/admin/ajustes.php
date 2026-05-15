@@ -2,7 +2,7 @@
 /**
  * Placeholder para lógica admin de ajustes.
  *
- * @package WC_APG_Withdrawal
+ * @package APG_Withdrawal_For_WooCommerce
  */
 
 defined( 'ABSPATH' ) || exit;

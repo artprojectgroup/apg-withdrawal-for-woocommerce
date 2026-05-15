@@ -2,7 +2,7 @@
 /**
  * Procesamiento de solicitudes.
  *
- * @package WC_APG_Withdrawal
+ * @package APG_Withdrawal_For_WooCommerce
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -68,7 +68,7 @@ function apg_withdrawal_process_submission_data( $data ) {
 			'post_status' => 'publish',
 			'post_title'  => sprintf(
 				/* translators: 1: order number, 2: customer name. */
-				__( 'Withdrawal request %1$s - %2$s', 'wc-apg-withdrawal' ),
+				__( 'Withdrawal request %1$s - %2$s', 'apg-withdrawal-for-woocommerce' ),
 				$order_ref
 				,
 				$name

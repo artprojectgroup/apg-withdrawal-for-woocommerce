@@ -1,4 +1,4 @@
-=== WC - APG Withdrawal ===
+=== APG Withdrawal for WooCommerce ===
 Contributors: artprojectgroup
 Donate link: https://artprojectgroup.es/tienda/donacion
 Tags: withdrawal, right of withdrawal, woocommerce, refund, consumer rights
@@ -14,7 +14,7 @@ License URI: https://www.gnu.org/licenses/gpl-3.0.html
 Add to WooCommerce an online withdrawal workflow with customer form, My Account integration and admin request log.
 
 == Description ==
-**WC - APG Withdrawal** adds to your WooCommerce store a complete online right of withdrawal workflow compliant with EU consumer protection legislation.
+**APG Withdrawal for WooCommerce** adds to your WooCommerce store a complete online right of withdrawal workflow compliant with EU consumer protection legislation.
 
 = Features =
 * Customer withdrawal form via the `[apg_withdrawal_form]` shortcode.
@@ -36,13 +36,13 @@ Add to WooCommerce an online withdrawal workflow with customer form, My Account 
 * Spanish: by [Art Project Group](https://artprojectgroup.es/).
 
 = More information =
-You can learn more about **WC - APG Withdrawal** on our [official website](https://artprojectgroup.es/plugins-para-woocommerce/wc-apg-withdrawal), and follow the development on [GitHub](https://github.com/artprojectgroup/wc-apg-withdrawal).
+You can learn more about **APG Withdrawal for WooCommerce** on our [official website](https://artprojectgroup.es/plugins-para-woocommerce/apg-withdrawal-for-woocommerce), and follow the development on [GitHub](https://github.com/artprojectgroup/apg-withdrawal-for-woocommerce).
 
 == Installation ==
 1. Install the plugin in one of the following ways:
- * Upload the `wc-apg-withdrawal` folder to the `/wp-content/plugins/` directory via FTP.
+ * Upload the `apg-withdrawal-for-woocommerce` folder to the `/wp-content/plugins/` directory via FTP.
  * Upload the full ZIP file via *Plugins -> Add New -> Upload* in the WordPress administration panel.
- * Search for **WC - APG Withdrawal** in *Plugins -> Add New* and click *Install Now*.
+ * Search for **APG Withdrawal for WooCommerce** in *Plugins -> Add New* and click *Install Now*.
 2. Activate the plugin through the *Plugins* menu in the WordPress administration panel.
 3. Configure the plugin in *WooCommerce -> Withdrawal* or through the *Settings* link on the plugins page.
 4. Add the `[apg_withdrawal_form]` shortcode to the page configured as the withdrawal page in the settings.
@@ -58,7 +58,7 @@ Yes. The plugin is fully compatible with WooCommerce High-Performance Order Stor
 Yes. The form supports both logged-in customers (with pre-filled data and order selector) and guests (with email lookup of their orders).
 
 = Where can I get support? =
-**WC - APG Withdrawal** is a free plugin. **Art Project Group** does not provide free technical support, but offers a paid [technical support](https://artprojectgroup.es/tienda/ticket-de-soporte) service for installation and configuration.
+**APG Withdrawal for WooCommerce** is a free plugin. **Art Project Group** does not provide free technical support, but offers a paid [technical support](https://artprojectgroup.es/tienda/ticket-de-soporte) service for installation and configuration.
 
 == Screenshots ==
 1. Plugin settings.

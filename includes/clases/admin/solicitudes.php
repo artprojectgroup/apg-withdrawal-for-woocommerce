@@ -2,7 +2,7 @@
 /**
  * Placeholder para lógica admin de solicitudes.
  *
- * @package WC_APG_Withdrawal
+ * @package APG_Withdrawal_For_WooCommerce
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -16,13 +16,13 @@ defined( 'ABSPATH' ) || exit;
 function apg_withdrawal_admin_columns( $columns ) {
 	$new_columns = array(
 		'cb'                     => isset( $columns['cb'] ) ? $columns['cb'] : '',
-		'title'                  => __( 'Reference', 'wc-apg-withdrawal' ),
-		'apg_withdrawal_name'    => __( 'Customer', 'wc-apg-withdrawal' ),
-		'apg_withdrawal_email'   => __( 'Email', 'wc-apg-withdrawal' ),
-		'apg_withdrawal_order'   => __( 'Order', 'wc-apg-withdrawal' ),
-		'apg_withdrawal_scope'   => __( 'Scope', 'wc-apg-withdrawal' ),
-		'apg_withdrawal_status'  => __( 'Status', 'wc-apg-withdrawal' ),
-		'date'                   => __( 'Date', 'wc-apg-withdrawal' ),
+		'title'                  => __( 'Reference', 'apg-withdrawal-for-woocommerce' ),
+		'apg_withdrawal_name'    => __( 'Customer', 'apg-withdrawal-for-woocommerce' ),
+		'apg_withdrawal_email'   => __( 'Email', 'apg-withdrawal-for-woocommerce' ),
+		'apg_withdrawal_order'   => __( 'Order', 'apg-withdrawal-for-woocommerce' ),
+		'apg_withdrawal_scope'   => __( 'Scope', 'apg-withdrawal-for-woocommerce' ),
+		'apg_withdrawal_status'  => __( 'Status', 'apg-withdrawal-for-woocommerce' ),
+		'date'                   => __( 'Date', 'apg-withdrawal-for-woocommerce' ),
 	);
 
 	return $new_columns;
@@ -60,15 +60,15 @@ function apg_withdrawal_admin_column_content( $column, $post_id ) {
 			}
 			break;
 		case 'apg_withdrawal_scope':
-			echo esc_html( 'partial' === get_post_meta( $post_id, '_apg_withdrawal_scope', true ) ? __( 'Specific products only', 'wc-apg-withdrawal' ) : __( 'Full order', 'wc-apg-withdrawal' ) );
+			echo esc_html( 'partial' === get_post_meta( $post_id, '_apg_withdrawal_scope', true ) ? __( 'Specific products only', 'apg-withdrawal-for-woocommerce' ) : __( 'Full order', 'apg-withdrawal-for-woocommerce' ) );
 			break;
 		case 'apg_withdrawal_status':
 			$status = get_post_meta( $post_id, '_apg_withdrawal_status', true );
 			$labels = array(
-				'pending'   => __( 'Pending', 'wc-apg-withdrawal' ),
-				'accepted'  => __( 'Accepted', 'wc-apg-withdrawal' ),
-				'rejected'  => __( 'Rejected', 'wc-apg-withdrawal' ),
-				'completed' => __( 'Completed', 'wc-apg-withdrawal' ),
+				'pending'   => __( 'Pending', 'apg-withdrawal-for-woocommerce' ),
+				'accepted'  => __( 'Accepted', 'apg-withdrawal-for-woocommerce' ),
+				'rejected'  => __( 'Rejected', 'apg-withdrawal-for-woocommerce' ),
+				'completed' => __( 'Completed', 'apg-withdrawal-for-woocommerce' ),
 			);
 			printf( '<span class="apg-status apg-status-%1$s">%2$s</span>', esc_attr( $status ? $status : 'pending' ), esc_html( isset( $labels[ $status ] ) ? $labels[ $status ] : $labels['pending'] ) );
 			break;
@@ -82,8 +82,8 @@ add_action( 'manage_apg_withdrawal_posts_custom_column', 'apg_withdrawal_admin_c
  * @return void
  */
 function apg_withdrawal_add_metaboxes() {
-	add_meta_box( 'apg_withdrawal_details', __( 'Withdrawal details', 'wc-apg-withdrawal' ), 'apg_withdrawal_render_details_metabox', 'apg_withdrawal', 'normal', 'high' );
-	add_meta_box( 'apg_withdrawal_status', __( 'Status', 'wc-apg-withdrawal' ), 'apg_withdrawal_render_status_metabox', 'apg_withdrawal', 'side', 'high' );
+	add_meta_box( 'apg_withdrawal_details', __( 'Withdrawal details', 'apg-withdrawal-for-woocommerce' ), 'apg_withdrawal_render_details_metabox', 'apg_withdrawal', 'normal', 'high' );
+	add_meta_box( 'apg_withdrawal_status', __( 'Status', 'apg-withdrawal-for-woocommerce' ), 'apg_withdrawal_render_status_metabox', 'apg_withdrawal', 'side', 'high' );
 }
 add_action( 'add_meta_boxes', 'apg_withdrawal_add_metaboxes' );
 
@@ -95,21 +95,21 @@ add_action( 'add_meta_boxes', 'apg_withdrawal_add_metaboxes' );
  */
 function apg_withdrawal_render_details_metabox( $post ) {
 	$fields = array(
-		'_apg_withdrawal_name'            => __( 'Customer', 'wc-apg-withdrawal' ),
-		'_apg_withdrawal_email'           => __( 'Email', 'wc-apg-withdrawal' ),
-		'_apg_withdrawal_phone'           => __( 'Phone', 'wc-apg-withdrawal' ),
-		'_apg_withdrawal_order'           => __( 'Order', 'wc-apg-withdrawal' ),
-		'_apg_withdrawal_scope'           => __( 'Scope', 'wc-apg-withdrawal' ),
-		'_apg_withdrawal_deadline_source' => __( 'Deadline source', 'wc-apg-withdrawal' ),
-		'_apg_withdrawal_deadline_date'   => __( 'Base date', 'wc-apg-withdrawal' ),
-		'_apg_withdrawal_ip'              => __( 'IP', 'wc-apg-withdrawal' ),
-		'_apg_withdrawal_user_agent'      => __( 'User agent', 'wc-apg-withdrawal' ),
+		'_apg_withdrawal_name'            => __( 'Customer', 'apg-withdrawal-for-woocommerce' ),
+		'_apg_withdrawal_email'           => __( 'Email', 'apg-withdrawal-for-woocommerce' ),
+		'_apg_withdrawal_phone'           => __( 'Phone', 'apg-withdrawal-for-woocommerce' ),
+		'_apg_withdrawal_order'           => __( 'Order', 'apg-withdrawal-for-woocommerce' ),
+		'_apg_withdrawal_scope'           => __( 'Scope', 'apg-withdrawal-for-woocommerce' ),
+		'_apg_withdrawal_deadline_source' => __( 'Deadline source', 'apg-withdrawal-for-woocommerce' ),
+		'_apg_withdrawal_deadline_date'   => __( 'Base date', 'apg-withdrawal-for-woocommerce' ),
+		'_apg_withdrawal_ip'              => __( 'IP', 'apg-withdrawal-for-woocommerce' ),
+		'_apg_withdrawal_user_agent'      => __( 'User agent', 'apg-withdrawal-for-woocommerce' ),
 	);
 
 	$expired_warning = get_post_meta( $post->ID, '_apg_withdrawal_expired_warning', true );
 
 	if ( $expired_warning ) {
-		echo '<div class="notice notice-warning inline"><p>' . esc_html__( 'This request was submitted after the ordinary withdrawal period had expired.', 'wc-apg-withdrawal' ) . '</p></div>';
+		echo '<div class="notice notice-warning inline"><p>' . esc_html__( 'This request was submitted after the ordinary withdrawal period had expired.', 'apg-withdrawal-for-woocommerce' ) . '</p></div>';
 	}
 
 	echo '<table class="apg-withdrawal-meta-table"><tbody>';
@@ -118,7 +118,7 @@ function apg_withdrawal_render_details_metabox( $post ) {
 		$value = get_post_meta( $post->ID, $meta_key, true );
 
 		if ( '_apg_withdrawal_scope' === $meta_key ) {
-			$value = 'partial' === $value ? __( 'Specific products only', 'wc-apg-withdrawal' ) : __( 'Full order', 'wc-apg-withdrawal' );
+			$value = 'partial' === $value ? __( 'Specific products only', 'apg-withdrawal-for-woocommerce' ) : __( 'Full order', 'apg-withdrawal-for-woocommerce' );
 		}
 
 		printf( '<tr><th>%1$s</th><td>%2$s</td></tr>', esc_html( $label ), esc_html( $value ) );
@@ -127,7 +127,7 @@ function apg_withdrawal_render_details_metabox( $post ) {
 	echo '</tbody></table>';
 
 	if ( $post->post_content ) {
-		echo '<h4>' . esc_html__( 'Additional details', 'wc-apg-withdrawal' ) . '</h4>';
+		echo '<h4>' . esc_html__( 'Additional details', 'apg-withdrawal-for-woocommerce' ) . '</h4>';
 		echo '<div class="apg-withdrawal-details-box">' . wp_kses_post( wpautop( $post->post_content ) ) . '</div>';
 	}
 
@@ -137,28 +137,28 @@ function apg_withdrawal_render_details_metabox( $post ) {
 	$product_labels    = is_array( $selected_products ) ? apg_withdrawal_get_selected_product_labels( $order, $selected_products ) : array();
 
 	if ( $product_labels ) {
-		echo '<h4>' . esc_html__( 'Selected products', 'wc-apg-withdrawal' ) . '</h4>';
+		echo '<h4>' . esc_html__( 'Selected products', 'apg-withdrawal-for-woocommerce' ) . '</h4>';
 		echo '<div class="apg-withdrawal-details-box">' . esc_html( implode( ', ', $product_labels ) ) . '</div>';
 	}
 
 	$log = get_post_meta( $post->ID, '_apg_withdrawal_status_log', true );
 
 	if ( is_array( $log ) && ! empty( $log ) ) {
-		echo '<h4>' . esc_html__( 'Status history', 'wc-apg-withdrawal' ) . '</h4>';
+		echo '<h4>' . esc_html__( 'Status history', 'apg-withdrawal-for-woocommerce' ) . '</h4>';
 		echo '<table class="apg-withdrawal-meta-table apg-withdrawal-log-table"><thead>';
-		echo '<tr><th>' . esc_html__( 'Date', 'wc-apg-withdrawal' ) . '</th><th>' . esc_html__( 'User', 'wc-apg-withdrawal' ) . '</th><th>' . esc_html__( 'From', 'wc-apg-withdrawal' ) . '</th><th>' . esc_html__( 'To', 'wc-apg-withdrawal' ) . '</th></tr>';
+		echo '<tr><th>' . esc_html__( 'Date', 'apg-withdrawal-for-woocommerce' ) . '</th><th>' . esc_html__( 'User', 'apg-withdrawal-for-woocommerce' ) . '</th><th>' . esc_html__( 'From', 'apg-withdrawal-for-woocommerce' ) . '</th><th>' . esc_html__( 'To', 'apg-withdrawal-for-woocommerce' ) . '</th></tr>';
 		echo '</thead><tbody>';
 
 		$status_labels = array(
-			'pending'   => __( 'Pending', 'wc-apg-withdrawal' ),
-			'accepted'  => __( 'Accepted', 'wc-apg-withdrawal' ),
-			'rejected'  => __( 'Rejected', 'wc-apg-withdrawal' ),
-			'completed' => __( 'Completed', 'wc-apg-withdrawal' ),
+			'pending'   => __( 'Pending', 'apg-withdrawal-for-woocommerce' ),
+			'accepted'  => __( 'Accepted', 'apg-withdrawal-for-woocommerce' ),
+			'rejected'  => __( 'Rejected', 'apg-withdrawal-for-woocommerce' ),
+			'completed' => __( 'Completed', 'apg-withdrawal-for-woocommerce' ),
 		);
 
 		foreach ( $log as $entry ) {
 			$user      = isset( $entry['user_id'] ) ? get_userdata( absint( $entry['user_id'] ) ) : false;
-			$user_name = $user ? $user->display_name : __( 'System', 'wc-apg-withdrawal' );
+			$user_name = $user ? $user->display_name : __( 'System', 'apg-withdrawal-for-woocommerce' );
 			$from      = isset( $entry['from'] ) && isset( $status_labels[ $entry['from'] ] ) ? $status_labels[ $entry['from'] ] : esc_html( $entry['from'] ?? '' );
 			$to        = isset( $entry['to'] ) && isset( $status_labels[ $entry['to'] ] ) ? $status_labels[ $entry['to'] ] : esc_html( $entry['to'] ?? '' );
 			printf(
@@ -185,13 +185,13 @@ function apg_withdrawal_render_status_metabox( $post ) {
 
 	$current_status = get_post_meta( $post->ID, '_apg_withdrawal_status', true );
 	$statuses       = array(
-		'pending'   => __( 'Pending', 'wc-apg-withdrawal' ),
-		'accepted'  => __( 'Accepted', 'wc-apg-withdrawal' ),
-		'rejected'  => __( 'Rejected', 'wc-apg-withdrawal' ),
-		'completed' => __( 'Completed', 'wc-apg-withdrawal' ),
+		'pending'   => __( 'Pending', 'apg-withdrawal-for-woocommerce' ),
+		'accepted'  => __( 'Accepted', 'apg-withdrawal-for-woocommerce' ),
+		'rejected'  => __( 'Rejected', 'apg-withdrawal-for-woocommerce' ),
+		'completed' => __( 'Completed', 'apg-withdrawal-for-woocommerce' ),
 	);
 
-	echo '<p><label for="apg_withdrawal_status_field"><strong>' . esc_html__( 'Set status', 'wc-apg-withdrawal' ) . '</strong></label></p>';
+	echo '<p><label for="apg_withdrawal_status_field"><strong>' . esc_html__( 'Set status', 'apg-withdrawal-for-woocommerce' ) . '</strong></label></p>';
 	echo '<select id="apg_withdrawal_status_field" name="apg_withdrawal_status_field" style="width:100%;">';
 
 	foreach ( $statuses as $key => $label ) {
@@ -239,11 +239,11 @@ add_action( 'save_post_apg_withdrawal', 'apg_withdrawal_save_status' );
  */
 function apg_withdrawal_export_csv() {
 	if ( ! current_user_can( 'manage_woocommerce' ) ) {
-		wp_die( esc_html__( 'You do not have permission to export withdrawal requests.', 'wc-apg-withdrawal' ) );
+		wp_die( esc_html__( 'You do not have permission to export withdrawal requests.', 'apg-withdrawal-for-woocommerce' ) );
 	}
 
 	if ( ! isset( $_GET['apg_withdrawal_export_nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_GET['apg_withdrawal_export_nonce'] ) ), 'apg_withdrawal_export' ) ) {
-		wp_die( esc_html__( 'Security check failed.', 'wc-apg-withdrawal' ) );
+		wp_die( esc_html__( 'Security check failed.', 'apg-withdrawal-for-woocommerce' ) );
 	}
 
 	$posts = get_posts(
@@ -257,10 +257,10 @@ function apg_withdrawal_export_csv() {
 	);
 
 	$status_labels = array(
-		'pending'   => __( 'Pending', 'wc-apg-withdrawal' ),
-		'accepted'  => __( 'Accepted', 'wc-apg-withdrawal' ),
-		'rejected'  => __( 'Rejected', 'wc-apg-withdrawal' ),
-		'completed' => __( 'Completed', 'wc-apg-withdrawal' ),
+		'pending'   => __( 'Pending', 'apg-withdrawal-for-woocommerce' ),
+		'accepted'  => __( 'Accepted', 'apg-withdrawal-for-woocommerce' ),
+		'rejected'  => __( 'Rejected', 'apg-withdrawal-for-woocommerce' ),
+		'completed' => __( 'Completed', 'apg-withdrawal-for-woocommerce' ),
 	);
 
 	header( 'Content-Type: text/csv; charset=UTF-8' );
@@ -275,19 +275,19 @@ function apg_withdrawal_export_csv() {
 	fputcsv(
 		$output,
 		array(
-			__( 'ID', 'wc-apg-withdrawal' ),
-			__( 'Date', 'wc-apg-withdrawal' ),
-			__( 'Customer', 'wc-apg-withdrawal' ),
-			__( 'Email', 'wc-apg-withdrawal' ),
-			__( 'Phone', 'wc-apg-withdrawal' ),
-			__( 'Order', 'wc-apg-withdrawal' ),
-			__( 'Scope', 'wc-apg-withdrawal' ),
-			__( 'Status', 'wc-apg-withdrawal' ),
-			__( 'Expired warning', 'wc-apg-withdrawal' ),
-			__( 'IP', 'wc-apg-withdrawal' ),
-			__( 'User agent', 'wc-apg-withdrawal' ),
-			__( 'Details', 'wc-apg-withdrawal' ),
-			__( 'Products', 'wc-apg-withdrawal' ),
+			__( 'ID', 'apg-withdrawal-for-woocommerce' ),
+			__( 'Date', 'apg-withdrawal-for-woocommerce' ),
+			__( 'Customer', 'apg-withdrawal-for-woocommerce' ),
+			__( 'Email', 'apg-withdrawal-for-woocommerce' ),
+			__( 'Phone', 'apg-withdrawal-for-woocommerce' ),
+			__( 'Order', 'apg-withdrawal-for-woocommerce' ),
+			__( 'Scope', 'apg-withdrawal-for-woocommerce' ),
+			__( 'Status', 'apg-withdrawal-for-woocommerce' ),
+			__( 'Expired warning', 'apg-withdrawal-for-woocommerce' ),
+			__( 'IP', 'apg-withdrawal-for-woocommerce' ),
+			__( 'User agent', 'apg-withdrawal-for-woocommerce' ),
+			__( 'Details', 'apg-withdrawal-for-woocommerce' ),
+			__( 'Products', 'apg-withdrawal-for-woocommerce' ),
 		),
 		',',
 		'"',
@@ -314,7 +314,7 @@ function apg_withdrawal_export_csv() {
 						if ( in_array( (string) $item_id, array_map( 'strval', $stored_items ), true ) ) {
 							$labels[] = sprintf(
 								/* translators: 1: product name, 2: quantity. */
-								__( '%1$s x %2$d', 'wc-apg-withdrawal' ),
+								__( '%1$s x %2$d', 'apg-withdrawal-for-woocommerce' ),
 								$item->get_name(),
 								$item->get_quantity()
 							);
@@ -335,9 +335,9 @@ function apg_withdrawal_export_csv() {
 				get_post_meta( $post->ID, '_apg_withdrawal_email', true ),
 				get_post_meta( $post->ID, '_apg_withdrawal_phone', true ),
 				get_post_meta( $post->ID, '_apg_withdrawal_order', true ),
-				'partial' === $scope ? __( 'Specific products only', 'wc-apg-withdrawal' ) : __( 'Full order', 'wc-apg-withdrawal' ),
+				'partial' === $scope ? __( 'Specific products only', 'apg-withdrawal-for-woocommerce' ) : __( 'Full order', 'apg-withdrawal-for-woocommerce' ),
 				isset( $status_labels[ $status ] ) ? $status_labels[ $status ] : $status,
-				$expired ? __( 'Yes', 'wc-apg-withdrawal' ) : __( 'No', 'wc-apg-withdrawal' ),
+				$expired ? __( 'Yes', 'apg-withdrawal-for-woocommerce' ) : __( 'No', 'apg-withdrawal-for-woocommerce' ),
 				get_post_meta( $post->ID, '_apg_withdrawal_ip', true ),
 				get_post_meta( $post->ID, '_apg_withdrawal_user_agent', true ),
 				$post->post_content,
@@ -375,7 +375,7 @@ function apg_withdrawal_list_export_link() {
 	printf(
 		'<div class="apg-withdrawal-export-wrap"><a href="%1$s" class="button">%2$s</a></div>',
 		esc_url( $url ),
-		esc_html__( 'Export CSV', 'wc-apg-withdrawal' )
+		esc_html__( 'Export CSV', 'apg-withdrawal-for-woocommerce' )
 	);
 }
 add_action( 'manage_posts_extra_tablenav', 'apg_withdrawal_list_export_link' );

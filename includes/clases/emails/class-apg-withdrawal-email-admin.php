@@ -2,7 +2,7 @@
 /**
  * Email de notificación al administrador.
  *
- * @package WC_APG_Withdrawal
+ * @package APG_Withdrawal_For_WooCommerce
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -20,8 +20,8 @@ if ( ! class_exists( 'APG_Withdrawal_Email_Admin', false ) ) :
 		public function __construct() {
 			$this->id             = 'apg_withdrawal_admin';
 			$this->customer_email = false;
-			$this->title          = __( 'New withdrawal request (admin)', 'wc-apg-withdrawal' );
-			$this->description    = __( 'Sent to the store administrator when a new withdrawal request is submitted.', 'wc-apg-withdrawal' );
+			$this->title          = __( 'New withdrawal request (admin)', 'apg-withdrawal-for-woocommerce' );
+			$this->description    = __( 'Sent to the store administrator when a new withdrawal request is submitted.', 'apg-withdrawal-for-woocommerce' );
 			$this->template_html  = 'emails/apg-withdrawal-admin.php';
 			$this->template_plain = 'emails/plain/apg-withdrawal-admin.php';
 			$this->template_base  = apg_withdrawal_PLUGIN_DIR . 'templates/';
@@ -46,7 +46,7 @@ if ( ! class_exists( 'APG_Withdrawal_Email_Admin', false ) ) :
 			return sprintf(
 				/* translators: %s email heading. */
 				'[{site_title}] %s #{order_number}',
-				__( 'New withdrawal request for order', 'wc-apg-withdrawal' )
+				__( 'New withdrawal request for order', 'apg-withdrawal-for-woocommerce' )
 			);
 		}
 
@@ -56,7 +56,7 @@ if ( ! class_exists( 'APG_Withdrawal_Email_Admin', false ) ) :
 		 * @return string Default heading string.
 		 */
 		public function get_default_heading() {
-			return __( 'New withdrawal request', 'wc-apg-withdrawal' );
+			return __( 'New withdrawal request', 'apg-withdrawal-for-woocommerce' );
 		}
 
 		/**

@@ -2,7 +2,7 @@
 /**
  * Email de actualización de estado al cliente.
  *
- * @package WC_APG_Withdrawal
+ * @package APG_Withdrawal_For_WooCommerce
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -23,8 +23,8 @@ if ( ! class_exists( 'APG_Withdrawal_Email_Status', false ) ) :
 		public function __construct() {
 			$this->id             = 'apg_withdrawal_status';
 			$this->customer_email = true;
-			$this->title          = __( 'Withdrawal request status update (customer)', 'wc-apg-withdrawal' );
-			$this->description    = __( 'Sent to the customer when the status of their withdrawal request changes.', 'wc-apg-withdrawal' );
+			$this->title          = __( 'Withdrawal request status update (customer)', 'apg-withdrawal-for-woocommerce' );
+			$this->description    = __( 'Sent to the customer when the status of their withdrawal request changes.', 'apg-withdrawal-for-woocommerce' );
 			$this->template_html  = 'emails/apg-withdrawal-status.php';
 			$this->template_plain = 'emails/plain/apg-withdrawal-status.php';
 			$this->template_base  = apg_withdrawal_PLUGIN_DIR . 'templates/';
@@ -46,7 +46,7 @@ if ( ! class_exists( 'APG_Withdrawal_Email_Status', false ) ) :
 			return sprintf(
 				/* translators: %s email heading. */
 				'[{site_title}] %s',
-				__( 'Update on your withdrawal request #{order_number}', 'wc-apg-withdrawal' )
+				__( 'Update on your withdrawal request #{order_number}', 'apg-withdrawal-for-woocommerce' )
 			);
 		}
 
@@ -56,7 +56,7 @@ if ( ! class_exists( 'APG_Withdrawal_Email_Status', false ) ) :
 		 * @return string Default heading string.
 		 */
 		public function get_default_heading() {
-			return __( 'Withdrawal request update', 'wc-apg-withdrawal' );
+			return __( 'Withdrawal request update', 'apg-withdrawal-for-woocommerce' );
 		}
 
 		/**
@@ -67,10 +67,10 @@ if ( ! class_exists( 'APG_Withdrawal_Email_Status', false ) ) :
 		 */
 		public function get_status_label( $status ) {
 			$labels = array(
-				'pending'   => __( 'Pending', 'wc-apg-withdrawal' ),
-				'accepted'  => __( 'Accepted', 'wc-apg-withdrawal' ),
-				'rejected'  => __( 'Rejected', 'wc-apg-withdrawal' ),
-				'completed' => __( 'Completed', 'wc-apg-withdrawal' ),
+				'pending'   => __( 'Pending', 'apg-withdrawal-for-woocommerce' ),
+				'accepted'  => __( 'Accepted', 'apg-withdrawal-for-woocommerce' ),
+				'rejected'  => __( 'Rejected', 'apg-withdrawal-for-woocommerce' ),
+				'completed' => __( 'Completed', 'apg-withdrawal-for-woocommerce' ),
 			);
 			return isset( $labels[ $status ] ) ? $labels[ $status ] : $status;
 		}
