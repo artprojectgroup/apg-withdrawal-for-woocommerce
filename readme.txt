@@ -61,10 +61,12 @@ Yes. The form supports both logged-in customers (with pre-filled data and order 
 **APG Withdrawal for WooCommerce** is a free plugin. **Art Project Group** does not provide free technical support, but offers a paid [technical support](https://artprojectgroup.es/tienda/ticket-de-soporte) service for installation and configuration.
 
 == Screenshots ==
-1. Plugin settings.
-2. Customer withdrawal form.
-3. Admin request log.
-4. My Account integration.
+1. Plugin settings page with general options, automation rules and customer email notifications.
+2. Customer withdrawal form on the public page (guest checkout).
+3. Withdrawal form integrated in the My Account area with order selector.
+4. My Account orders list with the *Withdrawal request* action per order.
+5. Admin withdrawals list with status, scope and order reference.
+6. Edit withdrawal screen with full request details and status history.
 
 == Changelog ==
 = 0.1.0 =
