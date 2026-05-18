@@ -4,7 +4,7 @@ Donate link: https://artprojectgroup.es/tienda/donacion
 Tags: withdrawal, right of withdrawal, woocommerce, refund, consumer rights
 Requires at least: 6.0
 Tested up to: 7.0
-Stable tag: 0.2.0
+Stable tag: 0.3.0
 Requires PHP: 7.4
 WC requires at least: 7.0
 WC tested up to: 10.8.0
@@ -69,6 +69,14 @@ Yes. The form supports both logged-in customers (with pre-filled data and order 
 6. Edit withdrawal screen with full request details and status history.
 
 == Changelog ==
+= 0.3.0 =
+* New: digital-content withdrawal waiver checkbox at checkout. Customers buying digital content or virtual services see an optional acknowledgement that requesting the immediate supply waives their right of withdrawal (EU consumer protection requirement). The checkbox is informational; ticking it is not mandatory and does not block order placement.
+* The checkbox is injected in both checkouts: classic shortcode (via `woocommerce_checkout_before_terms_and_conditions` with priority 999) and block-based (via JavaScript that reinserts itself with a `MutationObserver` to remain right before the native terms checkbox, after any other custom one).
+* In the block checkout, a generic cleanup pass removes content injected next to our wrapper by third-party plugins whose selectors over-match (e.g. plugins using `.wp-block-woocommerce-checkout-terms-block .wc-block-components-checkbox` plus jQuery `.after()`), avoiding duplicated privacy or marketing notices.
+* The customer's choice is persisted to order meta `_apg_withdrawal_digital_waiver` (`'1'` or `'0'`) on both checkouts: the classic checkout reads the POST value on `woocommerce_checkout_create_order`, the block checkout injects the value into the StoreAPI request body under `extensions['apg-withdrawal']['digital_waiver']` and the server hook `woocommerce_store_api_checkout_update_order_from_request` writes the same meta.
+* The block-checkout script reacts to cart changes mid-checkout: it watches StoreAPI cart mutations and, via a nonced AJAX endpoint (`apg_withdrawal_check_cart_waiver`), re-checks server-side whether the current cart still qualifies, inserting or removing the checkbox without a full page reload.
+* New settings section "Digital content waiver" with a single SelectWoo selector for when to show the checkbox: never (default), only on virtual products, on every order, or on products in selected categories or selected products (these two can be combined). Category and product selectors load only when relevant. The "Only on virtual products" mode also matches products with the per-product `_apg_withdrawal_type = digital` setting, so virtual flag and explicit digital classification are treated as equivalent triggers.
+
 = 0.2.0 =
 * The frontend form now inherits the native WooCommerce stylesheet (notices, fields, buttons) without requiring custom CSS overrides.
 * Notices rendered with `wc_print_notice()` so they pick up the correct WooCommerce template for both block themes (`block-notices/*.php`) and classic themes (`notices/*.php`).
@@ -82,6 +90,9 @@ Yes. The form supports both logged-in customers (with pre-filled data and order 
 * Initial release.
 
 == Upgrade Notice ==
+= 0.3.0 =
+* New: digital-content withdrawal waiver checkbox at checkout, with a settings section to choose when to display it (disabled by default).
+
 = 0.2.0 =
 * Frontend form aligned with native WooCommerce notices, fields and buttons. Custom CSS overrides for the form may no longer be necessary.
 

@@ -9,7 +9,7 @@ Requires at least: 6.0
 
 Tested up to: 7.0
 
-Stable tag: 0.2.0
+Stable tag: 0.3.0
 
 Requires PHP: 7.4
 
@@ -71,6 +71,14 @@ Sí. El formulario admite tanto clientes registrados (con datos rellenados previ
 **APG Desistimiento para WooCommerce** es un plugin gratuito. **Art Project Group** no proporciona soporte técnico gratuito, pero ofrece un servicio de [soporte técnico](https://artprojectgroup.es/tienda/ticket-de-soporte) de pago para instalación y configuración.
 
 ## Changelog
+### 0.3.0
+* Nuevo: casilla de renuncia al derecho de desistimiento para contenido digital en el checkout. Los clientes que compran contenido digital o servicios virtuales ven una aceptación opcional reconociendo que solicitar el suministro inmediato implica la pérdida del derecho de desistimiento (requisito de la legislación de protección al consumidor de la UE). La casilla es informativa: marcarla no es obligatorio ni bloquea el envío del pedido.
+* La casilla se inyecta en ambos checkouts: shortcode clásico (vía `woocommerce_checkout_before_terms_and_conditions` con prioridad 999) y bloques (vía JavaScript que se reposiciona con `MutationObserver` para quedar siempre justo antes de la casilla nativa, tras cualquier otra personalizada).
+* En el checkout de bloques se aplica una limpieza genérica que elimina el contenido inyectado junto a nuestro envoltorio por plugins de terceros con selectores demasiado amplios (por ejemplo, los que usan `.wp-block-woocommerce-checkout-terms-block .wc-block-components-checkbox` con jQuery `.after()`), evitando avisos de privacidad o marketing duplicados.
+* La elección del cliente se guarda en el meta del pedido `_apg_withdrawal_digital_waiver` (`'1'` o `'0'`) en ambos checkouts: el clásico lee el valor del POST en `woocommerce_checkout_create_order`, y el de bloques inyecta el valor en el cuerpo de la petición de StoreAPI bajo `extensions['apg-withdrawal']['digital_waiver']`, que el hook `woocommerce_store_api_checkout_update_order_from_request` persiste con el mismo meta.
+* El script del checkout de bloques reacciona a los cambios del carrito durante el flujo: observa las mutaciones de StoreAPI y, mediante un endpoint AJAX nonceado (`apg_withdrawal_check_cart_waiver`), revuelve a comprobar en el servidor si el carrito actual sigue calificando, mostrando o quitando la casilla sin recargar la página.
+* Nueva sección de ajustes "Renuncia al desistimiento de contenido digital" con un selector SelectWoo único de cuándo mostrar la casilla: nunca (por defecto), solo en productos virtuales, en todos los pedidos, o en productos de categorías seleccionadas o productos seleccionados (estas dos opciones se pueden combinar). Los selectores de categorías y productos se muestran solo cuando son relevantes. El modo "Solo en productos virtuales" también detecta productos con el ajuste por producto `_apg_withdrawal_type = digital`, tratando ambos (la marca nativa de virtual de WooCommerce y la clasificación explícita como digital) como disparadores equivalentes.
+
 ### 0.2.0
 * El formulario del frontend hereda ahora la hoja de estilo nativa de WooCommerce (avisos, campos, botones) sin necesidad de personalización CSS adicional.
 * Los avisos se renderizan con `wc_print_notice()` para que adopten la plantilla correcta de WooCommerce tanto en temas de bloques (`block-notices/*.php`) como en temas clásicos (`notices/*.php`).

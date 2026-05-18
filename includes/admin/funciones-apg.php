@@ -33,6 +33,23 @@ $apg_withdrawal = array(
 );
 
 /**
+ * Replaces the literal English plugin name in the global $apg_withdrawal array with
+ * its translated counterpart once WordPress has fired `init`. Translating at array
+ * initialization time would trigger `_load_textdomain_just_in_time` before the
+ * domain is registered, which WordPress 6.7+ flags as a "too early" notice. All
+ * call sites that read `$apg_withdrawal['plugin']` run on admin pages, filters
+ * (`plugin_row_meta`, `plugin_action_links_*`) or enqueue callbacks fired after
+ * `init`, so by the time they read the value it is already translated.
+ *
+ * @return void
+ */
+function apg_withdrawal_translate_plugin_name() {
+	global $apg_withdrawal;
+	$apg_withdrawal['plugin'] = __( 'APG Withdrawal for WooCommerce', 'apg-withdrawal-for-woocommerce' );
+}
+add_action( 'init', 'apg_withdrawal_translate_plugin_name' );
+
+/**
  * Renders an admin notice indicating WooCommerce is required.
  *
  * @return void
@@ -71,6 +88,9 @@ function apg_withdrawal_get_settings() {
 			'rejected'  => '1',
 			'completed' => '1',
 		),
+		'digital_waiver_mode'       => 'disabled',
+		'digital_waiver_categories' => array(),
+		'digital_waiver_products'   => array(),
 	);
 
 	return wp_parse_args( get_option( 'apg_withdrawal_settings', array() ), $defaults );

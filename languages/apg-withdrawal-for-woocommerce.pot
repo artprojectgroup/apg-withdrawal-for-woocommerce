@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: APG Withdrawal for WooCommerce\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-15 10:22+0000\n"
+"POT-Creation-Date: 2026-05-18 15:43+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: \n"
@@ -17,7 +17,7 @@ msgstr ""
 "X-Domain: apg-withdrawal-for-woocommerce"
 
 #. 1: product name, 2: quantity.
-#: includes/clases/woocommerce.php:85 includes/clases/formulario.php:654
+#: includes/clases/woocommerce.php:85 includes/clases/formulario.php:668
 #: includes/clases/emails/class-apg-withdrawal-email-customer.php:86
 #: includes/clases/admin/solicitudes.php:317
 #, php-format
@@ -28,7 +28,7 @@ msgstr ""
 msgid "(empty)"
 msgstr ""
 
-#: apg-withdrawal-for-woocommerce.php:354
+#: apg-withdrawal-for-woocommerce.php:355
 msgid ""
 "* The standard withdrawal period for this order may have expired. You "
 "may still submit a request and it will be reviewed by the store."
@@ -62,14 +62,14 @@ msgstr ""
 msgid "Accepted"
 msgstr ""
 
-#: includes/clases/formulario.php:175 includes/clases/formulario.php:561
+#: includes/clases/formulario.php:176 includes/clases/formulario.php:575
 msgid ""
 "According to the available information, the ordinary withdrawal period "
 "for this order may have expired. You may still submit your request and "
 "it will be reviewed by the store."
 msgstr ""
 
-#: includes/clases/formulario.php:557
+#: includes/clases/formulario.php:571
 msgid ""
 "According to this product's configuration, the right of withdrawal may "
 "not apply under the legally provided exceptions. Your request will be "
@@ -88,18 +88,18 @@ msgid ""
 "Account integration and admin request log."
 msgstr ""
 
-#: apg-withdrawal-for-woocommerce.php:218
+#: apg-withdrawal-for-woocommerce.php:219
 msgid "Add withdrawal"
 msgstr ""
 
-#: includes/clases/formulario.php:510
+#: includes/clases/formulario.php:517
 #: templates/emails/apg-withdrawal-customer.php:79
 #: includes/clases/admin/solicitudes.php:130
 #: templates/emails/plain/apg-withdrawal-customer.php:60
 msgid "Additional details"
 msgstr ""
 
-#: includes/clases/formulario.php:202
+#: includes/clases/formulario.php:205
 msgid "Additional details:"
 msgstr ""
 
@@ -119,11 +119,11 @@ msgstr ""
 msgid "All withdrawal statuses"
 msgstr ""
 
-#: includes/clases/formulario.php:588
+#: includes/clases/formulario.php:602
 msgid "An error occurred while processing the withdrawal request."
 msgstr ""
 
-#: apg-withdrawal-for-woocommerce.php:138
+#: apg-withdrawal-for-woocommerce.php:139
 msgid "APG Withdrawal"
 msgstr ""
 
@@ -165,15 +165,15 @@ msgid ""
 "the contract in accordance with consumer protection legislation."
 msgstr ""
 
-#: includes/clases/formulario.php:209
+#: includes/clases/formulario.php:212
 msgid "Cancel"
 msgstr ""
 
-#: includes/clases/formulario.php:503
+#: includes/clases/formulario.php:510
 msgid "Choose one or more products from the selected order."
 msgstr ""
 
-#: includes/clases/formulario.php:554
+#: includes/clases/formulario.php:568
 msgid "Choose products..."
 msgstr ""
 
@@ -191,7 +191,7 @@ msgstr ""
 msgid "Completed date"
 msgstr ""
 
-#: apg-withdrawal-for-woocommerce.php:466
+#: apg-withdrawal-for-woocommerce.php:467
 #: includes/admin/funciones-apg.php:63
 msgid "Confirm withdrawal"
 msgstr ""
@@ -200,7 +200,7 @@ msgstr ""
 msgid "Confirmation button text"
 msgstr ""
 
-#: includes/cuadro-informacion.php:42 includes/admin/funciones-apg.php:151
+#: includes/cuadro-informacion.php:42 includes/admin/funciones-apg.php:154
 msgid "Contact with us by "
 msgstr ""
 
@@ -223,7 +223,7 @@ msgstr ""
 msgid "Customer email notifications"
 msgstr ""
 
-#: includes/clases/formulario.php:191
+#: includes/clases/formulario.php:194
 msgid "Customer:"
 msgstr ""
 
@@ -267,15 +267,19 @@ msgstr ""
 msgid "Digital content"
 msgstr ""
 
+#: includes/formulario.php:231
+msgid "Digital content waiver"
+msgstr ""
+
 #: includes/cuadro-informacion.php:45
 msgid "Documentation and Support:"
 msgstr ""
 
-#: apg-withdrawal-for-woocommerce.php:219
+#: apg-withdrawal-for-woocommerce.php:220
 msgid "Edit withdrawal"
 msgstr ""
 
-#: includes/clases/emails.php:104 includes/clases/formulario.php:412
+#: includes/clases/emails.php:104 includes/clases/formulario.php:419
 #: templates/emails/apg-withdrawal-customer.php:47
 #: templates/emails/apg-withdrawal-admin.php:38
 #: includes/clases/admin/solicitudes.php:21
@@ -292,7 +296,7 @@ msgstr ""
 msgid "Email when changed to %s"
 msgstr ""
 
-#: includes/clases/formulario.php:192
+#: includes/clases/formulario.php:195
 msgid "Email:"
 msgstr ""
 
@@ -312,9 +316,9 @@ msgstr ""
 msgid "Extra grace days"
 msgstr ""
 
-#: includes/cuadro-informacion.php:30 includes/admin/funciones-apg.php:149
-#: includes/admin/funciones-apg.php:149
-#: includes/admin/funciones-apg.php:149
+#: includes/cuadro-informacion.php:30 includes/admin/funciones-apg.php:152
+#: includes/admin/funciones-apg.php:152
+#: includes/admin/funciones-apg.php:152
 msgid "Follow us on "
 msgstr ""
 
@@ -326,13 +330,13 @@ msgstr ""
 msgid "From"
 msgstr ""
 
-#: includes/clases/formulario.php:398
+#: includes/clases/formulario.php:405
 msgid "Full name"
 msgstr ""
 
 #: includes/clases/woocommerce.php:329 includes/clases/emails.php:38
-#: includes/clases/emails.php:93 includes/clases/formulario.php:197
-#: includes/clases/formulario.php:486
+#: includes/clases/emails.php:93 includes/clases/formulario.php:200
+#: includes/clases/formulario.php:493
 #: templates/emails/apg-withdrawal-customer.php:20
 #: templates/emails/apg-withdrawal-admin.php:20
 #: includes/clases/admin/solicitudes.php:63
@@ -365,7 +369,13 @@ msgstr ""
 msgid "https://wordpress.org/plugins/apg-withdrawal-for-woocommerce/"
 msgstr ""
 
-#: includes/clases/formulario.php:522
+#: includes/clases/checkout.php:89
+msgid ""
+"I request the immediate supply of the digital content and acknowledge "
+"that, once execution has begun, I will lose my right of withdrawal."
+msgstr ""
+
+#: includes/clases/formulario.php:529
 msgid ""
 "I understand that the next step will submit my withdrawal request after "
 "confirmation."
@@ -392,7 +402,7 @@ msgstr ""
 msgid "IP"
 msgstr ""
 
-#: includes/cuadro-informacion.php:18 includes/admin/funciones-apg.php:147
+#: includes/cuadro-informacion.php:18 includes/admin/funciones-apg.php:150
 msgid "Make a donation by "
 msgstr ""
 
@@ -406,12 +416,16 @@ msgstr ""
 msgid "Mark as %s when order becomes"
 msgstr ""
 
-#: includes/cuadro-informacion.php:34 includes/admin/funciones-apg.php:150
+#: includes/cuadro-informacion.php:34 includes/admin/funciones-apg.php:153
 msgid "More plugins on "
 msgstr ""
 
 #: includes/cuadro-informacion.php:33
 msgid "More plugins:"
+msgstr ""
+
+#: includes/formulario.php:246
+msgid "Never (disabled)"
 msgstr ""
 
 #: templates/emails/apg-withdrawal-status.php:43
@@ -437,12 +451,16 @@ msgid "No"
 msgstr ""
 
 #. %s: email address entered by the user.
-#: includes/clases/formulario.php:553
+#: includes/clases/formulario.php:567
 #, php-format
 msgid "No orders were found in the store for the email address %s."
 msgstr ""
 
-#: includes/clases/formulario.php:551
+#: includes/formulario.php:273
+msgid "No product categories available."
+msgstr ""
+
+#: includes/clases/formulario.php:565
 msgid "No results found"
 msgstr ""
 
@@ -458,11 +476,23 @@ msgstr ""
 msgid "Notification email"
 msgstr ""
 
-#: includes/clases/formulario.php:527
+#: includes/formulario.php:248
+msgid "On every order"
+msgstr ""
+
+#: includes/formulario.php:249
+msgid "On selected categories or products"
+msgstr ""
+
+#: includes/formulario.php:247
+msgid "Only on virtual products"
+msgstr ""
+
+#: includes/clases/formulario.php:534
 msgid "Open withdrawal confirmation"
 msgstr ""
 
-#: includes/clases/formulario.php:246
+#: includes/clases/formulario.php:249
 msgid "optional"
 msgstr ""
 
@@ -483,7 +513,7 @@ msgstr ""
 msgid "Order created date"
 msgstr ""
 
-#: includes/clases/formulario.php:453 includes/clases/formulario.php:467
+#: includes/clases/formulario.php:460 includes/clases/formulario.php:474
 msgid "Order number"
 msgstr ""
 
@@ -491,7 +521,7 @@ msgstr ""
 msgid "Order status"
 msgstr ""
 
-#: includes/clases/formulario.php:196
+#: includes/clases/formulario.php:199
 msgid "Order:"
 msgstr ""
 
@@ -520,7 +550,7 @@ msgstr ""
 msgid "Personalised product"
 msgstr ""
 
-#: includes/clases/emails.php:108 includes/clases/formulario.php:426
+#: includes/clases/emails.php:108 includes/clases/formulario.php:433
 #: templates/emails/apg-withdrawal-customer.php:53
 #: templates/emails/apg-withdrawal-admin.php:43
 #: includes/clases/admin/solicitudes.php:100
@@ -530,32 +560,37 @@ msgstr ""
 msgid "Phone"
 msgstr ""
 
-#: includes/clases/formulario.php:194
+#: includes/clases/formulario.php:197
 msgid "Phone:"
 msgstr ""
 
-#: includes/clases/formulario.php:584
+#: includes/clases/formulario.php:598
 msgid "Please complete all required fields before continuing."
 msgstr ""
 
 #. %s plugin name
-#: includes/cuadro-informacion.php:56 includes/admin/funciones-apg.php:113
-#: includes/admin/funciones-apg.php:127
+#: includes/cuadro-informacion.php:56 includes/admin/funciones-apg.php:116
+#: includes/admin/funciones-apg.php:130
 #, php-format
 msgid "Please, rate %s:"
 msgstr ""
 
+#: includes/formulario.php:255
+msgid "Product categories"
+msgstr ""
+
+#: includes/formulario.php:279
 #: templates/emails/apg-withdrawal-customer.php:73
 #: includes/clases/admin/solicitudes.php:290
 #: templates/emails/plain/apg-withdrawal-customer.php:56
 msgid "Products"
 msgstr ""
 
-#: includes/clases/formulario.php:495
+#: includes/clases/formulario.php:502
 msgid "Products to withdraw"
 msgstr ""
 
-#: includes/clases/formulario.php:199
+#: includes/clases/formulario.php:202
 msgid "Products:"
 msgstr ""
 
@@ -565,7 +600,7 @@ msgid ""
 "withdrawal applies; the applicable legal exceptions may apply."
 msgstr ""
 
-#: includes/clases/formulario.php:205
+#: includes/clases/formulario.php:208
 msgid ""
 "Receipt of this request does not imply automatic acceptance of the right "
 "of withdrawal; the legally applicable exceptions may apply."
@@ -628,11 +663,15 @@ msgstr ""
 msgid "Scope"
 msgstr ""
 
-#: includes/clases/formulario.php:197
+#: includes/clases/formulario.php:200
 msgid "Scope:"
 msgstr ""
 
-#: apg-withdrawal-for-woocommerce.php:221
+#: includes/formulario.php:288
+msgid "Search for products&hellip;"
+msgstr ""
+
+#: apg-withdrawal-for-woocommerce.php:222
 msgid "Search withdrawals"
 msgstr ""
 
@@ -640,7 +679,7 @@ msgstr ""
 msgid "Security check failed."
 msgstr ""
 
-#: includes/clases/formulario.php:583
+#: includes/clases/formulario.php:597
 msgid "Security validation failed. Please try again."
 msgstr ""
 
@@ -648,12 +687,16 @@ msgstr ""
 msgid "Select a page"
 msgstr ""
 
-#: includes/clases/formulario.php:438 includes/clases/formulario.php:666
+#: includes/clases/formulario.php:445 includes/clases/formulario.php:680
 msgid "Select an order"
 msgstr ""
 
 #: includes/formulario.php:174
 msgid "Select order statuses&hellip;"
+msgstr ""
+
+#: includes/formulario.php:265
+msgid "Select product categories&hellip;"
 msgstr ""
 
 #: includes/clases/admin/solicitudes.php:140
@@ -685,11 +728,11 @@ msgstr ""
 msgid "Set status"
 msgstr ""
 
-#: includes/admin/funciones-apg.php:174
+#: includes/admin/funciones-apg.php:177
 msgid "Settings"
 msgstr ""
 
-#: includes/admin/funciones-apg.php:174
+#: includes/admin/funciones-apg.php:177
 msgid "Settings of "
 msgstr ""
 
@@ -702,9 +745,16 @@ msgid ""
 "store."
 msgstr ""
 
+#: includes/formulario.php:232
+msgid ""
+"Show an optional acknowledgement at checkout when the customer is buying "
+"digital content or virtual services subject to the immediate-execution "
+"waiver of the right of withdrawal."
+msgstr ""
+
 #: includes/clases/woocommerce.php:329 includes/clases/emails.php:38
-#: includes/clases/emails.php:93 includes/clases/formulario.php:197
-#: includes/clases/formulario.php:487
+#: includes/clases/emails.php:93 includes/clases/formulario.php:200
+#: includes/clases/formulario.php:494
 #: templates/emails/apg-withdrawal-customer.php:19
 #: templates/emails/apg-withdrawal-admin.php:19
 #: includes/clases/admin/solicitudes.php:63
@@ -733,11 +783,11 @@ msgstr ""
 msgid "Store IP address?"
 msgstr ""
 
-#: includes/cuadro-informacion.php:46 includes/admin/funciones-apg.php:173
+#: includes/cuadro-informacion.php:46 includes/admin/funciones-apg.php:176
 msgid "Support"
 msgstr ""
 
-#: includes/admin/funciones-apg.php:173
+#: includes/admin/funciones-apg.php:176
 msgid "Support of "
 msgstr ""
 
@@ -745,45 +795,45 @@ msgstr ""
 msgid "System"
 msgstr ""
 
-#: includes/clases/formulario.php:585
+#: includes/clases/formulario.php:599
 msgid "The email address is not valid."
 msgstr ""
 
-#: includes/clases/formulario.php:525
+#: includes/clases/formulario.php:532
 msgid ""
 "The next step will show a confirmation screen before the request is "
 "submitted."
 msgstr ""
 
-#: includes/clases/formulario.php:586
+#: includes/clases/formulario.php:600
 msgid "The order could not be matched with the email address provided."
 msgstr ""
 
 #. %d number of days of the withdrawal window.
-#: includes/clases/formulario.php:381
+#: includes/clases/formulario.php:386
 msgid ""
 "The right of withdrawal may be exercised within %d calendar days from "
 "receipt of the order."
 msgstr ""
 
-#: includes/clases/formulario.php:587
+#: includes/clases/formulario.php:601
 msgid "The withdrawal period for this order appears to have expired."
 msgstr ""
 
-#: includes/clases/formulario.php:558
+#: includes/clases/formulario.php:572
 msgid ""
 "This order contains digital content. If execution began with your prior "
 "express consent and you acknowledged the loss of the right of withdrawal "
 "at purchase, this right may no longer apply."
 msgstr ""
 
-#: includes/clases/formulario.php:559
+#: includes/clases/formulario.php:573
 msgid ""
 "This order contains personalised products. The right of withdrawal does "
 "not apply to goods made to your specifications or clearly personalised."
 msgstr ""
 
-#: includes/clases/formulario.php:560
+#: includes/clases/formulario.php:574
 msgid ""
 "This request requires manual review. The store will evaluate whether the "
 "right of withdrawal applies to this order."
@@ -799,7 +849,7 @@ msgstr ""
 msgid "To"
 msgstr ""
 
-#: includes/admin/funciones-apg.php:113
+#: includes/admin/funciones-apg.php:116
 msgid "Unknown rating"
 msgstr ""
 
@@ -829,7 +879,7 @@ msgstr ""
 msgid "User agent"
 msgstr ""
 
-#: apg-withdrawal-for-woocommerce.php:220
+#: apg-withdrawal-for-woocommerce.php:221
 msgid "View withdrawal"
 msgstr ""
 
@@ -868,9 +918,13 @@ msgstr ""
 msgid "We have correctly received your withdrawal request."
 msgstr ""
 
-#: apg-withdrawal-for-woocommerce.php:139
-#: apg-withdrawal-for-woocommerce.php:215
-#: apg-withdrawal-for-woocommerce.php:279 includes/clases/producto.php:18
+#: includes/formulario.php:236
+msgid "When to show the checkbox"
+msgstr ""
+
+#: apg-withdrawal-for-woocommerce.php:140
+#: apg-withdrawal-for-woocommerce.php:216
+#: apg-withdrawal-for-woocommerce.php:280 includes/clases/producto.php:18
 #: includes/clases/woocommerce.php:380 includes/clases/pedidos.php:69
 #: includes/clases/pedidos.php:74
 msgid "Withdrawal"
@@ -898,8 +952,8 @@ msgstr ""
 msgid "Withdrawal page"
 msgstr ""
 
-#: apg-withdrawal-for-woocommerce.php:335
-#: includes/clases/formulario.php:389
+#: apg-withdrawal-for-woocommerce.php:336
+#: includes/clases/formulario.php:396
 msgid "Withdrawal request"
 msgstr ""
 
@@ -909,7 +963,7 @@ msgstr ""
 msgid "Withdrawal request %1$s - %2$s"
 msgstr ""
 
-#: apg-withdrawal-for-woocommerce.php:330
+#: apg-withdrawal-for-woocommerce.php:331
 msgid "Withdrawal request *"
 msgstr ""
 
@@ -941,7 +995,7 @@ msgstr ""
 msgid "Withdrawal requests"
 msgstr ""
 
-#: includes/clases/formulario.php:482
+#: includes/clases/formulario.php:489
 msgid "Withdrawal scope"
 msgstr ""
 
@@ -953,13 +1007,13 @@ msgstr ""
 msgid "Withdrawal window (days)"
 msgstr ""
 
-#: apg-withdrawal-for-woocommerce.php:131
 #: apg-withdrawal-for-woocommerce.php:132
-#: apg-withdrawal-for-woocommerce.php:214
-#: apg-withdrawal-for-woocommerce.php:216
+#: apg-withdrawal-for-woocommerce.php:133
+#: apg-withdrawal-for-woocommerce.php:215
 #: apg-withdrawal-for-woocommerce.php:217
-#: includes/admin/funciones-apg.php:175
-#: includes/admin/funciones-apg.php:175
+#: apg-withdrawal-for-woocommerce.php:218
+#: includes/admin/funciones-apg.php:178
+#: includes/admin/funciones-apg.php:178
 msgid "Withdrawals"
 msgstr ""
 
@@ -988,6 +1042,6 @@ msgid ""
 "order."
 msgstr ""
 
-#: includes/clases/formulario.php:582
+#: includes/clases/formulario.php:596
 msgid "Your withdrawal request has been registered."
 msgstr ""

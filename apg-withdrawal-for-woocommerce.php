@@ -2,7 +2,7 @@
 /*
 Plugin Name: APG Withdrawal for WooCommerce
 Requires Plugins: woocommerce
-Version: 0.2.0
+Version: 0.3.0
 Plugin URI: https://wordpress.org/plugins/apg-withdrawal-for-woocommerce/
 Description: Add to WooCommerce an online withdrawal workflow compliant with EU requirements.
 Author URI: https://artprojectgroup.es/
@@ -26,7 +26,7 @@ Domain Path: /languages
 defined( 'ABSPATH' ) || exit;
 
 define( 'apg_withdrawal_DIRECCION', plugin_basename( __FILE__ ) );
-define( 'apg_withdrawal_VERSION', '0.2.0' );
+define( 'apg_withdrawal_VERSION', '0.3.0' );
 define( 'apg_withdrawal_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 
 include_once 'includes/admin/funciones-apg.php';
@@ -106,7 +106,6 @@ if ( is_plugin_active( 'woocommerce/woocommerce.php' ) || is_network_only_plugin
 			add_filter( 'query_vars', array( $this, 'apg_withdrawal_query_vars' ), 0 );
 			add_shortcode( 'apg_withdrawal_form', array( $this, 'apg_withdrawal_shortcode' ) );
 
-			include_once 'includes/clases/admin/ajustes.php';
 			include_once 'includes/clases/admin/solicitudes.php';
 			include_once 'includes/clases/emails.php';
 			include_once 'includes/clases/formulario.php';
@@ -114,6 +113,7 @@ if ( is_plugin_active( 'woocommerce/woocommerce.php' ) || is_network_only_plugin
 			include_once 'includes/clases/procesador.php';
 			include_once 'includes/clases/producto.php';
 			include_once 'includes/clases/woocommerce.php';
+			include_once 'includes/clases/checkout.php';
 		}
 
 		/**
@@ -475,12 +475,19 @@ if ( is_plugin_active( 'woocommerce/woocommerce.php' ) || is_network_only_plugin
 				'rejected'  => '1',
 				'completed' => '1',
 			),
+			'digital_waiver_mode'       => 'disabled',
+			'digital_waiver_categories' => array(),
+			'digital_waiver_products'   => array(),
 		);
 
 		$opciones = wp_parse_args( is_array( $opciones ) ? $opciones : array(), $predeterminadas );
 
 		$raw_map      = isset( $opciones['order_status_map'] ) && is_array( $opciones['order_status_map'] ) ? $opciones['order_status_map'] : array();
 		$raw_email_on = isset( $opciones['email_on_status'] ) && is_array( $opciones['email_on_status'] ) ? $opciones['email_on_status'] : array();
+		$allowed_waiver_modes = array( 'disabled', 'flagged', 'all', 'categories', 'products' );
+		$raw_waiver_mode      = isset( $opciones['digital_waiver_mode'] ) ? sanitize_key( $opciones['digital_waiver_mode'] ) : 'disabled';
+		$raw_waiver_cats      = isset( $opciones['digital_waiver_categories'] ) && is_array( $opciones['digital_waiver_categories'] ) ? $opciones['digital_waiver_categories'] : array();
+		$raw_waiver_products  = isset( $opciones['digital_waiver_products'] ) && is_array( $opciones['digital_waiver_products'] ) ? $opciones['digital_waiver_products'] : array();
 
 		$sanitize_wc_statuses = function ( $statuses ) {
 			if ( ! is_array( $statuses ) ) {
@@ -509,6 +516,9 @@ if ( is_plugin_active( 'woocommerce/woocommerce.php' ) || is_network_only_plugin
 				'rejected'  => ! empty( $raw_email_on['rejected'] ) ? '1' : '0',
 				'completed' => ! empty( $raw_email_on['completed'] ) ? '1' : '0',
 			),
+			'digital_waiver_mode'       => in_array( $raw_waiver_mode, $allowed_waiver_modes, true ) ? $raw_waiver_mode : 'disabled',
+			'digital_waiver_categories' => array_values( array_unique( array_filter( array_map( 'absint', $raw_waiver_cats ) ) ) ),
+			'digital_waiver_products'   => array_values( array_unique( array_filter( array_map( 'absint', $raw_waiver_products ) ) ) ),
 		);
 	}
 
