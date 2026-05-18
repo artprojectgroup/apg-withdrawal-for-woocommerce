@@ -31,6 +31,7 @@ Añade a WooCommerce un flujo de trabajo de desistimiento online con formulario 
 * Ventana de desistimiento configurable (en días) y fuente del plazo (fecha de completado o fecha de creación del pedido).
 * Días de cortesía adicionales sobre la ventana estándar.
 * Detección de solicitud activa: oculta el botón de desistimiento si ya existe una solicitud abierta para el pedido.
+* Casilla opcional de renuncia al desistimiento por contenido digital en el checkout (tanto en el shortcode clásico como en el de bloques): un selector configurable permite elegir cuándo mostrarla — nunca, solo en productos virtuales (o con `_apg_withdrawal_type = digital` por producto), en todos los pedidos, o en categorías y/o productos seleccionados. La elección del cliente se guarda en los metadatos del pedido como evidencia legal.
 * Registro de solicitudes en el panel de administración con todos los detalles (CPT).
 * Opciones de almacenamiento de dirección IP e identificador del navegador para evidencia legal.
 * Notificación por correo electrónico al administrador de la tienda en cada nueva solicitud.

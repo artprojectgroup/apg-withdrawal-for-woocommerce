@@ -21,6 +21,7 @@ Add to WooCommerce an online withdrawal workflow with customer form, My Account 
 * Configurable withdrawal window (days) and deadline source (completed or created date).
 * Optional extra grace days on top of the standard withdrawal window.
 * Active request detection: hides the withdrawal button if a request is already open for the order.
+* Optional digital-content waiver checkbox at checkout (both classic shortcode and block-based checkout): a configurable selector chooses when to display it — never, only on virtual products (or per-product `_apg_withdrawal_type = digital`), on every order, or on selected categories and/or selected products. The customer's choice is persisted to order meta as legal evidence.
 * Admin request log with full request details (custom post type).
 * IP address and browser identifier storage options for legal evidence.
 * Email notification to the store admin on every new request.
