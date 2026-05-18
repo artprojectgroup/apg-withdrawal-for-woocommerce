@@ -61,7 +61,7 @@ msgid ""
 "it will be reviewed by the store."
 msgstr ""
 "Según la información disponible, el plazo ordinario de desistimiento "
-"para este pedido puede haber expirado. Puede enviar igualmente su "
+"para este pedido puede haber expirado. Puedes enviar igualmente tu "
 "solicitud y será revisada por la tienda."
 
 #: includes/clases/formulario.php:537
@@ -72,7 +72,7 @@ msgid ""
 msgstr ""
 "Según la configuración de este producto, el derecho de desistimiento "
 "puede no ser aplicable en virtud de las excepciones legalmente previstas."
-" Su solicitud será revisada por la tienda."
+" Tu solicitud será revisada por la tienda."
 
 #. Description of the plugin
 msgid ""
@@ -115,7 +115,7 @@ msgid ""
 "rejected due to the legally applicable exceptions for this type of "
 "product or service."
 msgstr ""
-"Tras revisar su solicitud, lamentamos informarle de que ha sido "
+"Tras revisar tu solicitud, lamentamos informarte de que ha sido "
 "rechazada debido a las excepciones legalmente aplicables a este tipo de "
 "producto o servicio."
 
@@ -161,12 +161,12 @@ msgid ""
 "By submitting this request you communicate your wish to withdraw from "
 "the contract in accordance with consumer protection legislation."
 msgstr ""
-"Al enviar esta solicitud comunica su deseo de desistir del contrato de "
+"Al enviar esta solicitud comunicas tu deseo de desistir del contrato de "
 "conformidad con la legislación de protección al consumidor."
 
 #: includes/clases/formulario.php:491
 msgid "Choose one or more products from the selected order."
-msgstr "Seleccione uno o más productos del pedido seleccionado."
+msgstr "Selecciona uno o más productos del pedido seleccionado."
 
 #: includes/clases/formulario.php:612
 msgid "Choose products..."
@@ -200,11 +200,11 @@ msgstr "Texto del botón de confirmación"
 
 #: includes/cuadro-informacion.php:42 includes/admin/funciones-apg.php:151
 msgid "Contact with us by "
-msgstr "Contáctenos por "
+msgstr "Contacta con nosotros por "
 
 #: includes/cuadro-informacion.php:41
 msgid "Contact with us:"
-msgstr "Contáctenos:"
+msgstr "Contacta con nosotros:"
 
 #: includes/clases/emails.php:103
 #: templates/emails/apg-withdrawal-admin.php:34
@@ -294,7 +294,7 @@ msgstr "Correo electrónico:"
 
 #: includes/clases/emails.php:191
 msgid "Exercise your right of withdrawal"
-msgstr "Ejercer su derecho de desistimiento"
+msgstr "Ejercer tu derecho de desistimiento"
 
 #: includes/clases/admin/solicitudes.php:286
 msgid "Expired warning"
@@ -381,13 +381,13 @@ msgid ""
 msgstr ""
 "Si está marcado, todas las solicitudes de desistimiento, sus metadatos y "
 "los ajustes del plugin se eliminarán de forma permanente al desinstalar "
-"el plugin. Déjelo desmarcado para conservar sus datos."
+"el plugin. Déjalo desmarcado para conservar tus datos."
 
 #: includes/cuadro-informacion.php:17
 msgid ""
 "If you enjoyed and find helpful this plugin, please make a donation:"
 msgstr ""
-"Si ha disfrutado y le ha sido útil este plugin, por favor realice una "
+"Si has disfrutado y te ha sido útil este plugin, por favor haz una "
 "donación:"
 
 #: includes/clases/admin/solicitudes.php:105
@@ -397,7 +397,7 @@ msgstr "IP"
 
 #: includes/cuadro-informacion.php:18 includes/admin/funciones-apg.php:147
 msgid "Make a donation by "
-msgstr "Realice una donación por "
+msgstr "Haz una donación por "
 
 #: includes/clases/producto.php:44
 msgid "Manual review required"
@@ -541,14 +541,14 @@ msgstr "Teléfono:"
 #: includes/clases/formulario.php:781
 msgid "Please complete all required fields before continuing."
 msgstr ""
-"Por favor, complete todos los campos obligatorios antes de continuar."
+"Por favor, completa todos los campos obligatorios antes de continuar."
 
 #. %s plugin name
 #: includes/cuadro-informacion.php:56 includes/admin/funciones-apg.php:113
 #: includes/admin/funciones-apg.php:127
 #, php-format
 msgid "Please, rate %s:"
-msgstr "Por favor, valore %s:"
+msgstr "Por favor, valora %s:"
 
 #: includes/clases/admin/solicitudes.php:289
 msgid "Products"
@@ -618,7 +618,7 @@ msgstr "Número de solicitud"
 
 #: includes/clases/formulario.php:168
 msgid "Review your withdrawal request"
-msgstr "Revise su solicitud de desistimiento"
+msgstr "Revisa tu solicitud de desistimiento"
 
 #. %s withdrawal request URL.
 #: includes/clases/emails.php:186
@@ -652,7 +652,7 @@ msgstr "La comprobación de seguridad ha fallado."
 #: includes/clases/formulario.php:780
 msgid "Security validation failed. Please try again."
 msgstr ""
-"La validación de seguridad ha fallado. Por favor, inténtelo de nuevo."
+"La validación de seguridad ha fallado. Por favor, inténtalo de nuevo."
 
 #: includes/formulario.php:50
 msgid "Select a page"
@@ -676,7 +676,7 @@ msgid ""
 " Configure content in"
 msgstr ""
 "Enviar un correo electrónico al cliente cuando cambie el estado de la "
-"solicitud de desistimiento. Configure el contenido en"
+"solicitud de desistimiento. Configura el contenido en"
 
 #: includes/clases/emails/class-apg-withdrawal-email-customer.php:24
 msgid "Sent to the customer when a withdrawal request is submitted."
@@ -717,9 +717,9 @@ msgid ""
 "return the product in accordance with the instructions provided by the "
 "store."
 msgstr ""
-"Si el derecho de desistimiento fuera aplicable, puede ser necesario "
-"devolver el producto de acuerdo con las instrucciones proporcionadas por "
-"la tienda."
+"Si el derecho de desistimiento fuera aplicable, puede ser necesario que "
+"devuelvas el producto de acuerdo con las instrucciones proporcionadas "
+"por la tienda."
 
 #: includes/clases/woocommerce.php:330 includes/clases/emails.php:38
 #: includes/clases/emails.php:93 includes/clases/formulario.php:197
@@ -802,9 +802,9 @@ msgid ""
 "express consent and you acknowledged the loss of the right of withdrawal "
 "at purchase, this right may no longer apply."
 msgstr ""
-"Este pedido contiene contenido digital. Si la ejecución comenzó con su "
-"consentimiento expreso previo y usted reconoció la pérdida del derecho "
-"de desistimiento en el momento de la compra, es posible que este derecho "
+"Este pedido contiene contenido digital. Si la ejecución comenzó con tu "
+"consentimiento expreso previo y reconociste la pérdida del derecho de "
+"desistimiento en el momento de la compra, es posible que este derecho "
 "ya no sea aplicable."
 
 #: includes/clases/formulario.php:539
@@ -813,7 +813,7 @@ msgid ""
 "not apply to goods made to your specifications or clearly personalised."
 msgstr ""
 "Este pedido contiene productos personalizados. El derecho de "
-"desistimiento no se aplica a los bienes fabricados según sus "
+"desistimiento no se aplica a los bienes fabricados según tus "
 "especificaciones o claramente personalizados."
 
 #: includes/clases/formulario.php:540
@@ -844,7 +844,7 @@ msgstr "Valoración desconocida"
 #: includes/clases/emails/class-apg-withdrawal-email-status.php:49
 msgid "Update on your withdrawal request #{order_number}"
 msgstr ""
-"Actualización sobre su solicitud de desistimiento nº {order_number}"
+"Actualización sobre tu solicitud de desistimiento nº {order_number}"
 
 #: includes/formulario.php:97
 msgid ""
@@ -860,7 +860,7 @@ msgid ""
 "Use this page to exercise your right of withdrawal for WooCommerce "
 "orders."
 msgstr ""
-"Utilice esta página para ejercer su derecho de desistimiento en pedidos "
+"Utiliza esta página para ejercer tu derecho de desistimiento en pedidos "
 "de WooCommerce."
 
 #: includes/clases/admin/solicitudes.php:149
@@ -900,8 +900,8 @@ msgid ""
 "accepted. We will contact you with instructions for returning the "
 "product."
 msgstr ""
-"Nos complace informarle de que su solicitud de desistimiento ha sido "
-"aceptada. Nos pondremos en contacto con usted con las instrucciones para "
+"Nos complace informarte de que tu solicitud de desistimiento ha sido "
+"aceptada. Nos pondremos en contacto contigo con las instrucciones para "
 "devolver el producto."
 
 #: templates/emails/apg-withdrawal-status.php:21
@@ -910,7 +910,7 @@ msgid ""
 "We are writing to confirm that the processing of your withdrawal request "
 "has been completed and the applicable refund has been arranged."
 msgstr ""
-"Le escribimos para confirmar que el procesamiento de su solicitud de "
+"Te escribimos para confirmar que el procesamiento de tu solicitud de "
 "desistimiento ha sido completado y el reembolso aplicable ha sido "
 "tramitado."
 
@@ -919,14 +919,14 @@ msgstr ""
 msgid ""
 "We are writing to inform you of an update to your withdrawal request."
 msgstr ""
-"Le escribimos para informarle de una actualización en su solicitud de "
+"Te escribimos para informarte de una actualización en tu solicitud de "
 "desistimiento."
 
 #: includes/clases/emails.php:46
 #: templates/emails/apg-withdrawal-customer.php:26
 #: templates/emails/plain/apg-withdrawal-customer.php:25
 msgid "We have correctly received your withdrawal request."
-msgstr "Hemos recibido correctamente su solicitud de desistimiento."
+msgstr "Hemos recibido correctamente tu solicitud de desistimiento."
 
 #: apg-withdrawal-for-woocommerce.php:123 apg-withdrawal-for-woocommerce.php:185
 #: apg-withdrawal-for-woocommerce.php:249 includes/clases/producto.php:18
@@ -967,7 +967,7 @@ msgstr "Solicitud de desistimiento *"
 
 #: apg-withdrawal-for-woocommerce.php
 msgid "* The standard withdrawal period for this order may have expired. You may still submit a request and it will be reviewed by the store."
-msgstr "* El plazo ordinario de desistimiento para este pedido puede haber expirado. Puede enviar igualmente su solicitud y será revisada por la tienda."
+msgstr "* El plazo ordinario de desistimiento para este pedido puede haber expirado. Puedes enviar igualmente tu solicitud y será revisada por la tienda."
 
 #. 1: order number, 2: customer name.
 #: includes/clases/procesador.php:98
@@ -1035,7 +1035,7 @@ msgstr "Sí"
 
 #: includes/clases/admin/solicitudes.php:242
 msgid "You do not have permission to export withdrawal requests."
-msgstr "No tiene permiso para exportar solicitudes de desistimiento."
+msgstr "No tienes permiso para exportar solicitudes de desistimiento."
 
 #: includes/clases/emails.php:47
 #: templates/emails/apg-withdrawal-customer.php:27
@@ -1045,10 +1045,10 @@ msgid ""
 "protection legislation and the conditions applicable to the contracted "
 "order."
 msgstr ""
-"Su solicitud será revisada de conformidad con la legislación de "
+"Tu solicitud será revisada de conformidad con la legislación de "
 "protección de los consumidores y usuarios y las condiciones aplicables "
 "al pedido contratado."
 
 #: includes/clases/formulario.php:779
 msgid "Your withdrawal request has been registered."
-msgstr "Su solicitud de desistimiento ha sido registrada."
+msgstr "Tu solicitud de desistimiento ha sido registrada."
