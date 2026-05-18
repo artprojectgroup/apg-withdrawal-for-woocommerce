@@ -9,7 +9,7 @@ Requires at least: 6.0
 
 Tested up to: 7.0
 
-Stable tag: 0.1.0
+Stable tag: 0.2.0
 
 Requires PHP: 7.4
 
@@ -71,6 +71,15 @@ Sí. El formulario admite tanto clientes registrados (con datos rellenados previ
 **APG Desistimiento para WooCommerce** es un plugin gratuito. **Art Project Group** no proporciona soporte técnico gratuito, pero ofrece un servicio de [soporte técnico](https://artprojectgroup.es/tienda/ticket-de-soporte) de pago para instalación y configuración.
 
 ## Changelog
+### 0.2.0
+* El formulario del frontend hereda ahora la hoja de estilo nativa de WooCommerce (avisos, campos, botones) sin necesidad de personalización CSS adicional.
+* Los avisos se renderizan con `wc_print_notice()` para que adopten la plantilla correcta de WooCommerce tanto en temas de bloques (`block-notices/*.php`) como en temas clásicos (`notices/*.php`).
+* Los avisos dinámicos (error de "pedido no encontrado" y aviso de producto) se pre-renderizan en el servidor con `wc_print_notice()` y solo se muestran/ocultan desde JavaScript, en lugar de construirse a mano con marcado legacy que se rompe en temas de bloques.
+* El aviso de "pedido no encontrado" sigue el patrón nativo de WooCommerce: aviso al inicio del formulario más la clase `woocommerce-invalid` en el campo de correo electrónico.
+* Los botones usan `wc_wp_theme_get_element_class_name( 'button' )` para compatibilidad con temas y temas de bloques.
+* Se ha eliminado el CSS en línea inyectado desde JavaScript en favor de las clases nativas de avisos de WooCommerce.
+* Traducción al español actualizada al tratamiento informal "tú" conforme al libro de estilo de WooCommerce.
+
 ### 0.1.0
 * Versión inicial.
 

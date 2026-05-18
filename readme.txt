@@ -4,7 +4,7 @@ Donate link: https://artprojectgroup.es/tienda/donacion
 Tags: withdrawal, right of withdrawal, woocommerce, refund, consumer rights
 Requires at least: 6.0
 Tested up to: 7.0
-Stable tag: 0.1.0
+Stable tag: 0.2.0
 Requires PHP: 7.4
 WC requires at least: 7.0
 WC tested up to: 10.8.0
@@ -69,12 +69,21 @@ Yes. The form supports both logged-in customers (with pre-filled data and order 
 6. Edit withdrawal screen with full request details and status history.
 
 == Changelog ==
+= 0.2.0 =
+* The frontend form now inherits the native WooCommerce stylesheet (notices, fields, buttons) without requiring custom CSS overrides.
+* Notices rendered with `wc_print_notice()` so they pick up the correct WooCommerce template for both block themes (`block-notices/*.php`) and classic themes (`notices/*.php`).
+* Dynamic notices (order-not-found feedback and product warning) are pre-rendered server-side via `wc_print_notice()` and toggled by JavaScript, instead of being built by hand with legacy markup that breaks on block themes.
+* Order-not-found feedback follows the native WooCommerce pattern: notice at the top of the form plus `woocommerce-invalid` class on the email field.
+* Buttons use `wc_wp_theme_get_element_class_name( 'button' )` for theme and block-theme compatibility.
+* Removed inline CSS injected from JavaScript in favour of native WooCommerce notice classes.
+* Spanish translation updated to informal "tú" treatment as recommended by the WooCommerce style guide.
+
 = 0.1.0 =
 * Initial release.
 
 == Upgrade Notice ==
-= 0.1.0 =
-* Initial release.
+= 0.2.0 =
+* Frontend form aligned with native WooCommerce notices, fields and buttons. Custom CSS overrides for the form may no longer be necessary.
 
 == Thanks ==
 Thanks to everyone who uses the plugin, helps improve it, makes a donation or encourages us with their comments.

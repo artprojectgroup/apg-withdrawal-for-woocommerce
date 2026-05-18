@@ -34,37 +34,74 @@
 		var noOrdersForEmailText = config.i18n && config.i18n.noOrdersForEmail ? config.i18n.noOrdersForEmail : '';
 		var chooseProductsText = config.i18n && config.i18n.chooseProducts ? config.i18n.chooseProducts : '';
 		var warningMessages   = config.warningMessages || {};
+		var orderErrorTemplate    = config.orderErrorTemplate || '';
+		var productWarningTemplate = config.productWarningTemplate || '';
+		var noticePlaceholder     = config.noticePlaceholder || '__APG_NOTICE_MESSAGE__';
 
-		/** @returns {HTMLElement|null} Lazily-created error span inside #order_id_field. */
-		function getOrderErrorEl() {
-			var fieldContainer = document.getElementById( 'order_id_field' );
-			if ( ! fieldContainer ) { return null; }
-			var el = fieldContainer.querySelector( '.apg-withdrawal-order-error' );
-			if ( ! el ) {
-				el = document.createElement( 'span' );
-				el.className = 'apg-withdrawal-order-error';
-				el.style.cssText = 'display:none;color:#c0392b;font-size:0.875em;margin-top:4px;display:none;';
-				fieldContainer.appendChild( el );
+		/**
+		 * HTML-escapes arbitrary text so it can be safely substituted into a server-rendered
+		 * notice template via innerHTML without enabling XSS via user-provided values
+		 * (e.g. the email address typed by the user).
+		 *
+		 * @param {string} text Untrusted plain text.
+		 * @returns {string} HTML-escaped string.
+		 */
+		function escapeHtml( text ) {
+			var div = document.createElement( 'div' );
+			div.textContent = text == null ? '' : String( text );
+			return div.innerHTML;
+		}
+
+		/**
+		 * Replaces the contents of a toggleable notice wrapper with the server-rendered
+		 * WooCommerce notice template (either `block-notices/*.php` or `notices/*.php` —
+		 * whichever WooCommerce picked for the current theme) with the message substituted
+		 * into the placeholder. No assumption is made about the template's internal structure.
+		 *
+		 * @param {HTMLElement} wrapperEl Outer toggleable element rendered by PHP.
+		 * @param {string}      template  Server-rendered template HTML containing the placeholder.
+		 * @param {string}      message   Message text to inject (will be HTML-escaped).
+		 */
+		function renderNotice( wrapperEl, template, message ) {
+			if ( ! wrapperEl ) { return; }
+			if ( ! template ) {
+				wrapperEl.textContent = message;
+				return;
 			}
-			return el;
+			wrapperEl.innerHTML = template.split( noticePlaceholder ).join( escapeHtml( message ) );
+		}
+
+		/** @param {boolean} invalid Whether to mark the email field as invalid. */
+		function setEmailFieldInvalid( invalid ) {
+			var emailRow = document.getElementById( 'email_field' );
+			if ( ! emailRow ) { return; }
+			if ( invalid ) {
+				emailRow.classList.add( 'woocommerce-invalid', 'woocommerce-invalid-email' );
+				emailRow.classList.remove( 'woocommerce-validated' );
+			} else {
+				emailRow.classList.remove( 'woocommerce-invalid', 'woocommerce-invalid-email' );
+			}
 		}
 
 		/** @param {string} emailVal Email that returned no orders. */
 		function showOrderError( emailVal ) {
-			var el = getOrderErrorEl();
-			if ( el ) {
-				el.textContent = noOrdersForEmailText.replace( '%s', emailVal );
-				el.style.display = '';
-			}
+			var formWrapper = wrapper || document.querySelector( '.apg-withdrawal-form-wrapper' );
+			var el = formWrapper ? formWrapper.querySelector( '.apg-withdrawal-order-error' ) : null;
+			if ( ! el ) { return; }
+			renderNotice( el, orderErrorTemplate, noOrdersForEmailText.replace( '%s', emailVal ) );
+			el.hidden = false;
+			setEmailFieldInvalid( true );
 		}
 
 		/** Hides and clears the order-not-found error. */
 		function hideOrderError() {
-			var el = getOrderErrorEl();
+			var formWrapper = wrapper || document.querySelector( '.apg-withdrawal-form-wrapper' );
+			var el = formWrapper ? formWrapper.querySelector( '.apg-withdrawal-order-error' ) : null;
 			if ( el ) {
-				el.style.display = 'none';
-				el.textContent = '';
+				el.hidden = true;
+				el.innerHTML = '';
 			}
+			setEmailFieldInvalid( false );
 		}
 
 		/** @param {string} emailVal Email that returned no orders. */
@@ -259,11 +296,11 @@
 			if ( warningDiv ) {
 				var warningType = ordersWarning[ orderId ];
 				if ( warningType && warningMessages[ warningType ] ) {
-					warningDiv.textContent = warningMessages[ warningType ];
-					warningDiv.style.display = '';
+					renderNotice( warningDiv, productWarningTemplate, warningMessages[ warningType ] );
+					warningDiv.hidden = false;
 				} else {
-					warningDiv.style.display = 'none';
-					warningDiv.textContent = '';
+					warningDiv.innerHTML = '';
+					warningDiv.hidden = true;
 				}
 			}
 		}
