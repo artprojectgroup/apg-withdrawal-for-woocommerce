@@ -1,6 +1,6 @@
 <?php
 /**
- * Limpieza al desinstalar el plugin.
+ * Cleanup tasks executed when the plugin is uninstalled.
  *
  * @package APG_Withdrawal_For_WooCommerce
  */

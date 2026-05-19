@@ -4,7 +4,7 @@ Donate link: https://artprojectgroup.es/tienda/donacion
 Tags: withdrawal, right of withdrawal, woocommerce, refund, consumer rights
 Requires at least: 6.0
 Tested up to: 7.0
-Stable tag: 0.3.0
+Stable tag: 0.4.0
 Requires PHP: 7.4
 WC requires at least: 7.0
 WC tested up to: 10.8.0
@@ -70,6 +70,11 @@ Yes. The form supports both logged-in customers (with pre-filled data and order 
 6. Edit withdrawal screen with full request details and status history.
 
 == Changelog ==
+= 0.4.0 =
+* New setting "Custom checkbox text" in the Digital content waiver section: lets the merchant override the default acknowledgement label rendered at checkout with a custom plain-text string. Leaving the field empty keeps the default translatable text.
+* The default page auto-created by the plugin now uses the title "Exercise the right of withdrawal" (translated to "Ejercer derecho de desistimiento" in Spanish) and lets WordPress derive its slug from the title. Existing pages are not modified — only new installations get the new title and slug.
+* Internal: corrected the allowed-modes whitelist in the settings sanitiser (`disabled`, `virtual`, `all`, `specific`) so the values now match the actual mode selector.
+
 = 0.3.0 =
 * New: digital-content withdrawal waiver checkbox at checkout. Customers buying digital content or virtual services see an optional acknowledgement that requesting the immediate supply waives their right of withdrawal (EU consumer protection requirement). The checkbox is informational; ticking it is not mandatory and does not block order placement.
 * The checkbox is injected in both checkouts: classic shortcode (via `woocommerce_checkout_before_terms_and_conditions` with priority 999) and block-based (via JavaScript that reinserts itself with a `MutationObserver` to remain right before the native terms checkbox, after any other custom one).
@@ -91,11 +96,8 @@ Yes. The form supports both logged-in customers (with pre-filled data and order 
 * Initial release.
 
 == Upgrade Notice ==
-= 0.3.0 =
-* New: digital-content withdrawal waiver checkbox at checkout, with a settings section to choose when to display it (disabled by default).
-
-= 0.2.0 =
-* Frontend form aligned with native WooCommerce notices, fields and buttons. Custom CSS overrides for the form may no longer be necessary.
+= 0.4.0 =
+* New setting to customise the digital-content waiver checkbox text, and the auto-created page now uses the title "Exercise the right of withdrawal" with a slug derived from the title (new installations only).
 
 == Thanks ==
 Thanks to everyone who uses the plugin, helps improve it, makes a donation or encourages us with their comments.

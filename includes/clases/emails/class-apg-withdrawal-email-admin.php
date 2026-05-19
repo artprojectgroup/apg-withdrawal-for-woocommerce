@@ -1,6 +1,6 @@
 <?php
 /**
- * Email de notificación al administrador.
+ * Admin notification email triggered on new withdrawal requests.
  *
  * @package APG_Withdrawal_For_WooCommerce
  */

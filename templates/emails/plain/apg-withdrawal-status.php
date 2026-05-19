@@ -1,6 +1,6 @@
 <?php
 /**
- * Email de actualización de estado al cliente - texto plano.
+ * Customer status update email — plain text version.
  *
  * @package APG_Withdrawal_For_WooCommerce
  * @var string   $email_heading

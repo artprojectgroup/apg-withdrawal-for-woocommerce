@@ -1,6 +1,6 @@
 <?php
 /**
- * Email de actualización de estado al cliente.
+ * Customer email sent when the status of a withdrawal request changes.
  *
  * @package APG_Withdrawal_For_WooCommerce
  */

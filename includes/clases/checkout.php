@@ -84,11 +84,21 @@ function apg_withdrawal_cart_has_digital_content() {
 }
 
 /**
- * Returns the translatable label displayed next to the digital-content waiver checkbox.
+ * Returns the label displayed next to the digital-content waiver checkbox. If the
+ * administrator has filled in a custom label in the plugin settings, that value
+ * is used verbatim; otherwise the default translatable acknowledgement string is
+ * returned so the rendered text follows the current locale.
  *
  * @return string
  */
 function apg_withdrawal_get_digital_waiver_label() {
+	$settings = function_exists( 'apg_withdrawal_get_settings' ) ? apg_withdrawal_get_settings() : array();
+	$custom   = isset( $settings['digital_waiver_custom_label'] ) ? trim( (string) $settings['digital_waiver_custom_label'] ) : '';
+
+	if ( '' !== $custom ) {
+		return $custom;
+	}
+
 	return __( 'I request the immediate supply of the digital content and acknowledge that, once execution has begun, I will lose my right of withdrawal.', 'apg-withdrawal-for-woocommerce' );
 }
 

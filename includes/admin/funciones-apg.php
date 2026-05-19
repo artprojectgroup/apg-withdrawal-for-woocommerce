@@ -1,6 +1,6 @@
 <?php
 /**
- * Funciones comunes del plugin APG Withdrawal for WooCommerce.
+ * Common helper functions for the APG Withdrawal for WooCommerce plugin.
  *
  * @package APG_Withdrawal_For_WooCommerce
  */
@@ -10,7 +10,7 @@ defined( 'ABSPATH' ) || exit;
 global $apg_withdrawal;
 
 /**
- * Datos estáticos del plugin usados en la administración.
+ * Static plugin data used in the admin area.
  *
  * @var array{
  *   plugin:string,
@@ -88,9 +88,10 @@ function apg_withdrawal_get_settings() {
 			'rejected'  => '1',
 			'completed' => '1',
 		),
-		'digital_waiver_mode'       => 'disabled',
-		'digital_waiver_categories' => array(),
-		'digital_waiver_products'   => array(),
+		'digital_waiver_mode'         => 'disabled',
+		'digital_waiver_categories'   => array(),
+		'digital_waiver_products'     => array(),
+		'digital_waiver_custom_label' => '',
 	);
 
 	return wp_parse_args( get_option( 'apg_withdrawal_settings', array() ), $defaults );
@@ -108,15 +109,15 @@ function apg_withdrawal_get_page_id() {
 }
 
 /**
- * Recupera información del plugin desde la API de WordPress.org y
- * devuelve el HTML de las estrellas de valoración enlazadas.
+ * Fetches plugin information from the WordPress.org API and returns the linked
+ * HTML markup for the star rating.
  *
- * Usa un transient para cachear la respuesta 24 h.
+ * The remote response is cached for 24 h via a transient.
  *
  * @global array $apg_withdrawal
  *
- * @param string $nombre Slug del plugin en WordPress.org.
- * @return string HTML con las estrellas de valoración (o texto alternativo si falla).
+ * @param string $nombre Plugin slug on WordPress.org.
+ * @return string Star rating HTML markup (or fallback text on failure).
  */
 function apg_withdrawal_plugin( $nombre ) {
 	global $apg_withdrawal;
@@ -148,16 +149,16 @@ function apg_withdrawal_plugin( $nombre ) {
 }
 
 /**
- * Añade enlaces personalizados (donación, redes, rating, etc.)
- * en la fila del plugin dentro de "Plugins" (admin).
+ * Adds custom links (donation, social networks, rating, etc.) to the plugin row
+ * inside the WordPress "Plugins" admin screen.
  *
  * Hook: `plugin_row_meta`.
  *
  * @global array $apg_withdrawal
  *
- * @param string[] $enlaces Lista existente de enlaces.
- * @param string   $archivo Ruta del archivo principal del plugin mostrado.
- * @return string[] Enlaces con los adicionales del plugin si aplica.
+ * @param string[] $enlaces Existing list of plugin meta links.
+ * @param string   $archivo Path of the plugin's main file being rendered.
+ * @return string[] Original links merged with the plugin-specific ones when applicable.
  */
 function apg_withdrawal_enlaces( $enlaces, $archivo ) {
 	global $apg_withdrawal;
@@ -177,14 +178,14 @@ function apg_withdrawal_enlaces( $enlaces, $archivo ) {
 add_filter( 'plugin_row_meta', 'apg_withdrawal_enlaces', 10, 2 );
 
 /**
- * Añade los enlaces "Ajustes" y "Soporte" en la fila de acciones del plugin.
+ * Adds the "Settings" and "Support" links to the plugin's action row.
  *
  * Hook: `plugin_action_links_{plugin_basename}`.
  *
  * @global array $apg_withdrawal
  *
- * @param string[] $enlaces Enlaces actuales de acción del plugin.
- * @return string[] Enlaces actualizados con Ajustes y Soporte al principio.
+ * @param string[] $enlaces Existing plugin action links.
+ * @return string[] Updated links with "Settings" and "Support" prepended.
  */
 function apg_withdrawal_enlace_de_ajustes( $enlaces ) {
 	global $apg_withdrawal;
@@ -199,7 +200,7 @@ function apg_withdrawal_enlace_de_ajustes( $enlaces ) {
 }
 
 /**
- * Basename del plugin usado para construir el hook de acción.
+ * Plugin basename used to build the plugin action links filter hook name.
  *
  * @var string
  */

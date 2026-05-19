@@ -39,6 +39,25 @@ div.informacion .artprojectgroup {
 
 .woocommerce table.form-table.apg-table .select2-container {
     min-width: auto !important;
+    height: 40px;
+}
+
+.woocommerce table.form-table.apg-table .select2-container--default .select2-selection--single,
+table.apg-table .select2-container--default .select2-selection--single {
+    height: 40px !important;
+}
+
+.woocommerce
+    table.form-table.apg-table
+    .select2-container--default
+    .select2-selection--single
+    .select2-selection__rendered,
+table.apg-table
+    .select2-container--default
+    .select2-selection--single
+    .select2-selection__rendered {
+    line-height: 38px !important;
+    padding: 0 20px 0 12px;
 }
 
 table.apg-table,
@@ -121,12 +140,14 @@ div.informacion a {
     color: #fff;
 }
 
+table.apg-table .select2-container,
 table.apg-table textarea,
 table.apg-table input[type='text'],
 table.apg-table input[type='number'],
 table.apg-table input[type='email'],
+table.apg-table input[type='url'],
 table.apg-table select {
-    min-width: auto;
+    min-width: 100%;
     max-width: 100%;
     width: 100% !important;
 }

@@ -377,8 +377,7 @@ function apg_withdrawal_maybe_create_page() {
 
 	$page_id = wp_insert_post(
 		array(
-			'post_title'   => __( 'Withdrawal', 'apg-withdrawal-for-woocommerce' ),
-			'post_name'    => 'withdrawal-form',
+			'post_title'   => __( 'Exercise the right of withdrawal', 'apg-withdrawal-for-woocommerce' ),
 			'post_content' => '<!-- wp:paragraph --><p>' . esc_html__( 'Use this page to exercise your right of withdrawal for WooCommerce orders.', 'apg-withdrawal-for-woocommerce' ) . '</p><!-- /wp:paragraph --><!-- wp:shortcode -->[apg_withdrawal_form]<!-- /wp:shortcode -->',
 			'post_status'  => 'publish',
 			'post_type'    => 'page',
@@ -393,7 +392,7 @@ function apg_withdrawal_maybe_create_page() {
 }
 
 // ——————————————————————————————————
-// Solicitudes activas y plazo
+// Active requests and deadline checks
 // ——————————————————————————————————
 
 /**
@@ -464,7 +463,7 @@ function apg_withdrawal_order_is_within_deadline( $order, $settings ) {
 }
 
 // ——————————————————————————————————
-// Cambio de estado centralizado
+// Centralised status change handling
 // ——————————————————————————————————
 
 /**
@@ -523,7 +522,7 @@ function apg_withdrawal_change_status( $post_id, $new_status, $user_id = null ) 
 }
 
 // ——————————————————————————————————
-// Sincronización automática pedido → solicitud
+// Automatic order → withdrawal request synchronisation
 // ——————————————————————————————————
 
 add_action(

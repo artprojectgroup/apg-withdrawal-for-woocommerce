@@ -1,6 +1,6 @@
 <?php
 /**
- * Email de notificación al administrador - texto plano.
+ * Admin notification email — plain text version.
  *
  * @package APG_Withdrawal_For_WooCommerce
  * @var string $email_heading

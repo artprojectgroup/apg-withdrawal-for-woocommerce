@@ -1,6 +1,6 @@
 <?php
 /**
- * Render del formulario público.
+ * Public withdrawal-request form rendering.
  *
  * @package APG_Withdrawal_For_WooCommerce
  */

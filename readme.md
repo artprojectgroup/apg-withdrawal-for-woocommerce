@@ -9,7 +9,7 @@ Requires at least: 6.0
 
 Tested up to: 7.0
 
-Stable tag: 0.3.0
+Stable tag: 0.4.0
 
 Requires PHP: 7.4
 
@@ -72,6 +72,11 @@ Sí. El formulario admite tanto clientes registrados (con datos rellenados previ
 **APG Desistimiento para WooCommerce** es un plugin gratuito. **Art Project Group** no proporciona soporte técnico gratuito, pero ofrece un servicio de [soporte técnico](https://artprojectgroup.es/tienda/ticket-de-soporte) de pago para instalación y configuración.
 
 ## Changelog
+### 0.4.0
+* Nuevo ajuste "Texto personalizado de la casilla" en la sección Renuncia al desistimiento de contenido digital: permite sobrescribir el texto por defecto que se muestra en el checkbox del checkout con una cadena de texto plano. Si se deja vacío se conserva el texto traducible por defecto.
+* La página por defecto que crea el plugin pasa a tener el título "Ejercer derecho de desistimiento" ("Exercise the right of withdrawal" en inglés) y deja que WordPress derive el slug del título automáticamente. Las páginas ya existentes no se modifican; solo se aplica a instalaciones nuevas.
+* Interno: corregida la lista blanca de modos en el saneador de ajustes (`disabled`, `virtual`, `all`, `specific`) para que coincida con los valores reales del selector.
+
 ### 0.3.0
 * Nuevo: casilla de renuncia al derecho de desistimiento para contenido digital en el checkout. Los clientes que compran contenido digital o servicios virtuales ven una aceptación opcional reconociendo que solicitar el suministro inmediato implica la pérdida del derecho de desistimiento (requisito de la legislación de protección al consumidor de la UE). La casilla es informativa: marcarla no es obligatorio ni bloquea el envío del pedido.
 * La casilla se inyecta en ambos checkouts: shortcode clásico (vía `woocommerce_checkout_before_terms_and_conditions` con prioridad 999) y bloques (vía JavaScript que se reposiciona con `MutationObserver` para quedar siempre justo antes de la casilla nativa, tras cualquier otra personalizada).

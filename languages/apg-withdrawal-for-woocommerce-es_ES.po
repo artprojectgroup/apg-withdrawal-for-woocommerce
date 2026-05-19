@@ -1133,3 +1133,20 @@ msgstr ""
 #: includes/clases/formulario.php:596
 msgid "Your withdrawal request has been registered."
 msgstr "Tu solicitud de desistimiento ha sido registrada."
+
+#: includes/clases/woocommerce.php:381
+msgid "Exercise the right of withdrawal"
+msgstr "Ejercer derecho de desistimiento"
+
+#: includes/formulario.php:319
+msgid "Custom checkbox text"
+msgstr "Texto personalizado de la casilla"
+
+#: includes/formulario.php:330
+msgid ""
+"Pre-filled with the default acknowledgement text. Edit it to customise it, "
+"or clear the field to revert to the default at any time."
+msgstr ""
+"Pre-rellenado con el texto de aceptación por defecto. Edítalo para "
+"personalizarlo, o vacía el campo para volver al texto por defecto en "
+"cualquier momento."

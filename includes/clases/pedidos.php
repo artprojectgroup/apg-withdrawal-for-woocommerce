@@ -1,6 +1,6 @@
 <?php
 /**
- * Integración con la lista y edición de pedidos WooCommerce.
+ * Integration with the WooCommerce orders list and order edit screens.
  *
  * @package APG_Withdrawal_For_WooCommerce
  */

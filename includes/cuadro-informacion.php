@@ -1,6 +1,6 @@
 <?php
 /**
- * Cuadro lateral de información del plugin.
+ * Side information box for the plugin's settings page.
  *
  * @package APG_Withdrawal_For_WooCommerce
  * @global array<string,string> $apg_withdrawal
@@ -11,7 +11,7 @@ defined( 'ABSPATH' ) || exit;
 global $apg_withdrawal;
 ?>
 <div class="informacion">
-	<!-- Fila: Donación y autor -->
+	<!-- Row: Donation and author -->
 	<div class="fila">
 		<div class="columna">
 			<p><?php esc_html_e( 'If you enjoyed and find helpful this plugin, please make a donation:', 'apg-withdrawal-for-woocommerce' ); ?></p>
@@ -23,7 +23,7 @@ global $apg_withdrawal;
 		</div>
 	</div>
 
-	<!-- Fila: Redes sociales y más plugins -->
+	<!-- Row: Social networks and more plugins -->
 	<div class="fila">
 		<div class="columna">
 			<p><?php esc_html_e( 'Follow us:', 'apg-withdrawal-for-woocommerce' ); ?></p>
@@ -35,7 +35,7 @@ global $apg_withdrawal;
 		</div>
 	</div>
 
-	<!-- Fila: Contacto y Documentación/Soporte -->
+	<!-- Row: Contact and Documentation/Support -->
 	<div class="fila">
 		<div class="columna">
 			<p><?php esc_html_e( 'Contact with us:', 'apg-withdrawal-for-woocommerce' ); ?></p>
@@ -47,7 +47,7 @@ global $apg_withdrawal;
 		</div>
 	</div>
 
-	<!-- Fila final: Valoración -->
+	<!-- Final row: Rating -->
 	<div class="fila final">
 		<div class="columna">
 			<p>

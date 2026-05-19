@@ -1,6 +1,6 @@
 <?php
 /**
- * Clasificación de productos para el derecho de desistimiento.
+ * Product classification for the right of withdrawal.
  *
  * @package APG_Withdrawal_For_WooCommerce
  */

@@ -1,6 +1,6 @@
 <?php
 /**
- * Placeholder para lógica admin de solicitudes.
+ * Admin-side logic for the withdrawal request list and editor.
  *
  * @package APG_Withdrawal_For_WooCommerce
  */

@@ -1,6 +1,6 @@
 <?php
 /**
- * Correos del plugin.
+ * Plugin emails: notification helpers and content rendering.
  *
  * @package APG_Withdrawal_For_WooCommerce
  */

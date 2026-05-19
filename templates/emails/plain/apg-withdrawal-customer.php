@@ -1,6 +1,6 @@
 <?php
 /**
- * Email de acuse de recibo al cliente - texto plano.
+ * Customer acknowledgement email — plain text version.
  *
  * @package APG_Withdrawal_For_WooCommerce
  * @var string $email_heading
