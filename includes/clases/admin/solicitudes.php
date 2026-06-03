@@ -141,12 +141,20 @@ function apg_withdrawal_render_details_metabox( $post ) {
 		echo '<div class="apg-withdrawal-details-box">' . esc_html( implode( ', ', $product_labels ) ) . '</div>';
 	}
 
+	$initial_delivery = get_post_meta( $post->ID, '_apg_withdrawal_initial_email_delivery', true );
+	if ( is_array( $initial_delivery ) && ! empty( $initial_delivery ) ) {
+		echo '<h4>' . esc_html__( 'Acknowledgement email', 'apg-withdrawal-for-woocommerce' ) . '</h4>';
+		echo '<div class="apg-withdrawal-details-box">';
+		echo wp_kses_post( apg_withdrawal_render_delivery_summary( $initial_delivery ) );
+		echo '</div>';
+	}
+
 	$log = get_post_meta( $post->ID, '_apg_withdrawal_status_log', true );
 
 	if ( is_array( $log ) && ! empty( $log ) ) {
 		echo '<h4>' . esc_html__( 'Status history', 'apg-withdrawal-for-woocommerce' ) . '</h4>';
 		echo '<table class="apg-withdrawal-meta-table apg-withdrawal-log-table"><thead>';
-		echo '<tr><th>' . esc_html__( 'Date', 'apg-withdrawal-for-woocommerce' ) . '</th><th>' . esc_html__( 'User', 'apg-withdrawal-for-woocommerce' ) . '</th><th>' . esc_html__( 'From', 'apg-withdrawal-for-woocommerce' ) . '</th><th>' . esc_html__( 'To', 'apg-withdrawal-for-woocommerce' ) . '</th></tr>';
+		echo '<tr><th>' . esc_html__( 'Date', 'apg-withdrawal-for-woocommerce' ) . '</th><th>' . esc_html__( 'User', 'apg-withdrawal-for-woocommerce' ) . '</th><th>' . esc_html__( 'From', 'apg-withdrawal-for-woocommerce' ) . '</th><th>' . esc_html__( 'To', 'apg-withdrawal-for-woocommerce' ) . '</th><th>' . esc_html__( 'Email delivery', 'apg-withdrawal-for-woocommerce' ) . '</th></tr>';
 		echo '</thead><tbody>';
 
 		$status_labels = array(
@@ -162,16 +170,50 @@ function apg_withdrawal_render_details_metabox( $post ) {
 			$from      = isset( $entry['from'] ) && isset( $status_labels[ $entry['from'] ] ) ? $status_labels[ $entry['from'] ] : esc_html( $entry['from'] ?? '' );
 			$to        = isset( $entry['to'] ) && isset( $status_labels[ $entry['to'] ] ) ? $status_labels[ $entry['to'] ] : esc_html( $entry['to'] ?? '' );
 			printf(
-				'<tr><td>%1$s</td><td>%2$s</td><td>%3$s</td><td>%4$s</td></tr>',
+				'<tr><td>%1$s</td><td>%2$s</td><td>%3$s</td><td>%4$s</td><td>%5$s</td></tr>',
 				esc_html( $entry['date'] ?? '' ),
 				esc_html( $user_name ),
 				esc_html( $from ),
-				esc_html( $to )
+				esc_html( $to ),
+				wp_kses_post( apg_withdrawal_render_delivery_summary( $entry ) )
 			);
 		}
 
 		echo '</tbody></table>';
 	}
+}
+
+/**
+ * Renders a short human-readable summary of an email delivery record (initial
+ * acknowledgement or status-change log entry). Used both in the admin detail
+ * view and as a building block for richer summaries.
+ *
+ * @param array $entry Delivery info or status-log entry with the email fields.
+ * @return string Inline HTML summary.
+ */
+function apg_withdrawal_render_delivery_summary( $entry ) {
+	$attempted = ! empty( $entry['email_attempted'] ) || ! empty( $entry['attempted'] );
+	$accepted  = isset( $entry['email_accepted'] ) ? $entry['email_accepted'] : ( $entry['accepted'] ?? null );
+	$when      = isset( $entry['email_accepted_at'] ) ? (string) $entry['email_accepted_at'] : (string) ( $entry['accepted_at'] ?? '' );
+	$error     = isset( $entry['email_error'] ) ? (string) $entry['email_error'] : (string) ( $entry['error'] ?? '' );
+
+	if ( ! $attempted ) {
+		return esc_html__( '— (not sent)', 'apg-withdrawal-for-woocommerce' );
+	}
+
+	if ( true === (bool) $accepted && '' === $error ) {
+		return sprintf(
+			'✓ %s %s',
+			esc_html__( 'Accepted by the mailer at', 'apg-withdrawal-for-woocommerce' ),
+			esc_html( $when . ' UTC' )
+		);
+	}
+
+	return sprintf(
+		'✗ %s%s',
+		esc_html__( 'Failed', 'apg-withdrawal-for-woocommerce' ),
+		'' !== $error ? ': ' . esc_html( $error ) : ''
+	);
 }
 
 /**
@@ -237,6 +279,50 @@ add_action( 'save_post_apg_withdrawal', 'apg_withdrawal_save_status' );
  *
  * @return void
  */
+/**
+ * Writes a CSV row to the given stream after applying OWASP-recommended
+ * defences against CSV / spreadsheet formula injection.
+ *
+ * Cells whose first character is one of `=`, `+`, `-`, `@`, tab or carriage
+ * return can be interpreted as a formula by spreadsheet software like Excel
+ * or Numbers. To prevent that, those values are prefixed with a leading
+ * apostrophe (`'`) which is then stripped on display by the spreadsheet but
+ * neutralises the formula evaluation.
+ *
+ * @param resource           $handle Open file pointer (php://output is fine).
+ * @param array<int,scalar>  $fields Row values to be serialised.
+ * @return void
+ */
+function apg_withdrawal_fputcsv_safe( $handle, array $fields ) {
+	$dangerous_prefixes = array( '=', '+', '-', '@', "\t", "\r" );
+
+	$safe = array_map(
+		function ( $value ) use ( $dangerous_prefixes ) {
+			$string = (string) $value;
+			if ( '' === $string ) {
+				return $string;
+			}
+			if ( in_array( $string[0], $dangerous_prefixes, true ) ) {
+				return "'" . $string;
+			}
+			return $string;
+		},
+		$fields
+	);
+
+	fputcsv( $handle, $safe, ',', '"', '\\' );
+}
+
+/**
+ * Streams the full withdrawal request log as a CSV download. Hooked on
+ * `admin_post_apg_withdrawal_export_csv` and triggered from the admin toolbar.
+ * Sets the appropriate HTTP headers, writes a UTF-8 BOM so spreadsheet
+ * software opens the file with the correct encoding, and emits each row via
+ * `apg_withdrawal_fputcsv_safe()` so cells starting with formula-trigger
+ * characters cannot be evaluated by Excel / Numbers / LibreOffice.
+ *
+ * @return void
+ */
 function apg_withdrawal_export_csv() {
 	if ( ! current_user_can( 'manage_woocommerce' ) ) {
 		wp_die( esc_html__( 'You do not have permission to export withdrawal requests.', 'apg-withdrawal-for-woocommerce' ) );
@@ -272,7 +358,7 @@ function apg_withdrawal_export_csv() {
 
 	fprintf( $output, chr( 0xEF ) . chr( 0xBB ) . chr( 0xBF ) );
 
-	fputcsv(
+	apg_withdrawal_fputcsv_safe(
 		$output,
 		array(
 			__( 'ID', 'apg-withdrawal-for-woocommerce' ),
@@ -288,10 +374,10 @@ function apg_withdrawal_export_csv() {
 			__( 'User agent', 'apg-withdrawal-for-woocommerce' ),
 			__( 'Details', 'apg-withdrawal-for-woocommerce' ),
 			__( 'Products', 'apg-withdrawal-for-woocommerce' ),
-		),
-		',',
-		'"',
-		'\\'
+			__( 'Receipt SHA-256', 'apg-withdrawal-for-woocommerce' ),
+			__( 'Acknowledgement email accepted', 'apg-withdrawal-for-woocommerce' ),
+			__( 'Acknowledgement email accepted at (UTC)', 'apg-withdrawal-for-woocommerce' ),
+		)
 	);
 
 	foreach ( $posts as $post ) {
@@ -326,7 +412,19 @@ function apg_withdrawal_export_csv() {
 			}
 		}
 
-		fputcsv(
+		$initial_delivery = get_post_meta( $post->ID, '_apg_withdrawal_initial_email_delivery', true );
+		$delivery_accepted = '';
+		$delivery_when     = '';
+		if ( is_array( $initial_delivery ) ) {
+			$delivery_when = isset( $initial_delivery['accepted_at'] ) ? (string) $initial_delivery['accepted_at'] : '';
+			if ( ! empty( $initial_delivery['attempted'] ) ) {
+				$delivery_accepted = ! empty( $initial_delivery['accepted'] )
+					? __( 'Yes', 'apg-withdrawal-for-woocommerce' )
+					: __( 'No', 'apg-withdrawal-for-woocommerce' );
+			}
+		}
+
+		apg_withdrawal_fputcsv_safe(
 			$output,
 			array(
 				$post->ID,
@@ -342,10 +440,10 @@ function apg_withdrawal_export_csv() {
 				get_post_meta( $post->ID, '_apg_withdrawal_user_agent', true ),
 				$post->post_content,
 				$products_label,
-			),
-			',',
-			'"',
-			'\\'
+				get_post_meta( $post->ID, '_apg_withdrawal_receipt_hash', true ),
+				$delivery_accepted,
+				$delivery_when,
+			)
 		);
 	}
 

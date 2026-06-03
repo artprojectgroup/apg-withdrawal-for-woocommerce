@@ -145,6 +145,7 @@ table.apg-table textarea,
 table.apg-table input[type='text'],
 table.apg-table input[type='number'],
 table.apg-table input[type='email'],
+table.apg-table input[type='tel'],
 table.apg-table input[type='url'],
 table.apg-table select {
     min-width: 100%;
@@ -170,12 +171,6 @@ table.apg-table select {
 .apg-withdrawal-form h2,
 .apg-withdrawal-confirmation h2 {
     margin-bottom: 1rem;
-}
-
-.apg-withdrawal-checkbox label.checkbox {
-    display: flex;
-    gap: 8px;
-    align-items: center;
 }
 
 .apg-withdrawal-products-row select,

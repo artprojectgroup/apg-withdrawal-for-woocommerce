@@ -44,6 +44,8 @@ function apg_withdrawal_product_tab_content() {
 		'manual'       => __( 'Manual review required', 'apg-withdrawal-for-woocommerce' ),
 	);
 
+	$custom_reason = get_post_meta( $post->ID, '_apg_withdrawal_custom_reason', true );
+
 	echo '<div id="apg_withdrawal_product_data" class="panel woocommerce_options_panel">';
 	echo '<div class="options_group">';
 
@@ -51,10 +53,21 @@ function apg_withdrawal_product_tab_content() {
 		array(
 			'id'          => '_apg_withdrawal_type',
 			'label'       => __( 'Withdrawal type', 'apg-withdrawal-for-woocommerce' ),
-			'description' => __( 'Defines whether the right of withdrawal applies to this product. Shown as a notice to the customer in the withdrawal form.', 'apg-withdrawal-for-woocommerce' ),
+			'description' => __( 'Defines whether the right of withdrawal applies to this product. Shown as a notice to the customer in the withdrawal form. Leave on "Withdrawal allowed (default)" to let the product inherit the type from its categories.', 'apg-withdrawal-for-woocommerce' ),
 			'desc_tip'    => true,
 			'value'       => $current,
 			'options'     => $types,
+		)
+	);
+
+	woocommerce_wp_textarea_input(
+		array(
+			'id'          => '_apg_withdrawal_custom_reason',
+			'label'       => __( 'Custom exclusion notice (optional)', 'apg-withdrawal-for-woocommerce' ),
+			'description' => __( 'If set, this text overrides the default notice text for this specific product (configured per type in the plugin settings). Leave empty to use the per-type default.', 'apg-withdrawal-for-woocommerce' ),
+			'desc_tip'    => true,
+			'value'       => $custom_reason,
+			'rows'        => 3,
 		)
 	);
 
@@ -80,5 +93,10 @@ function apg_withdrawal_save_product_type( $post_id ) {
 	$allowed = array( 'allowed', 'excluded', 'digital', 'personalized', 'manual' );
 
 	update_post_meta( $post_id, '_apg_withdrawal_type', in_array( $type, $allowed, true ) ? $type : 'allowed' );
+
+	// Optional per-product override for the exclusion notice text.
+	// phpcs:ignore WordPress.Security.NonceVerification.Missing -- Nonce verified by WooCommerce upstream.
+	$reason = isset( $_POST['_apg_withdrawal_custom_reason'] ) ? sanitize_textarea_field( wp_unslash( $_POST['_apg_withdrawal_custom_reason'] ) ) : '';
+	update_post_meta( $post_id, '_apg_withdrawal_custom_reason', $reason );
 }
 add_action( 'woocommerce_process_product_meta', 'apg_withdrawal_save_product_type' );

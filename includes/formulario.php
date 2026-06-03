@@ -35,6 +35,17 @@ $tab = 1;
 			</tr>
 			<tr valign="top">
 				<th scope="row" class="titledesc">
+					<label for="apg_withdrawal_settings[merchant_phone]">
+						<?php esc_html_e( 'Merchant phone (optional)', 'apg-withdrawal-for-woocommerce' ); ?>
+					</label>
+				</th>
+				<td class="forminp">
+					<input id="apg_withdrawal_settings[merchant_phone]" name="apg_withdrawal_settings[merchant_phone]" type="tel" value="<?php echo esc_attr( isset( $apg_withdrawal_settings['merchant_phone'] ) ? $apg_withdrawal_settings['merchant_phone'] : '' ); ?>" tabindex="<?php echo esc_attr( $tab ); $tab++; ?>" />
+					<p class="description"><?php esc_html_e( 'Phone number displayed alongside the store name, address and email in the printable Annex I.B model withdrawal form. Leave empty to omit the phone line.', 'apg-withdrawal-for-woocommerce' ); ?></p>
+				</td>
+			</tr>
+			<tr valign="top">
+				<th scope="row" class="titledesc">
 					<label for="apg_withdrawal_settings[page_id]">
 						<?php esc_html_e( 'Withdrawal page', 'apg-withdrawal-for-woocommerce' ); ?>
 					</label>
@@ -222,14 +233,43 @@ $tab = 1;
 
 		<?php
 		$digital_waiver_mode         = isset( $apg_withdrawal_settings['digital_waiver_mode'] ) ? $apg_withdrawal_settings['digital_waiver_mode'] : 'disabled'; // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound -- Local template variables in included file
-		$digital_waiver_categories   = isset( $apg_withdrawal_settings['digital_waiver_categories'] ) ? (array) $apg_withdrawal_settings['digital_waiver_categories'] : array(); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound -- Local template variables in included file
-		$digital_waiver_products     = isset( $apg_withdrawal_settings['digital_waiver_products'] ) ? (array) $apg_withdrawal_settings['digital_waiver_products'] : array(); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound -- Local template variables in included file
 		$digital_waiver_custom_label = isset( $apg_withdrawal_settings['digital_waiver_custom_label'] ) ? $apg_withdrawal_settings['digital_waiver_custom_label'] : ''; // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound -- Local template variables in included file
-		$product_categories          = function_exists( 'get_terms' ) ? get_terms( array( 'taxonomy' => 'product_cat', 'hide_empty' => false ) ) : array(); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound -- Local template variables in included file
+		$exclusion_notice_types      = array( // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound -- Local template variables in included file
+			'excluded'     => __( 'Withdrawal excluded (generic)', 'apg-withdrawal-for-woocommerce' ),
+			'digital'      => __( 'Digital content', 'apg-withdrawal-for-woocommerce' ),
+			'personalized' => __( 'Personalised product', 'apg-withdrawal-for-woocommerce' ),
+			'manual'       => __( 'Manual review required', 'apg-withdrawal-for-woocommerce' ),
+		);
 		?>
 
+		<h3><?php esc_html_e( 'Exclusion notice texts', 'apg-withdrawal-for-woocommerce' ); ?></h3>
+		<p><?php esc_html_e( 'Text shown on the product page (between the price and the Add to Cart button) and inside the withdrawal request form for products classified with each withdrawal type. Edit any field to override the built-in default. Leave a field empty to keep the translated default text.', 'apg-withdrawal-for-woocommerce' ); ?></p>
+		<table class="form-table apg-table">
+			<?php foreach ( $exclusion_notice_types as $notice_type_slug => $notice_type_label ) : // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound -- Local template variables in included file ?>
+				<?php
+				$notice_key      = 'exclusion_notice_' . $notice_type_slug; // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound -- Local template variables in included file
+				$notice_saved    = isset( $apg_withdrawal_settings[ $notice_key ] ) ? (string) $apg_withdrawal_settings[ $notice_key ] : ''; // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound -- Local template variables in included file
+				$notice_to_show  = '' !== $notice_saved ? $notice_saved : apg_withdrawal_get_default_exclusion_notice( $notice_type_slug ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound -- Local template variables in included file
+				?>
+				<tr valign="top">
+					<th scope="row" class="titledesc">
+						<label for="apg_withdrawal_settings[<?php echo esc_attr( $notice_key ); ?>]"><?php echo esc_html( $notice_type_label ); ?></label>
+					</th>
+					<td class="forminp">
+						<textarea
+							id="apg_withdrawal_settings[<?php echo esc_attr( $notice_key ); ?>]"
+							name="apg_withdrawal_settings[<?php echo esc_attr( $notice_key ); ?>]"
+							rows="3"
+							style="width:560px;max-width:100%;"
+							tabindex="<?php echo esc_attr( $tab ); $tab++; ?>"
+						><?php echo esc_textarea( $notice_to_show ); ?></textarea>
+					</td>
+				</tr>
+			<?php endforeach; ?>
+		</table>
+
 		<h3><?php esc_html_e( 'Digital content waiver', 'apg-withdrawal-for-woocommerce' ); ?></h3>
-		<p><?php esc_html_e( 'Show an optional acknowledgement at checkout when the customer is buying digital content or virtual services subject to the immediate-execution waiver of the right of withdrawal.', 'apg-withdrawal-for-woocommerce' ); ?></p>
+		<p><?php esc_html_e( 'Show an optional acknowledgement at checkout when the customer is buying digital content or virtual services subject to the immediate-execution waiver of the right of withdrawal. The list of products that trigger this checkbox is driven by the per-product / per-category "Withdrawal type" field (mark them as "Digital content").', 'apg-withdrawal-for-woocommerce' ); ?></p>
 		<table class="form-table apg-table">
 			<tr valign="top">
 				<th scope="row" class="titledesc">
@@ -239,63 +279,12 @@ $tab = 1;
 					<select
 						id="apg_withdrawal_settings[digital_waiver_mode]"
 						name="apg_withdrawal_settings[digital_waiver_mode]"
-						class="wc-enhanced-select apg-withdrawal-digital-waiver-mode"
+						class="wc-enhanced-select"
 						tabindex="<?php echo esc_attr( $tab ); $tab++; ?>"
 					>
 						<option value="disabled" <?php selected( $digital_waiver_mode, 'disabled' ); ?>><?php esc_html_e( 'Never (disabled)', 'apg-withdrawal-for-woocommerce' ); ?></option>
-						<option value="virtual" <?php selected( $digital_waiver_mode, 'virtual' ); ?>><?php esc_html_e( 'Only on virtual products', 'apg-withdrawal-for-woocommerce' ); ?></option>
+						<option value="digital" <?php selected( $digital_waiver_mode, 'digital' ); ?>><?php esc_html_e( 'On products classified as digital content', 'apg-withdrawal-for-woocommerce' ); ?></option>
 						<option value="all" <?php selected( $digital_waiver_mode, 'all' ); ?>><?php esc_html_e( 'On every order', 'apg-withdrawal-for-woocommerce' ); ?></option>
-						<option value="specific" <?php selected( $digital_waiver_mode, 'specific' ); ?>><?php esc_html_e( 'On selected categories or products', 'apg-withdrawal-for-woocommerce' ); ?></option>
-					</select>
-				</td>
-			</tr>
-			<tr valign="top" class="apg-withdrawal-digital-waiver-specific-row" <?php echo 'specific' === $digital_waiver_mode ? '' : 'style="display:none;"'; ?>>
-				<th scope="row" class="titledesc">
-					<label for="apg_withdrawal_settings[digital_waiver_categories]"><?php esc_html_e( 'Product categories', 'apg-withdrawal-for-woocommerce' ); ?></label>
-				</th>
-				<td class="forminp">
-					<?php if ( ! empty( $product_categories ) && ! is_wp_error( $product_categories ) ) : ?>
-					<select
-						multiple="multiple"
-						id="apg_withdrawal_settings[digital_waiver_categories]"
-						name="apg_withdrawal_settings[digital_waiver_categories][]"
-						class="wc-enhanced-select"
-						data-placeholder="<?php esc_attr_e( 'Select product categories&hellip;', 'apg-withdrawal-for-woocommerce' ); ?>"
-						tabindex="<?php echo esc_attr( $tab ); $tab++; ?>"
-					>
-						<?php foreach ( $product_categories as $product_category ) : // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound -- Local template variables in included file ?>
-						<option value="<?php echo esc_attr( $product_category->term_id ); ?>" <?php selected( in_array( (int) $product_category->term_id, array_map( 'intval', $digital_waiver_categories ), true ), true ); ?>><?php echo esc_html( $product_category->name ); ?></option>
-						<?php endforeach; ?>
-					</select>
-					<?php else : ?>
-					<em><?php esc_html_e( 'No product categories available.', 'apg-withdrawal-for-woocommerce' ); ?></em>
-					<?php endif; ?>
-				</td>
-			</tr>
-			<tr valign="top" class="apg-withdrawal-digital-waiver-specific-row" <?php echo 'specific' === $digital_waiver_mode ? '' : 'style="display:none;"'; ?>>
-				<th scope="row" class="titledesc">
-					<label for="apg_withdrawal_settings[digital_waiver_products]"><?php esc_html_e( 'Products', 'apg-withdrawal-for-woocommerce' ); ?></label>
-				</th>
-				<td class="forminp">
-					<select
-						multiple="multiple"
-						id="apg_withdrawal_settings[digital_waiver_products]"
-						name="apg_withdrawal_settings[digital_waiver_products][]"
-						class="wc-product-search"
-						data-placeholder="<?php esc_attr_e( 'Search for products&hellip;', 'apg-withdrawal-for-woocommerce' ); ?>"
-						data-action="woocommerce_json_search_products_and_variations"
-						data-multiple="true"
-						tabindex="<?php echo esc_attr( $tab ); $tab++; ?>"
-					>
-						<?php foreach ( $digital_waiver_products as $waiver_product_id ) : // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound -- Local template variables in included file ?>
-							<?php
-							$waiver_product = function_exists( 'wc_get_product' ) ? wc_get_product( absint( $waiver_product_id ) ) : false; // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound -- Local template variables in included file
-							if ( ! $waiver_product ) {
-								continue;
-							}
-							?>
-							<option value="<?php echo esc_attr( $waiver_product_id ); ?>" selected="selected"><?php echo esc_html( wp_strip_all_tags( $waiver_product->get_formatted_name() ) ); ?></option>
-						<?php endforeach; ?>
 					</select>
 				</td>
 			</tr>
@@ -317,27 +306,6 @@ $tab = 1;
 				</td>
 			</tr>
 		</table>
-
-		<script>
-			(function () {
-				var modeEl = document.querySelector( '.apg-withdrawal-digital-waiver-mode' );
-				if ( ! modeEl ) { return; }
-				var specificRows = document.querySelectorAll( '.apg-withdrawal-digital-waiver-specific-row' );
-				/** Toggle the category/product rows depending on whether the 'specific' mode is selected. */
-				function syncRows() {
-					var show = 'specific' === modeEl.value;
-					for ( var i = 0; i < specificRows.length; i++ ) {
-						specificRows[ i ].style.display = show ? '' : 'none';
-					}
-				}
-				// SelectWoo (jQuery-based) emits the change event on the original <select>; listen on both
-				// the DOM element and via jQuery when available to catch SelectWoo-driven changes.
-				modeEl.addEventListener( 'change', syncRows );
-				if ( window.jQuery ) {
-					window.jQuery( modeEl ).on( 'change', syncRows );
-				}
-			})();
-		</script>
 
 		<?php submit_button(); ?>
 	</form>

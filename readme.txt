@@ -4,7 +4,7 @@ Donate link: https://artprojectgroup.es/tienda/donacion
 Tags: withdrawal, right of withdrawal, woocommerce, refund, consumer rights
 Requires at least: 6.0
 Tested up to: 7.0
-Stable tag: 0.4.0
+Stable tag: 0.5.0
 Requires PHP: 7.4
 WC requires at least: 7.0
 WC tested up to: 10.8.0
@@ -58,6 +58,24 @@ Yes. The plugin is fully compatible with WooCommerce High-Performance Order Stor
 = Can guest customers submit a withdrawal request? =
 Yes. The form supports both logged-in customers (with pre-filled data and order selector) and guests (with email lookup of their orders).
 
+= Where should I place the withdrawal link? =
+The withdrawal form page is auto-created on activation and contains the `[apg_withdrawal_form]` shortcode. To comply with Article 11a of Directive 2011/83/EU (added by Directive 2023/2673), the link to that page should be prominently visible and easy to find on the storefront. The plugin gives you several tools to place it; deciding *where* to place it is the merchant's (or their web designer's) responsibility:
+
+* The fixed URL of the auto-created page, available in *WooCommerce → Withdrawal → Withdrawal page*.
+* The `[apg_withdrawal_link]` shortcode, with optional `label`, `class` and `target` attributes, to drop the link inside any post, page, footer widget or HTML block.
+* The matching *Withdrawal link* Gutenberg block for sites built with the Full Site Editor.
+* The *Withdrawal request* action that is automatically added to every eligible order in the *My Account → Orders* table.
+
+Typical recommended placements:
+
+* The site footer, so the link is reachable from any page.
+* The *My Account* menu (the per-order action is already added; you can also add a top-level menu item linking to the public form).
+* The Terms and Conditions / Privacy Policy pages, alongside the rest of the consumer information required by Article 6.1.h of Directive 2011/83/EU.
+* The order processing / completed emails (the plugin already injects the link there automatically via `woocommerce_email_after_order_table`).
+
+= How long should I keep the withdrawal request records? =
+The plugin does not delete withdrawal request records automatically. As a general recommendation, keep them for at least **5 years** after their creation — the typical statute of limitations for consumer and contractual actions in many EU jurisdictions. Always check the applicable retention period in your country before deleting old records or running the plugin's CSV export + uninstall flow.
+
 = Where can I get support? =
 **APG Withdrawal for WooCommerce** is a free plugin. **Art Project Group** does not provide free technical support, but offers a paid [technical support](https://artprojectgroup.es/tienda/ticket-de-soporte) service for installation and configuration.
 
@@ -70,6 +88,21 @@ Yes. The form supports both logged-in customers (with pre-filled data and order 
 6. Edit withdrawal screen with full request details and status history.
 
 == Changelog ==
+= 0.5.0 =
+* Compliance with Directive (EU) 2023/2673 (amends Directive 2011/83/EU on consumer rights). The plugin now covers the additional obligations introduced by the new Article 11a (online withdrawal function) plus the related pre-contractual and burden-of-proof requirements.
+* Category-level *Withdrawal type* term meta on `product_cat`, with automatic inheritance for products that keep the "Withdrawal allowed (default)" value. When a product belongs to several categories with conflicting types, the most restrictive type wins (priority order: `excluded` > `personalized` > `digital` > `manual` > `allowed`).
+* New `[apg_withdrawal_notice]` shortcode, matching `apg-withdrawal/notice` Gutenberg block and `woocommerce_single_product_summary` injection (priority 20, between the price and the Add to Cart button) that automatically displays the exclusion notice on the product page when the effective withdrawal type is not `allowed`.
+* New plugin settings section "Exclusion notice texts" with one editable textarea per non-default type (`excluded`, `digital`, `personalized`, `manual`) and a translated default text per type. Optional per-product override field on the *Withdrawal* product data tab to customise the notice for a single product.
+* "Digital content waiver" settings section simplified to a single excluding selector with three modes — `Never (disabled)`, `On products classified as digital content`, `On every order` — driven exclusively by the per-product / per-category withdrawal type. Legacy installations with mode `virtual` are migrated to `digital`; mode `specific` is migrated to `digital` and the previously selected categories / products are automatically marked with `_apg_withdrawal_type = digital` to preserve their behaviour. The legacy `digital_waiver_categories` / `digital_waiver_products` settings stop being honoured at the UI level (a one-time silent migration runs on `init`, flagged by the `apg_withdrawal_migrated_to_0_5` option).
+* New printable Annex I.B model withdrawal form served at `?apg_withdrawal_model_form=1` with `@media print` styling, pre-populated with the store name, address, email (from WooCommerce settings) and an optional merchant phone (new `Merchant phone (optional)` plugin setting). The public withdrawal request form links to it as "Download the official model withdrawal form (Annex I.B)".
+* New `[apg_withdrawal_link]` shortcode and `apg-withdrawal/link` Gutenberg block to render a link to the public withdrawal form with optional `label`, `class` and `target` attributes. The default label uses the literal wording suggested by Article 11a(1) ("Withdraw from the contract here"). The My Account per-order action label has been updated to the same default for new installs.
+* Customer acknowledgement email now includes a verifiable SHA-256 hash of the receipt content (computed over name + email + order + scope + products + details + UTC timestamp) and the UTC timestamp used for verification. Hash and timestamp are also persisted in post meta (`_apg_withdrawal_receipt_hash`, `_apg_withdrawal_receipt_hash_timestamp`) and exposed in the CSV export.
+* Digital-content waiver consent at checkout is now persisted as a structured log (`_apg_withdrawal_digital_waiver_log` order meta) that includes the exact label shown to the customer, UTC timestamp, IP, user agent and checkout type (`classic` or `block`). The legacy `_apg_withdrawal_digital_waiver` boolean meta is also written for backwards compatibility.
+* Email delivery indicator: every status-change email and the initial customer acknowledgement now record whether `wp_mail()` was invoked, whether it returned success (= "accepted by the mailer", not actual recipient delivery), the UTC timestamp and any error captured through `wp_mail_failed`. The information is surfaced in the request detail screen and exported as two additional CSV columns.
+* GDPR integration: the plugin now registers a personal-data exporter and a personal-data eraser with the native WordPress privacy tools. The eraser **anonymises** withdrawal requests (replaces name, email, phone, IP, user agent and customer-supplied free text with `[redacted]`) and keeps the record itself plus the `_apg_withdrawal_wc_order_id` reference for legal evidence, in line with the burden of proof in Article 16 bis(8).
+* CSV export now defends against spreadsheet formula injection: every cell whose first character is `=`, `+`, `-`, `@`, tab or carriage return is prefixed with an apostrophe before being written via `fputcsv`.
+* New FAQ entries documenting where the withdrawal link should be placed by the merchant or the web designer and recommending a minimum 5-year retention period for withdrawal request records.
+
 = 0.4.0 =
 * New setting "Custom checkbox text" in the Digital content waiver section: lets the merchant override the default acknowledgement label rendered at checkout with a custom plain-text string. Leaving the field empty keeps the default translatable text.
 * The default page auto-created by the plugin now uses the title "Exercise the right of withdrawal" (translated to "Ejercer derecho de desistimiento" in Spanish) and lets WordPress derive its slug from the title. Existing pages are not modified — only new installations get the new title and slug.
@@ -96,8 +129,8 @@ Yes. The form supports both logged-in customers (with pre-filled data and order 
 * Initial release.
 
 == Upgrade Notice ==
-= 0.4.0 =
-* New setting to customise the digital-content waiver checkbox text, and the auto-created page now uses the title "Exercise the right of withdrawal" with a slug derived from the title (new installations only).
+= 0.5.0 =
+* Directive (EU) 2023/2673 compliance: category-level withdrawal type with inheritance, product page exclusion notices, printable Annex I.B form, SHA-256 receipt hash, waiver consent log, email delivery indicator, GDPR exporter / eraser and CSV injection protection.
 
 == Thanks ==
 Thanks to everyone who uses the plugin, helps improve it, makes a donation or encourages us with their comments.

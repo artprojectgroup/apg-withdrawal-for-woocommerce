@@ -105,8 +105,38 @@ function apg_withdrawal_process_submission_data( $data ) {
 			update_post_meta( $post_id, '_apg_withdrawal_expired_warning', '1' );
 		}
 
+		// SHA-256 receipt hash for legal traceability. The canonical form is a
+		// pipe-separated concatenation of the receipt's user-visible fields plus
+		// the GMT timestamp recorded with it, so the consumer can reconstruct
+		// and verify the digest from the data shown in the acknowledgement email.
+		$receipt_timestamp = current_time( 'mysql', true );
+		$receipt_canonical = implode(
+			'|',
+			array(
+				$name,
+				$email,
+				$order_ref,
+				$scope,
+				implode( ',', $products ),
+				$details,
+				$receipt_timestamp,
+			)
+		);
+		$receipt_hash      = hash( 'sha256', $receipt_canonical );
+		update_post_meta( $post_id, '_apg_withdrawal_receipt_hash', $receipt_hash );
+		update_post_meta( $post_id, '_apg_withdrawal_receipt_hash_timestamp', $receipt_timestamp );
+
 		apg_withdrawal_add_order_note( $validation['order'], $post_id, $scope, $details );
-		apg_withdrawal_send_customer_email( $email, $name, $order_ref, $scope, $post_id, current_time( 'mysql' ), $phone );
+
+		// Customer acknowledgement: capture delivery status (mailer acceptance,
+		// not real recipient delivery) as legal evidence under Art. 16 bis(8).
+		$initial_delivery = apg_withdrawal_send_with_delivery_capture(
+			function () use ( $email, $name, $order_ref, $scope, $post_id, $phone ) {
+				apg_withdrawal_send_customer_email( $email, $name, $order_ref, $scope, $post_id, current_time( 'mysql' ), $phone );
+			}
+		);
+		update_post_meta( $post_id, '_apg_withdrawal_initial_email_delivery', $initial_delivery );
+
 		apg_withdrawal_send_admin_email( $post_id, $name, $email, $order_ref, $scope, $details, $settings['notification_email'], $phone );
 	} else {
 		return 'general';

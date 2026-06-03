@@ -29,3 +29,4 @@ foreach ( $apg_withdrawal_post_ids as $post_id ) {
 }
 
 delete_option( 'apg_withdrawal_settings' );
+delete_option( 'apg_withdrawal_migrated_to_0_5' );

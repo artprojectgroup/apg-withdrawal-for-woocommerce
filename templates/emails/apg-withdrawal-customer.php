@@ -83,6 +83,19 @@ printf( esc_html__( 'Hello %s,', 'apg-withdrawal-for-woocommerce' ), esc_html( $
 	</tbody>
 </table>
 
+<?php if ( ! empty( $data['receipt_hash'] ) ) : ?>
+<p style="font-size:13px;color:#555;border-top:1px solid #eee;padding-top:12px;">
+	<?php
+	printf(
+		/* translators: 1: SHA-256 receipt hash, 2: timestamp in UTC. */
+		esc_html__( 'Verification code for this acknowledgement (SHA-256): %1$s — computed at %2$s UTC.', 'apg-withdrawal-for-woocommerce' ),
+		'<code>' . esc_html( $data['receipt_hash'] ) . '</code>',
+		'<code>' . esc_html( $data['receipt_hash_timestamp'] ) . '</code>'
+	);
+	?>
+</p>
+<?php endif; ?>
+
 <p><?php esc_html_e( 'Should the right of withdrawal be applicable, it may be necessary to return the product in accordance with the instructions provided by the store.', 'apg-withdrawal-for-woocommerce' ); ?></p>
 
 <?php if ( $additional_content ) : ?>

@@ -2,7 +2,7 @@
 /*
 Plugin Name: APG Withdrawal for WooCommerce
 Requires Plugins: woocommerce
-Version: 0.4.0
+Version: 0.5.0
 Plugin URI: https://wordpress.org/plugins/apg-withdrawal-for-woocommerce/
 Description: Add to WooCommerce an online withdrawal workflow compliant with EU requirements.
 Author URI: https://artprojectgroup.es/
@@ -26,7 +26,7 @@ Domain Path: /languages
 defined( 'ABSPATH' ) || exit;
 
 define( 'apg_withdrawal_DIRECCION', plugin_basename( __FILE__ ) );
-define( 'apg_withdrawal_VERSION', '0.4.0' );
+define( 'apg_withdrawal_VERSION', '0.5.0' );
 define( 'apg_withdrawal_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 
 include_once 'includes/admin/funciones-apg.php';
@@ -112,8 +112,13 @@ if ( is_plugin_active( 'woocommerce/woocommerce.php' ) || is_network_only_plugin
 			include_once 'includes/clases/pedidos.php';
 			include_once 'includes/clases/procesador.php';
 			include_once 'includes/clases/producto.php';
+			include_once 'includes/clases/categoria.php';
+			include_once 'includes/clases/aviso-producto.php';
+			include_once 'includes/clases/anexo-i-b.php';
 			include_once 'includes/clases/woocommerce.php';
 			include_once 'includes/clases/checkout.php';
+			include_once 'includes/clases/rgpd.php';
+			include_once 'includes/clases/enlace.php';
 		}
 
 		/**
@@ -327,12 +332,12 @@ if ( is_plugin_active( 'woocommerce/woocommerce.php' ) || is_network_only_plugin
 				$this->apg_withdrawal_has_expired_action = true;
 				$actions['apg_withdrawal_expired'] = array(
 					'url'  => $url,
-					'name' => esc_html__( 'Withdrawal request *', 'apg-withdrawal-for-woocommerce' ),
+					'name' => esc_html__( 'Withdraw from the contract here *', 'apg-withdrawal-for-woocommerce' ),
 				);
 			} else {
 				$actions['apg_withdrawal'] = array(
 					'url'  => $url,
-					'name' => esc_html__( 'Withdrawal request', 'apg-withdrawal-for-woocommerce' ),
+					'name' => esc_html__( 'Withdraw from the contract here', 'apg-withdrawal-for-woocommerce' ),
 				);
 			}
 
@@ -457,6 +462,7 @@ if ( is_plugin_active( 'woocommerce/woocommerce.php' ) || is_network_only_plugin
 	function apg_withdrawal_sanitiza_opciones( $opciones ) {
 		$predeterminadas = array(
 			'notification_email'       => get_option( 'admin_email' ),
+			'merchant_phone'           => '',
 			'page_id'                  => '0',
 			'store_ip'                 => '1',
 			'store_user_agent'         => '1',
@@ -475,21 +481,29 @@ if ( is_plugin_active( 'woocommerce/woocommerce.php' ) || is_network_only_plugin
 				'rejected'  => '1',
 				'completed' => '1',
 			),
-			'digital_waiver_mode'         => 'disabled',
-			'digital_waiver_categories'   => array(),
-			'digital_waiver_products'     => array(),
-			'digital_waiver_custom_label' => '',
+			'digital_waiver_mode'             => 'disabled',
+			'digital_waiver_categories'       => array(),
+			'digital_waiver_products'         => array(),
+			'digital_waiver_custom_label'     => '',
+			'exclusion_notice_excluded'       => '',
+			'exclusion_notice_digital'        => '',
+			'exclusion_notice_personalized'   => '',
+			'exclusion_notice_manual'         => '',
 		);
 
 		$opciones = wp_parse_args( is_array( $opciones ) ? $opciones : array(), $predeterminadas );
 
 		$raw_map      = isset( $opciones['order_status_map'] ) && is_array( $opciones['order_status_map'] ) ? $opciones['order_status_map'] : array();
 		$raw_email_on = isset( $opciones['email_on_status'] ) && is_array( $opciones['email_on_status'] ) ? $opciones['email_on_status'] : array();
-		$allowed_waiver_modes = array( 'disabled', 'virtual', 'all', 'specific' );
+		$allowed_waiver_modes = array( 'disabled', 'digital', 'all' );
 		$raw_waiver_mode      = isset( $opciones['digital_waiver_mode'] ) ? sanitize_key( $opciones['digital_waiver_mode'] ) : 'disabled';
 		$raw_waiver_cats      = isset( $opciones['digital_waiver_categories'] ) && is_array( $opciones['digital_waiver_categories'] ) ? $opciones['digital_waiver_categories'] : array();
 		$raw_waiver_products  = isset( $opciones['digital_waiver_products'] ) && is_array( $opciones['digital_waiver_products'] ) ? $opciones['digital_waiver_products'] : array();
 		$raw_waiver_label     = isset( $opciones['digital_waiver_custom_label'] ) ? $opciones['digital_waiver_custom_label'] : '';
+		$raw_notice_excluded     = isset( $opciones['exclusion_notice_excluded'] ) ? $opciones['exclusion_notice_excluded'] : '';
+		$raw_notice_digital      = isset( $opciones['exclusion_notice_digital'] ) ? $opciones['exclusion_notice_digital'] : '';
+		$raw_notice_personalized = isset( $opciones['exclusion_notice_personalized'] ) ? $opciones['exclusion_notice_personalized'] : '';
+		$raw_notice_manual       = isset( $opciones['exclusion_notice_manual'] ) ? $opciones['exclusion_notice_manual'] : '';
 
 		$sanitize_wc_statuses = function ( $statuses ) {
 			if ( ! is_array( $statuses ) ) {
@@ -500,6 +514,7 @@ if ( is_plugin_active( 'woocommerce/woocommerce.php' ) || is_network_only_plugin
 
 		return array(
 			'notification_email'       => sanitize_email( $opciones['notification_email'] ),
+			'merchant_phone'           => sanitize_text_field( $opciones['merchant_phone'] ),
 			'page_id'                  => strval( absint( $opciones['page_id'] ) ),
 			'store_ip'                 => '1' === $opciones['store_ip'] ? '1' : '0',
 			'store_user_agent'         => '1' === $opciones['store_user_agent'] ? '1' : '0',
@@ -518,10 +533,14 @@ if ( is_plugin_active( 'woocommerce/woocommerce.php' ) || is_network_only_plugin
 				'rejected'  => ! empty( $raw_email_on['rejected'] ) ? '1' : '0',
 				'completed' => ! empty( $raw_email_on['completed'] ) ? '1' : '0',
 			),
-			'digital_waiver_mode'         => in_array( $raw_waiver_mode, $allowed_waiver_modes, true ) ? $raw_waiver_mode : 'disabled',
-			'digital_waiver_categories'   => array_values( array_unique( array_filter( array_map( 'absint', $raw_waiver_cats ) ) ) ),
-			'digital_waiver_products'     => array_values( array_unique( array_filter( array_map( 'absint', $raw_waiver_products ) ) ) ),
-			'digital_waiver_custom_label' => sanitize_text_field( $raw_waiver_label ),
+			'digital_waiver_mode'             => in_array( $raw_waiver_mode, $allowed_waiver_modes, true ) ? $raw_waiver_mode : 'disabled',
+			'digital_waiver_categories'       => array_values( array_unique( array_filter( array_map( 'absint', $raw_waiver_cats ) ) ) ),
+			'digital_waiver_products'         => array_values( array_unique( array_filter( array_map( 'absint', $raw_waiver_products ) ) ) ),
+			'digital_waiver_custom_label'     => sanitize_text_field( $raw_waiver_label ),
+			'exclusion_notice_excluded'       => sanitize_textarea_field( $raw_notice_excluded ),
+			'exclusion_notice_digital'        => sanitize_textarea_field( $raw_notice_digital ),
+			'exclusion_notice_personalized'   => sanitize_textarea_field( $raw_notice_personalized ),
+			'exclusion_notice_manual'         => sanitize_textarea_field( $raw_notice_manual ),
 		);
 	}
 

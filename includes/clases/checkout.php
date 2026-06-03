@@ -16,17 +16,14 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Determines whether the digital-content waiver checkbox should be displayed for
  * the current cart. The decision is driven by the `digital_waiver_mode` plugin
- * setting (a single excluding selector):
+ * setting, which after the 0.5.0 simplification has only three possible values:
  *
  *   - 'disabled': never show.
- *   - 'virtual':  show when any cart product is marked as virtual in its product
- *                 page (WC native virtual checkbox) OR has the per-product
- *                 withdrawal type set to 'digital' (`_apg_withdrawal_type`). Both
- *                 settings semantically represent "no physical shipment / digital
- *                 supply", so they are treated as equivalent triggers here.
+ *   - 'digital':  show when at least one cart product has the effective
+ *                 withdrawal type `digital` (per-product setting, or inherited
+ *                 from one of its `product_cat` terms using the most-restrictive
+ *                 rule from `apg_withdrawal_get_effective_withdrawal_type()`).
  *   - 'all':      show whenever the cart is not empty.
- *   - 'specific': show when any cart product belongs to a configured category OR
- *                 is in the configured product list (both lists combine in OR).
  *
  * @return bool
  */
@@ -46,8 +43,9 @@ function apg_withdrawal_cart_has_digital_content() {
 		return true;
 	}
 
-	$selected_categories = isset( $settings['digital_waiver_categories'] ) ? array_map( 'absint', (array) $settings['digital_waiver_categories'] ) : array();
-	$selected_products   = isset( $settings['digital_waiver_products'] ) ? array_map( 'absint', (array) $settings['digital_waiver_products'] ) : array();
+	if ( 'digital' !== $mode ) {
+		return false;
+	}
 
 	foreach ( WC()->cart->get_cart() as $cart_item ) {
 		$product_id = isset( $cart_item['product_id'] ) ? absint( $cart_item['product_id'] ) : 0;
@@ -56,27 +54,8 @@ function apg_withdrawal_cart_has_digital_content() {
 			continue;
 		}
 
-		if ( 'virtual' === $mode ) {
-			$product = function_exists( 'wc_get_product' ) ? wc_get_product( $product_id ) : null;
-			if ( $product && is_callable( array( $product, 'is_virtual' ) ) && $product->is_virtual() ) {
-				return true;
-			}
-			if ( 'digital' === apg_withdrawal_get_product_withdrawal_type( $product_id ) ) {
-				return true;
-			}
-			continue;
-		}
-
-		if ( 'specific' === $mode ) {
-			if ( ! empty( $selected_products ) && in_array( $product_id, $selected_products, true ) ) {
-				return true;
-			}
-			if ( ! empty( $selected_categories ) ) {
-				$product_terms = wp_get_post_terms( $product_id, 'product_cat', array( 'fields' => 'ids' ) );
-				if ( is_array( $product_terms ) && array_intersect( array_map( 'intval', $product_terms ), $selected_categories ) ) {
-					return true;
-				}
-			}
+		if ( 'digital' === apg_withdrawal_get_effective_withdrawal_type( $product_id ) ) {
+			return true;
 		}
 	}
 
@@ -198,10 +177,38 @@ add_action( 'wp_ajax_apg_withdrawal_check_cart_waiver', 'apg_withdrawal_ajax_che
 add_action( 'wp_ajax_nopriv_apg_withdrawal_check_cart_waiver', 'apg_withdrawal_ajax_check_cart_waiver' );
 
 /**
+ * Builds a structured log of the customer's choice on the digital-content
+ * waiver checkbox, suitable for persisting on the order as legal evidence under
+ * Article 16 bis(8) of Directive 2011/83/EU (burden of proof on the merchant).
+ *
+ * @param bool   $checked       Whether the customer ticked the checkbox.
+ * @param string $checkout_type Either 'classic' or 'block', for traceability.
+ * @return array<string,mixed>
+ */
+function apg_withdrawal_build_digital_waiver_log( $checked, $checkout_type ) {
+	$user_agent = isset( $_SERVER['HTTP_USER_AGENT'] ) ? substr( sanitize_text_field( wp_unslash( $_SERVER['HTTP_USER_AGENT'] ) ), 0, 1024 ) : '';
+	$ip         = class_exists( 'WC_Geolocation' ) ? WC_Geolocation::get_ip_address() : ( isset( $_SERVER['REMOTE_ADDR'] ) ? sanitize_text_field( wp_unslash( $_SERVER['REMOTE_ADDR'] ) ) : '' );
+	$label      = function_exists( 'apg_withdrawal_get_digital_waiver_label' ) ? apg_withdrawal_get_digital_waiver_label() : '';
+
+	return array(
+		'accepted'      => (bool) $checked,
+		'label_shown'   => (string) $label,
+		'timestamp_utc' => gmdate( 'Y-m-d H:i:s' ),
+		'ip'            => (string) $ip,
+		'user_agent'    => (string) $user_agent,
+		'checkout_type' => 'block' === $checkout_type ? 'block' : 'classic',
+	);
+}
+
+/**
  * Persists the classic-checkout digital waiver acknowledgement to order meta
- * (`_apg_withdrawal_digital_waiver`, `'1'` or `'0'`) so the merchant has a record
- * of the customer's choice. Only runs when the cart actually qualified for the
- * checkbox, to avoid storing irrelevant zeros on every order.
+ * `_apg_withdrawal_digital_waiver_log` as a JSON-serialisable array including
+ * the exact label shown to the customer, the timestamp (UTC), the IP address
+ * and user agent. Only runs when the cart actually qualified for the checkbox
+ * — irrelevant entries are not stored on regular orders.
+ *
+ * The legacy `_apg_withdrawal_digital_waiver` ('0' or '1') is also written so
+ * any merchant tooling that reads the old key keeps working without changes.
  *
  * @param WC_Order $order Order being created.
  * @return void
@@ -214,16 +221,20 @@ function apg_withdrawal_save_classic_digital_waiver( $order ) {
 	// phpcs:ignore WordPress.Security.NonceVerification.Missing -- Submission protected by WooCommerce's own checkout nonce
 	$checked = ! empty( $_POST['apg_withdrawal_digital_waiver'] );
 
+	$log = apg_withdrawal_build_digital_waiver_log( $checked, 'classic' );
+
+	$order->update_meta_data( '_apg_withdrawal_digital_waiver_log', $log );
 	$order->update_meta_data( '_apg_withdrawal_digital_waiver', $checked ? '1' : '0' );
 }
 add_action( 'woocommerce_checkout_create_order', 'apg_withdrawal_save_classic_digital_waiver', 10, 1 );
 
 /**
  * Persists the block-checkout digital waiver acknowledgement to order meta when
- * the StoreAPI checkout request reaches the server. The boolean is sent under
- * `extensions['apg-withdrawal']['digital_waiver']` by the front-end script. As
- * with the classic-checkout counterpart, the value is only stored when the cart
- * actually qualified for the checkbox.
+ * the StoreAPI checkout request reaches the server. The boolean arrives via
+ * `extensions['apg-withdrawal']['digital_waiver']`, populated by the front-end
+ * fetch interceptor. The structured log is identical in shape to the
+ * classic-checkout counterpart so downstream tooling can read both flows the
+ * same way.
  *
  * @param WC_Order        $order   Order being created.
  * @param WP_REST_Request $request Incoming StoreAPI request.
@@ -241,6 +252,9 @@ function apg_withdrawal_save_block_digital_waiver( $order, $request ) {
 
 	$checked = ! empty( $extensions['apg-withdrawal']['digital_waiver'] );
 
+	$log = apg_withdrawal_build_digital_waiver_log( $checked, 'block' );
+
+	$order->update_meta_data( '_apg_withdrawal_digital_waiver_log', $log );
 	$order->update_meta_data( '_apg_withdrawal_digital_waiver', $checked ? '1' : '0' );
 }
 add_action( 'woocommerce_store_api_checkout_update_order_from_request', 'apg_withdrawal_save_block_digital_waiver', 10, 2 );

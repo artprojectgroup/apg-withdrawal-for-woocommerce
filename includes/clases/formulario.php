@@ -390,6 +390,13 @@ function apg_withdrawal_render_form( $atts = array() ) {
 				);
 			}
 			?>
+			<?php if ( function_exists( 'apg_withdrawal_get_model_form_url' ) ) : ?>
+				<p class="apg-withdrawal-model-link">
+					<a href="<?php echo esc_url( apg_withdrawal_get_model_form_url() ); ?>" target="_blank" rel="noopener">
+						<?php esc_html_e( 'Download the official model withdrawal form (Annex I.B)', 'apg-withdrawal-for-woocommerce' ); ?>
+					</a>
+				</p>
+			<?php endif; ?>
 			<form method="post" action="<?php echo esc_url( $form_action ); ?>" class="apg-withdrawal-form">
 				<input type="hidden" name="apg_withdrawal_step" value="confirm">
 				<?php wp_nonce_field( 'apg_withdrawal_preview_action', 'apg_withdrawal_preview_nonce' ); ?>

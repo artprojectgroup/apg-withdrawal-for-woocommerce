@@ -33,6 +33,76 @@ $apg_withdrawal = array(
 );
 
 /**
+ * One-shot migration of legacy "Digital content waiver" settings to the 0.5.0
+ * model. Runs once per installation, gated by the `apg_withdrawal_migrated_to_0_5`
+ * option flag so re-activating the plugin does not re-run it. Mappings:
+ *
+ *   - mode `virtual`             → `digital`
+ *   - mode `specific`            → `digital`, plus every category and product
+ *                                  that was previously selected is marked with
+ *                                  `_apg_withdrawal_type = digital` (preserving
+ *                                  the prior behaviour at product level via the
+ *                                  Phase 1.1 category-inheritance helper).
+ *
+ * After the mapping, the two now-unused arrays `digital_waiver_categories` and
+ * `digital_waiver_products` are cleared inside the settings option.
+ *
+ * @return void
+ */
+function apg_withdrawal_maybe_migrate_settings_to_0_5() {
+	if ( '1' === (string) get_option( 'apg_withdrawal_migrated_to_0_5', '0' ) ) {
+		return;
+	}
+
+	$settings = get_option( 'apg_withdrawal_settings', array() );
+	if ( ! is_array( $settings ) ) {
+		update_option( 'apg_withdrawal_migrated_to_0_5', '1' );
+		return;
+	}
+
+	$mode = isset( $settings['digital_waiver_mode'] ) ? (string) $settings['digital_waiver_mode'] : 'disabled';
+
+	if ( 'virtual' === $mode ) {
+		$settings['digital_waiver_mode'] = 'digital';
+	} elseif ( 'specific' === $mode ) {
+		$category_ids = isset( $settings['digital_waiver_categories'] ) && is_array( $settings['digital_waiver_categories'] )
+			? array_map( 'absint', $settings['digital_waiver_categories'] )
+			: array();
+		$product_ids = isset( $settings['digital_waiver_products'] ) && is_array( $settings['digital_waiver_products'] )
+			? array_map( 'absint', $settings['digital_waiver_products'] )
+			: array();
+
+		foreach ( $category_ids as $term_id ) {
+			if ( ! $term_id ) {
+				continue;
+			}
+			$existing = (string) get_term_meta( $term_id, '_apg_withdrawal_type', true );
+			if ( '' === $existing || 'allowed' === $existing ) {
+				update_term_meta( $term_id, '_apg_withdrawal_type', 'digital' );
+			}
+		}
+
+		foreach ( $product_ids as $product_id ) {
+			if ( ! $product_id ) {
+				continue;
+			}
+			$existing = (string) get_post_meta( $product_id, '_apg_withdrawal_type', true );
+			if ( '' === $existing || 'allowed' === $existing ) {
+				update_post_meta( $product_id, '_apg_withdrawal_type', 'digital' );
+			}
+		}
+
+		$settings['digital_waiver_mode']       = 'digital';
+		$settings['digital_waiver_categories'] = array();
+		$settings['digital_waiver_products']   = array();
+	}
+
+	update_option( 'apg_withdrawal_settings', $settings );
+	update_option( 'apg_withdrawal_migrated_to_0_5', '1' );
+}
+add_action( 'init', 'apg_withdrawal_maybe_migrate_settings_to_0_5', 5 );
+
+/**
  * Replaces the literal English plugin name in the global $apg_withdrawal array with
  * its translated counterpart once WordPress has fired `init`. Translating at array
  * initialization time would trigger `_load_textdomain_just_in_time` before the
@@ -70,6 +140,7 @@ function apg_withdrawal_requiere_wc() {
 function apg_withdrawal_get_settings() {
 	$defaults = array(
 		'notification_email' => get_option( 'admin_email' ),
+		'merchant_phone'     => '',
 		'page_id'            => '0',
 		'create_page'        => '1',
 		'store_ip'           => '1',
@@ -88,10 +159,14 @@ function apg_withdrawal_get_settings() {
 			'rejected'  => '1',
 			'completed' => '1',
 		),
-		'digital_waiver_mode'         => 'disabled',
-		'digital_waiver_categories'   => array(),
-		'digital_waiver_products'     => array(),
-		'digital_waiver_custom_label' => '',
+		'digital_waiver_mode'             => 'disabled',
+		'digital_waiver_categories'       => array(),
+		'digital_waiver_products'         => array(),
+		'digital_waiver_custom_label'     => '',
+		'exclusion_notice_excluded'       => '',
+		'exclusion_notice_digital'        => '',
+		'exclusion_notice_personalized'   => '',
+		'exclusion_notice_manual'         => '',
 	);
 
 	return wp_parse_args( get_option( 'apg_withdrawal_settings', array() ), $defaults );
@@ -169,7 +244,7 @@ function apg_withdrawal_enlaces( $enlaces, $archivo ) {
 		$enlaces[] = '<a href="' . esc_url( $apg_withdrawal['plugin_url'] ) . '" target="_blank" title="' . esc_attr( $apg_withdrawal['plugin'] ) . '"><strong class="artprojectgroup">APG</strong></a>';
 		$enlaces[] = '<a href="https://www.facebook.com/artprojectgroup" title="' . esc_attr__( 'Follow us on ', 'apg-withdrawal-for-woocommerce' ) . 'Facebook" target="_blank"><span class="genericon genericon-facebook-alt"></span></a> <a href="https://x.com/artprojectgroup" title="' . esc_attr__( 'Follow us on ', 'apg-withdrawal-for-woocommerce' ) . 'X" target="_blank"><span class="genericon genericon-x-alt"></span></a> <a href="https://es.linkedin.com/in/artprojectgroup" title="' . esc_attr__( 'Follow us on ', 'apg-withdrawal-for-woocommerce' ) . 'LinkedIn" target="_blank"><span class="genericon genericon-linkedin"></span></a>';
 		$enlaces[] = '<a href="https://profiles.wordpress.org/artprojectgroup/" title="' . esc_attr__( 'More plugins on ', 'apg-withdrawal-for-woocommerce' ) . 'WordPress" target="_blank"><span class="genericon genericon-wordpress"></span></a>';
-		$enlaces[] = '<a href="mailto:info@artprojectgroup.es" title="' . esc_attr__( 'Contact with us by ', 'apg-withdrawal-for-woocommerce' ) . 'e-mail"><span class="genericon genericon-mail"></span></a>';
+		$enlaces[] = '<a href="mailto:info@artprojectgroup.es" title="' . esc_attr__( 'Contact us by ', 'apg-withdrawal-for-woocommerce' ) . 'e-mail"><span class="genericon genericon-mail"></span></a>';
 		$enlaces[] = $plugin;
 	}
 

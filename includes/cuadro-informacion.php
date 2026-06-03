@@ -14,7 +14,7 @@ global $apg_withdrawal;
 	<!-- Row: Donation and author -->
 	<div class="fila">
 		<div class="columna">
-			<p><?php esc_html_e( 'If you enjoyed and find helpful this plugin, please make a donation:', 'apg-withdrawal-for-woocommerce' ); ?></p>
+			<p><?php esc_html_e( 'If you enjoy this plugin and find it helpful, please make a donation:', 'apg-withdrawal-for-woocommerce' ); ?></p>
 			<p><a href="<?php echo esc_url( $apg_withdrawal['donacion'] ); ?>" target="_blank" title="<?php esc_attr_e( 'Make a donation by ', 'apg-withdrawal-for-woocommerce' ); ?>APG"><span class="genericon genericon-cart"></span></a> </p>
 		</div>
 		<div class="columna">
@@ -38,8 +38,8 @@ global $apg_withdrawal;
 	<!-- Row: Contact and Documentation/Support -->
 	<div class="fila">
 		<div class="columna">
-			<p><?php esc_html_e( 'Contact with us:', 'apg-withdrawal-for-woocommerce' ); ?></p>
-			<p><a href="mailto:info@artprojectgroup.es" title="<?php esc_attr_e( 'Contact with us by ', 'apg-withdrawal-for-woocommerce' ); ?>e-mail"><span class="genericon genericon-mail"></span></a> </p>
+			<p><?php esc_html_e( 'Contact us:', 'apg-withdrawal-for-woocommerce' ); ?></p>
+			<p><a href="mailto:info@artprojectgroup.es" title="<?php esc_attr_e( 'Contact us by ', 'apg-withdrawal-for-woocommerce' ); ?>e-mail"><span class="genericon genericon-mail"></span></a> </p>
 		</div>
 		<div class="columna">
 			<p><?php esc_html_e( 'Documentation and Support:', 'apg-withdrawal-for-woocommerce' ); ?></p>

@@ -229,7 +229,10 @@ function apg_withdrawal_validate_order( $order_ref, $email, $settings ) {
 }
 
 /**
- * Returns the withdrawal type configured for a product.
+ * Returns the raw withdrawal type configured directly on a product (post meta
+ * `_apg_withdrawal_type`). Does NOT consider category-level inheritance — see
+ * `apg_withdrawal_get_effective_withdrawal_type()` for the resolved value with
+ * inheritance applied.
  *
  * @param int $product_id WooCommerce product ID.
  * @return string One of 'allowed', 'excluded', 'digital', 'personalized' or 'manual'.
@@ -243,7 +246,152 @@ function apg_withdrawal_get_product_withdrawal_type( $product_id ) {
 }
 
 /**
- * Returns the highest-priority withdrawal warning type found in any order line item.
+ * Returns the canonical priority map for withdrawal types. Higher number means
+ * "more restrictive" and wins when several types compete (per-product vs each
+ * of its categories' types). Centralised here so every caller uses the same
+ * resolution rule.
+ *
+ * @return array<string,int>
+ */
+function apg_withdrawal_get_type_priorities() {
+	return array(
+		'excluded'     => 4,
+		'personalized' => 3,
+		'digital'      => 2,
+		'manual'       => 1,
+		'allowed'      => 0,
+	);
+}
+
+/**
+ * Returns the effective withdrawal type for a product, applying category-level
+ * inheritance with the "most restrictive wins" rule.
+ *
+ * Resolution order:
+ *   1. If the product has an explicit type other than 'allowed', that value
+ *      always wins — the merchant has set it deliberately on the product page.
+ *   2. Otherwise the type of every `product_cat` term the product belongs to
+ *      is considered and the most restrictive one (highest priority) wins.
+ *      Priority: excluded > personalized > digital > manual > allowed.
+ *   3. If no category has a non-default type either, 'allowed' is returned.
+ *
+ * This is the function every consumer (cart-detection, product page notice,
+ * withdrawal form warnings, order-warning lookup) should use.
+ *
+ * @param int $product_id WooCommerce product ID.
+ * @return string One of 'allowed', 'excluded', 'digital', 'personalized' or 'manual'.
+ */
+function apg_withdrawal_get_effective_withdrawal_type( $product_id ) {
+	$product_id  = absint( $product_id );
+	$raw_product = apg_withdrawal_get_product_withdrawal_type( $product_id );
+
+	if ( 'allowed' !== $raw_product ) {
+		return $raw_product;
+	}
+
+	$priorities = apg_withdrawal_get_type_priorities();
+	$highest    = 'allowed';
+
+	$category_ids = wp_get_post_terms( $product_id, 'product_cat', array( 'fields' => 'ids' ) );
+
+	if ( is_wp_error( $category_ids ) || ! is_array( $category_ids ) ) {
+		return $highest;
+	}
+
+	foreach ( $category_ids as $term_id ) {
+		$term_type = get_term_meta( absint( $term_id ), '_apg_withdrawal_type', true );
+
+		if ( ! isset( $priorities[ $term_type ] ) ) {
+			continue;
+		}
+
+		if ( $priorities[ $term_type ] > $priorities[ $highest ] ) {
+			$highest = $term_type;
+		}
+	}
+
+	return $highest;
+}
+
+/**
+ * Returns the built-in default exclusion-notice text for a given withdrawal type
+ * slug. Translatable so the localised string is delivered at runtime (well after
+ * `init`), avoiding WordPress 6.7's "_load_textdomain_just_in_time" warnings that
+ * would fire if the strings were referenced at file-load time.
+ *
+ * @param string $type Withdrawal type slug.
+ * @return string Translated default notice text, or empty string for unknown types.
+ */
+function apg_withdrawal_get_default_exclusion_notice( $type ) {
+	switch ( $type ) {
+		case 'excluded':
+			return __( 'This product is excluded from the right of withdrawal.', 'apg-withdrawal-for-woocommerce' );
+		case 'digital':
+			return __( 'This product contains digital content. If you requested its immediate supply and acknowledged the loss of the right of withdrawal at purchase, you no longer have the right of withdrawal.', 'apg-withdrawal-for-woocommerce' );
+		case 'personalized':
+			return __( 'This product is made to your specifications or clearly personalised, and is therefore excluded from the right of withdrawal.', 'apg-withdrawal-for-woocommerce' );
+		case 'manual':
+			return __( 'The applicability of the right of withdrawal on this product will be reviewed manually by the store after a request is submitted.', 'apg-withdrawal-for-woocommerce' );
+		default:
+			return '';
+	}
+}
+
+/**
+ * Returns the notice text to show for a given withdrawal type, taking the value
+ * the merchant has saved in `Settings → Exclusion notice texts` if non-empty,
+ * and falling back to the translated default otherwise. Empty string when the
+ * type does not have an associated notice (e.g. `allowed`).
+ *
+ * @param string $type Withdrawal type slug.
+ * @return string
+ */
+function apg_withdrawal_get_exclusion_notice_text( $type ) {
+	$default = apg_withdrawal_get_default_exclusion_notice( $type );
+
+	if ( '' === $default ) {
+		return '';
+	}
+
+	$settings = apg_withdrawal_get_settings();
+	$key      = 'exclusion_notice_' . $type;
+	$saved    = isset( $settings[ $key ] ) ? trim( (string) $settings[ $key ] ) : '';
+
+	return '' !== $saved ? $saved : $default;
+}
+
+/**
+ * Returns the exclusion notice text that should be displayed for a given product,
+ * combining (in order of precedence):
+ *
+ *   1. Per-product override stored in `_apg_withdrawal_custom_reason` post meta.
+ *   2. The per-type text from settings (or the translated default for that type).
+ *
+ * Returns an empty string when the product's effective type is `allowed` — i.e.
+ * the right of withdrawal applies and no notice is needed.
+ *
+ * @param int $product_id WooCommerce product ID.
+ * @return string
+ */
+function apg_withdrawal_get_product_exclusion_notice( $product_id ) {
+	$product_id = absint( $product_id );
+	$type       = apg_withdrawal_get_effective_withdrawal_type( $product_id );
+
+	if ( 'allowed' === $type ) {
+		return '';
+	}
+
+	$override = trim( (string) get_post_meta( $product_id, '_apg_withdrawal_custom_reason', true ) );
+	if ( '' !== $override ) {
+		return $override;
+	}
+
+	return apg_withdrawal_get_exclusion_notice_text( $type );
+}
+
+/**
+ * Returns the highest-priority withdrawal warning type found in any order line
+ * item, considering category-level inheritance for each line item product.
  *
  * @param WC_Order|bool $order WooCommerce order object or false.
  * @return string Highest-priority warning type slug.
@@ -253,15 +401,8 @@ function apg_withdrawal_get_order_warning_type( $order ) {
 		return 'allowed';
 	}
 
-	$priority = array(
-		'excluded'     => 4,
-		'digital'      => 3,
-		'personalized' => 2,
-		'manual'       => 1,
-		'allowed'      => 0,
-	);
-
-	$highest = 'allowed';
+	$priorities = apg_withdrawal_get_type_priorities();
+	$highest    = 'allowed';
 
 	foreach ( $order->get_items() as $item ) {
 		$product_id = is_callable( array( $item, 'get_product_id' ) ) ? $item->get_product_id() : 0;
@@ -270,9 +411,9 @@ function apg_withdrawal_get_order_warning_type( $order ) {
 			continue;
 		}
 
-		$item_type = apg_withdrawal_get_product_withdrawal_type( $product_id );
+		$item_type = apg_withdrawal_get_effective_withdrawal_type( $product_id );
 
-		if ( isset( $priority[ $item_type ] ) && $priority[ $item_type ] > $priority[ $highest ] ) {
+		if ( isset( $priorities[ $item_type ] ) && $priorities[ $item_type ] > $priorities[ $highest ] ) {
 			$highest = $item_type;
 		}
 	}
@@ -490,19 +631,23 @@ function apg_withdrawal_change_status( $post_id, $new_status, $user_id = null ) 
 
 	update_post_meta( $post_id, '_apg_withdrawal_status', $new_status );
 
-	$log   = get_post_meta( $post_id, '_apg_withdrawal_status_log', true );
-	$log   = is_array( $log ) ? $log : array();
-	$log[] = array(
-		'date'    => current_time( 'mysql' ),
-		'user_id' => null !== $user_id ? absint( $user_id ) : get_current_user_id(),
-		'from'    => $old_status,
-		'to'      => $new_status,
-	);
-	update_post_meta( $post_id, '_apg_withdrawal_status_log', $log );
+	$log = get_post_meta( $post_id, '_apg_withdrawal_status_log', true );
+	$log = is_array( $log ) ? $log : array();
 
-	$settings     = apg_withdrawal_get_settings();
-	$email_on     = isset( $settings['email_on_status'] ) ? $settings['email_on_status'] : array();
-	$send_email   = isset( $email_on[ $new_status ] ) && '1' === $email_on[ $new_status ];
+	$log_entry = array(
+		'date'        => current_time( 'mysql' ),
+		'user_id'     => null !== $user_id ? absint( $user_id ) : get_current_user_id(),
+		'from'        => $old_status,
+		'to'          => $new_status,
+		'email_attempted'   => false,
+		'email_accepted'    => null,
+		'email_accepted_at' => '',
+		'email_error'       => '',
+	);
+
+	$settings   = apg_withdrawal_get_settings();
+	$email_on   = isset( $settings['email_on_status'] ) ? $settings['email_on_status'] : array();
+	$send_email = isset( $email_on[ $new_status ] ) && '1' === $email_on[ $new_status ];
 
 	if ( $send_email ) {
 		$customer_email = get_post_meta( $post_id, '_apg_withdrawal_email', true );
@@ -513,10 +658,24 @@ function apg_withdrawal_change_status( $post_id, $new_status, $user_id = null ) 
 			$emails = WC()->mailer()->get_emails();
 
 			if ( isset( $emails['APG_Withdrawal_Email_Status'] ) ) {
-				$emails['APG_Withdrawal_Email_Status']->trigger( $post_id, $customer_email, $customer_name, $order_ref, $new_status );
+				$delivery = function_exists( 'apg_withdrawal_send_with_delivery_capture' )
+					? apg_withdrawal_send_with_delivery_capture(
+						function () use ( $emails, $post_id, $customer_email, $customer_name, $order_ref, $new_status ) {
+							$emails['APG_Withdrawal_Email_Status']->trigger( $post_id, $customer_email, $customer_name, $order_ref, $new_status );
+						}
+					)
+					: array( 'attempted' => true, 'accepted' => true, 'accepted_at' => gmdate( 'Y-m-d H:i:s' ), 'error' => '' );
+
+				$log_entry['email_attempted']   = (bool) $delivery['attempted'];
+				$log_entry['email_accepted']    = $delivery['accepted'];
+				$log_entry['email_accepted_at'] = (string) $delivery['accepted_at'];
+				$log_entry['email_error']       = (string) $delivery['error'];
 			}
 		}
 	}
+
+	$log[] = $log_entry;
+	update_post_meta( $post_id, '_apg_withdrawal_status_log', $log );
 
 	return true;
 }

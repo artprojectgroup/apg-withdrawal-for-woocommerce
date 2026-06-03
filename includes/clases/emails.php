@@ -8,6 +8,58 @@
 defined( 'ABSPATH' ) || exit;
 
 /**
+ * Executes the given email-sending callable while capturing whether `wp_mail()`
+ * was invoked and whether it reported a failure via the `wp_mail_failed`
+ * action. The returned array is the structure persisted as legal evidence of
+ * the merchant's diligent attempt to deliver the message, in line with the
+ * burden of proof requirement in Article 16 bis(8) of Directive 2011/83/EU.
+ *
+ * The recorded `accepted` field reflects what WordPress's mailer accepted for
+ * dispatch, NOT whether the recipient's mailbox actually received the email
+ * (that would require external SMTP delivery tracking, which is out of scope).
+ *
+ * @param callable $send Callable that triggers the actual `wp_mail()`-based send.
+ * @return array{attempted: bool, accepted: bool|null, accepted_at: string, error: string}
+ */
+function apg_withdrawal_send_with_delivery_capture( callable $send ) {
+	$captured = array(
+		'attempted'   => false,
+		'accepted'    => null,
+		'accepted_at' => '',
+		'error'       => '',
+	);
+
+	$mark_attempt = function ( $args ) use ( &$captured ) {
+		$captured['attempted'] = true;
+		return $args;
+	};
+
+	$mark_failed = function ( $wp_error ) use ( &$captured ) {
+		if ( is_wp_error( $wp_error ) ) {
+			$captured['accepted'] = false;
+			$captured['error']    = $wp_error->get_error_message();
+		}
+	};
+
+	add_filter( 'wp_mail', $mark_attempt );
+	add_action( 'wp_mail_failed', $mark_failed );
+
+	$send();
+
+	remove_filter( 'wp_mail', $mark_attempt );
+	remove_action( 'wp_mail_failed', $mark_failed );
+
+	if ( $captured['attempted'] ) {
+		if ( null === $captured['accepted'] ) {
+			$captured['accepted'] = true;
+		}
+		$captured['accepted_at'] = gmdate( 'Y-m-d H:i:s' );
+	}
+
+	return $captured;
+}
+
+/**
  * Sends the withdrawal request acknowledgement email to the customer.
  *
  * @param string $email        Customer email address.

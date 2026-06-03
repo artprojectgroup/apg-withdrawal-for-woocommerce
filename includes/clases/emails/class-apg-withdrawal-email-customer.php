@@ -94,15 +94,17 @@ if ( ! class_exists( 'APG_Withdrawal_Email_Customer', false ) ) :
 			}
 
 			$this->data = array(
-				'post_id'      => absint( $post_id ),
-				'email'        => sanitize_email( $email_address ),
-				'name'         => sanitize_text_field( $name ),
-				'phone'        => sanitize_text_field( $phone ),
-				'order_ref'    => sanitize_text_field( $order_ref ),
-				'scope'        => sanitize_key( $scope ),
-				'request_date' => $request_date,
-				'details'      => $post_obj ? $post_obj->post_content : '',
-				'products'     => $products_list,
+				'post_id'                 => absint( $post_id ),
+				'email'                   => sanitize_email( $email_address ),
+				'name'                    => sanitize_text_field( $name ),
+				'phone'                   => sanitize_text_field( $phone ),
+				'order_ref'               => sanitize_text_field( $order_ref ),
+				'scope'                   => sanitize_key( $scope ),
+				'request_date'            => $request_date,
+				'details'                 => $post_obj ? $post_obj->post_content : '',
+				'products'                => $products_list,
+				'receipt_hash'            => $post_id ? (string) get_post_meta( absint( $post_id ), '_apg_withdrawal_receipt_hash', true ) : '',
+				'receipt_hash_timestamp'  => $post_id ? (string) get_post_meta( absint( $post_id ), '_apg_withdrawal_receipt_hash_timestamp', true ) : '',
 			);
 
 			$this->recipient                      = sanitize_email( $email_address );
