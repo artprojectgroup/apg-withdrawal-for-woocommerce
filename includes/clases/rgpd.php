@@ -232,3 +232,32 @@ function apg_withdrawal_data_eraser( $email_address, $page = 1 ) { // phpcs:igno
 		'done'           => true,
 	);
 }
+
+/**
+ * Anonymises every withdrawal request belonging to a WordPress user that is
+ * about to be deleted, regardless of who triggers the deletion (administrator
+ * via *Users → Delete*, a "Delete my account" button shipped by plugins such
+ * as `apg-gdpr-texts-for-forms`, a custom WooCommerce flow, etc.). Without
+ * this hook the records would remain with the customer's personal data after
+ * the user account itself disappears, since `wp_delete_user()` does not go
+ * through the WordPress privacy eraser API.
+ *
+ * Reuses {@see apg_withdrawal_data_eraser()} so the anonymisation policy is
+ * identical to the privacy-tools flow: name, email, phone, IP, user agent
+ * and free text are replaced with `[redacted]`, while the request itself,
+ * its `_apg_withdrawal_wc_order_id` reference and the status / scope metas
+ * are preserved as legal evidence.
+ *
+ * @param int $user_id ID of the user being deleted.
+ * @return void
+ */
+function apg_withdrawal_anonymize_on_user_delete( $user_id ) {
+	$user = get_userdata( (int) $user_id );
+	if ( ! $user || empty( $user->user_email ) ) {
+		return;
+	}
+
+	apg_withdrawal_data_eraser( $user->user_email );
+}
+add_action( 'delete_user', 'apg_withdrawal_anonymize_on_user_delete' );
+add_action( 'wpmu_delete_user', 'apg_withdrawal_anonymize_on_user_delete' );
