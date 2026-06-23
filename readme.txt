@@ -3,11 +3,11 @@ Contributors: artprojectgroup
 Donate link: https://artprojectgroup.es/tienda/donacion
 Tags: withdrawal, right of withdrawal, woocommerce, refund, consumer rights
 Requires at least: 6.0
-Tested up to: 7.0
-Stable tag: 0.5.0
+Tested up to: 7.1
+Stable tag: 0.6.0
 Requires PHP: 7.4
 WC requires at least: 7.0
-WC tested up to: 10.8.0
+WC tested up to: 10.9.0
 License: GNU General Public License v3 or later
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -88,6 +88,16 @@ The plugin does not delete withdrawal request records automatically. As a genera
 6. Edit withdrawal screen with full request details and status history.
 
 == Changelog ==
+= 0.6.0 =
+* Fixed: the plugin's bundled Spanish translation (and any future locale shipped under `/languages`) was not being loaded on sites where translate.wordpress.org had not yet generated a language pack. WordPress's just-in-time loader only inspects `wp-content/languages/plugins/`, so the `.mo` file shipped inside the plugin was ignored. The plugin now hooks the WordPress 6.6+ `lang_dir_for_domain` filter to return the bundled `/languages` folder when no language pack is available, without resorting to the WP.org-discouraged `load_plugin_textdomain()` call. On WordPress 6.5 and below the bundled translation will still not load until a language pack is published, but the plugin keeps working in the source language.
+* WooCommerce 10.9 transactional-email log integration: the three `WC_Email` classes shipped by the plugin (customer acknowledgement, admin notification, status update) are picked up automatically by the new built-in `EmailLogger`. Each log entry is enriched via `woocommerce_email_log_context` with the withdrawal request id, scope and the SHA-256 receipt hash plus its UTC timestamp, so the log entry can be cross-checked against the email actually delivered to the customer. The filter is silently ignored on older WooCommerce versions.
+* Article 11a label safety net: a new helper (`apg_withdrawal_label_is_ambiguous()`) flags withdrawal labels that fail the "unambiguous wording" requirement of Article 11a of Directive 2011/83/EU. Used in two places: (a) the configurable confirmation button label (`Settings → Button text`) now surfaces an admin warning if the merchant saves an ambiguous wording (e.g. "Contáctanos", "Gestionar pedido", "Volver"); the choice is not blocked, only flagged; (b) the `[apg_withdrawal_link]` shortcode and the matching `apg-withdrawal/link` Gutenberg block emit a `_doing_it_wrong()` notice (visible with `WP_DEBUG`) when an ambiguous custom `label` attribute is used. Lists of "passes" and "blacklist" terms are filterable via `apg_withdrawal_label_unambiguous_terms` and `apg_withdrawal_label_ambiguous_terms`.
+* Annex I.B link redesign on the public form: replaced the single long inline link with a short descriptive sentence ("If you prefer, you can use the official model (Annex I.B).") plus a "Print" button styled with the native WooCommerce button classes. The button appends `?print=1` to the Annex I.B URL so the browser print dialog opens automatically on page load (the existing on-page Print button still works for users who reach the URL directly).
+* Annex I.B addressee block polish: the merchant state and country are now rendered with their human-readable names (via `WC()->countries->get_countries()` and `get_states()`) instead of the raw `XX:YY` ISO code stored in `woocommerce_default_country`, each on its own paragraph. Every paragraph in the addressee block ends with a period, as expected in formal correspondence.
+* WPML / Polylang integration for merchant-configurable strings: the confirmation button text, the digital-content waiver custom label and the four per-type exclusion notices are now registered with WPML's String Translation (Polylang ships a compatibility layer for the same `wpml_register_single_string` action) on `init`. When neither plugin is active the registration is a no-op and the original value is rendered unchanged.
+* Rate limiting + honeypot on the public form: a new `apg_withdrawal_is_rate_limited()` helper throttles repeated submissions by IP + email pair (default policy: 5 attempts per 10 minutes, both filterable via `apg_withdrawal_rate_limit_max` and `apg_withdrawal_rate_limit_window`). A hidden honeypot field is rendered in both steps of the form and silently swallows automated submissions before any persistence happens. Client IP detection respects common reverse-proxy headers and is filterable via `apg_withdrawal_client_ip`.
+* Verified Article 11a continuous visibility throughout the 14-day window: the My Account → Orders "Withdraw from the contract here" action is shown for every order whose withdrawal deadline is still open, regardless of the WooCommerce status, with the deadline source automatically falling back from `completed_date` to `created_date` for orders that have not yet been marked complete. No code change required.
+
 = 0.5.0 =
 * Compliance with Directive (EU) 2023/2673 (amends Directive 2011/83/EU on consumer rights). The plugin now covers the additional obligations introduced by the new Article 11a (online withdrawal function) plus the related pre-contractual and burden-of-proof requirements.
 * Category-level *Withdrawal type* term meta on `product_cat`, with automatic inheritance for products that keep the "Withdrawal allowed (default)" value. When a product belongs to several categories with conflicting types, the most restrictive type wins (priority order: `excluded` > `personalized` > `digital` > `manual` > `allowed`).
@@ -129,8 +139,8 @@ The plugin does not delete withdrawal request records automatically. As a genera
 * Initial release.
 
 == Upgrade Notice ==
-= 0.5.0 =
-* Directive (EU) 2023/2673 compliance: category-level withdrawal type with inheritance, product page exclusion notices, printable Annex I.B form, SHA-256 receipt hash, waiver consent log, email delivery indicator, GDPR exporter / eraser and CSV injection protection.
+= 0.6.0 =
+* Fixes the bundled Spanish translation loading, integrates the WooCommerce 10.9 transactional-email log, adds Article 11a label safety net, WPML / Polylang support for configurable strings and rate limiting plus honeypot on the public form.
 
 == Thanks ==
 Thanks to everyone who uses the plugin, helps improve it, makes a donation or encourages us with their comments.

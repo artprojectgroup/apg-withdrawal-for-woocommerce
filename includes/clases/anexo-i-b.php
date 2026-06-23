@@ -52,17 +52,40 @@ function apg_withdrawal_get_merchant_data_for_model_form() {
 		$store_email = isset( $settings['notification_email'] ) ? $settings['notification_email'] : '';
 	}
 
+	$raw_country  = (string) get_option( 'woocommerce_default_country', '' );
+	$country_code = $raw_country;
+	$state_code   = '';
+	if ( false !== strpos( $raw_country, ':' ) ) {
+		list( $country_code, $state_code ) = explode( ':', $raw_country, 2 );
+	}
+
+	$country_name = $country_code;
+	$state_name   = $state_code;
+	if ( function_exists( 'WC' ) && WC()->countries ) {
+		$countries = WC()->countries->get_countries();
+		if ( isset( $countries[ $country_code ] ) ) {
+			$country_name = (string) $countries[ $country_code ];
+		}
+		if ( '' !== $state_code ) {
+			$states = WC()->countries->get_states( $country_code );
+			if ( is_array( $states ) && isset( $states[ $state_code ] ) ) {
+				$state_name = (string) $states[ $state_code ];
+			}
+		}
+	}
+
 	$address_lines = array(
 		(string) get_option( 'woocommerce_store_address', '' ),
 		(string) get_option( 'woocommerce_store_address_2', '' ),
 		trim( (string) get_option( 'woocommerce_store_postcode', '' ) . ' ' . (string) get_option( 'woocommerce_store_city', '' ) ),
-		(string) get_option( 'woocommerce_default_country', '' ),
 	);
 	$address       = trim( implode( ', ', array_filter( array_map( 'trim', $address_lines ) ) ) );
 
 	return array(
 		'name'    => (string) get_bloginfo( 'name' ),
 		'address' => $address,
+		'state'   => trim( $state_name ),
+		'country' => trim( $country_name ),
 		'phone'   => isset( $settings['merchant_phone'] ) ? trim( (string) $settings['merchant_phone'] ) : '',
 		'email'   => (string) $store_email,
 	);
@@ -77,8 +100,9 @@ function apg_withdrawal_get_merchant_data_for_model_form() {
 function apg_withdrawal_render_model_form() {
 	nocache_headers();
 
-	$merchant = apg_withdrawal_get_merchant_data_for_model_form();
-	$lang     = function_exists( 'get_bloginfo' ) ? get_bloginfo( 'language' ) : 'en';
+	$merchant   = apg_withdrawal_get_merchant_data_for_model_form();
+	$lang       = function_exists( 'get_bloginfo' ) ? get_bloginfo( 'language' ) : 'en';
+	$auto_print = isset( $_GET['print'] ) && '1' === sanitize_text_field( wp_unslash( $_GET['print'] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Public read-only endpoint.
 
 	// phpcs:disable WordPress.Security.EscapeOutput.OutputNotEscaped -- Output composed of esc_html'd parts.
 	?><!DOCTYPE html>
@@ -118,16 +142,19 @@ function apg_withdrawal_render_model_form() {
 	<h2><?php echo esc_html__( 'To', 'apg-withdrawal-for-woocommerce' ); ?>:</h2>
 	<div class="addressee">
 		<?php if ( '' !== $merchant['name'] ) : ?>
-			<p><strong><?php echo esc_html( $merchant['name'] ); ?></strong></p>
+			<p><strong><?php echo esc_html( $merchant['name'] ); ?></strong>.</p>
 		<?php endif; ?>
-		<?php if ( '' !== $merchant['address'] ) : ?>
-			<p><?php echo esc_html( $merchant['address'] ); ?></p>
+		<?php
+		$location_parts = array_filter( array( $merchant['address'], $merchant['state'], $merchant['country'] ) );
+		if ( ! empty( $location_parts ) ) :
+			?>
+			<p><?php echo esc_html( implode( '. ', $location_parts ) ); ?>.</p>
 		<?php endif; ?>
 		<?php if ( '' !== $merchant['phone'] ) : ?>
-			<p><?php echo esc_html__( 'Phone', 'apg-withdrawal-for-woocommerce' ); ?>: <?php echo esc_html( $merchant['phone'] ); ?></p>
+			<p><?php echo esc_html__( 'Phone', 'apg-withdrawal-for-woocommerce' ); ?>: <?php echo esc_html( $merchant['phone'] ); ?>.</p>
 		<?php endif; ?>
 		<?php if ( '' !== $merchant['email'] ) : ?>
-			<p><?php echo esc_html__( 'Email', 'apg-withdrawal-for-woocommerce' ); ?>: <?php echo esc_html( $merchant['email'] ); ?></p>
+			<p><?php echo esc_html__( 'Email', 'apg-withdrawal-for-woocommerce' ); ?>: <?php echo esc_html( $merchant['email'] ); ?>.</p>
 		<?php endif; ?>
 	</div>
 
@@ -160,6 +187,9 @@ function apg_withdrawal_render_model_form() {
 		<p>(*) <?php echo esc_html__( 'Delete as appropriate.', 'apg-withdrawal-for-woocommerce' ); ?></p>
 		<p><?php echo esc_html__( 'Model withdrawal form pursuant to Annex I.B of Directive 2011/83/EU on consumer rights.', 'apg-withdrawal-for-woocommerce' ); ?></p>
 	</footer>
+	<?php if ( $auto_print ) : ?>
+	<script>window.addEventListener('load', function () { window.print(); });</script>
+	<?php endif; ?>
 </body>
 </html>
 	<?php

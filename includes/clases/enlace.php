@@ -57,7 +57,24 @@ function apg_withdrawal_render_link_html( array $args = array() ) {
 		'class'  => '',
 		'target' => '_self',
 	);
-	$args     = array_merge( $defaults, $args );
+	$default_label = $defaults['label'];
+	$args          = array_merge( $defaults, $args );
+
+	if (
+		function_exists( 'apg_withdrawal_label_is_ambiguous' )
+		&& $args['label'] !== $default_label
+		&& apg_withdrawal_label_is_ambiguous( $args['label'] )
+	) {
+		_doing_it_wrong(
+			'apg_withdrawal_render_link_html',
+			sprintf(
+				/* translators: %s the custom label received. */
+				esc_html__( 'The withdrawal link label "%s" looks ambiguous. Article 11a of Directive 2011/83/EU requires the wording to make it clear to the consumer that they are exercising their right of withdrawal.', 'apg-withdrawal-for-woocommerce' ),
+				esc_html( (string) $args['label'] )
+			),
+			'0.6.0'
+		);
+	}
 
 	$class_attr = trim( 'apg-withdrawal-link ' . (string) $args['class'] );
 	$rel_attr   = '_blank' === $args['target'] ? ' rel="noopener"' : '';

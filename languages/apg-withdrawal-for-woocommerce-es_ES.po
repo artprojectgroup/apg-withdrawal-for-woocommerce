@@ -368,11 +368,6 @@ msgstr ""
 msgid "Documentation and Support:"
 msgstr "Documentación y soporte:"
 
-#: includes/clases/formulario.php:396
-msgid "Download the official model withdrawal form (Annex I.B)"
-msgstr ""
-"Descargar el modelo oficial de formulario de desistimiento (Anexo I.B)"
-
 #: apg-withdrawal-for-woocommerce.php:224
 msgid "Edit withdrawal"
 msgstr "Editar desistimiento"
@@ -540,6 +535,10 @@ msgid ""
 msgstr ""
 "Si has disfrutado y te ha sido útil este plugin, por favor haz una "
 "donación:"
+
+#: includes/clases/formulario.php:395
+msgid "If you prefer, you can use the official model (Annex I.B)."
+msgstr "Si lo prefieres, puedes utilizar el modelo oficial (Anexo I.B)."
 
 #: includes/clases/enlace.php:118
 msgid ""
@@ -776,6 +775,10 @@ msgstr ""
 "Pre-rellenado con el texto de aceptación por defecto. Edítalo para "
 "personalizarlo, o vacía el campo para volver al texto por defecto en "
 "cualquier momento."
+
+#: includes/clases/formulario.php:402
+msgid "Print"
+msgstr "Imprimir"
 
 #: includes/clases/anexo-i-b.php:112
 msgid "Print or save as PDF"
@@ -1053,6 +1056,22 @@ msgstr ""
 "La aplicabilidad del derecho de desistimiento sobre este producto será "
 "revisada manualmente por la tienda tras el envío de la solicitud."
 
+#. %s saved button label.
+#: includes/admin/funciones-apg.php:275
+#, php-format
+msgid ""
+"The confirmation button label \"%s\" looks ambiguous. Article 11a of "
+"Directive 2011/83/EU (added by Directive (EU) 2023/2673) requires the "
+"wording to make it clear to the consumer that they are exercising their "
+"right of withdrawal. Consider using \"Confirm withdrawal\" or an "
+"equivalent unambiguous wording in your language."
+msgstr ""
+"El texto del botón de confirmación «%s» parece ambiguo. El Artículo 11 "
+"bis de la Directiva 2011/83/UE (añadido por la Directiva (UE) 2023/2673) "
+"exige que la redacción deje claro al consumidor que está ejerciendo su "
+"derecho de desistimiento. Considera utilizar «Confirmar desistimiento» o "
+"una redacción inequívoca equivalente en tu idioma."
+
 #: includes/clases/formulario.php:606
 msgid "The email address is not valid."
 msgstr "La dirección de correo electrónico no es válida."
@@ -1079,6 +1098,18 @@ msgid ""
 msgstr ""
 "El derecho de desistimiento puede ejercerse en un plazo de %d días "
 "naturales desde la recepción del pedido."
+
+#. %s the custom label received.
+#: includes/clases/enlace.php:72
+#, php-format
+msgid ""
+"The withdrawal link label \"%s\" looks ambiguous. Article 11a of "
+"Directive 2011/83/EU requires the wording to make it clear to the "
+"consumer that they are exercising their right of withdrawal."
+msgstr ""
+"El texto del enlace de desistimiento «%s» parece ambiguo. El Artículo 11 "
+"bis de la Directiva 2011/83/UE exige que la redacción deje claro al "
+"consumidor que está ejerciendo su derecho de desistimiento."
 
 #: includes/clases/formulario.php:608
 msgid "The withdrawal period for this order appears to have expired."
@@ -1146,6 +1177,11 @@ msgstr ""
 #: includes/clases/admin/solicitudes.php:157
 msgid "To"
 msgstr "Hasta"
+
+#: includes/clases/formulario.php:625
+msgid "Too many attempts. Please wait a few minutes before trying again."
+msgstr ""
+"Demasiados intentos. Espera unos minutos antes de volver a intentarlo."
 
 #: includes/admin/funciones-apg.php:209
 msgid "Unknown rating"
@@ -1240,6 +1276,10 @@ msgstr ""
 #: templates/emails/plain/apg-withdrawal-customer.php:25
 msgid "We have correctly received your withdrawal request."
 msgstr "Hemos recibido correctamente tu solicitud de desistimiento."
+
+#: includes/clases/formulario.php:183 includes/clases/formulario.php:415
+msgid "Website (leave empty)"
+msgstr "Sitio web (déjalo vacío)"
 
 #: includes/formulario.php:276
 msgid "When to show the checkbox"

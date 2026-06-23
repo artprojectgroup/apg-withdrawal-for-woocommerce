@@ -357,7 +357,12 @@ function apg_withdrawal_get_exclusion_notice_text( $type ) {
 	$key      = 'exclusion_notice_' . $type;
 	$saved    = isset( $settings[ $key ] ) ? trim( (string) $settings[ $key ] ) : '';
 
-	return '' !== $saved ? $saved : $default;
+	if ( '' === $saved ) {
+		return $default;
+	}
+
+	$names = apg_withdrawal_get_translatable_setting_names();
+	return isset( $names[ $key ] ) ? apg_withdrawal_translate_setting_string( $saved, $names[ $key ] ) : $saved;
 }
 
 /**

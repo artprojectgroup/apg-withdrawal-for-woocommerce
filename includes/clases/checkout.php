@@ -75,7 +75,9 @@ function apg_withdrawal_get_digital_waiver_label() {
 	$custom   = isset( $settings['digital_waiver_custom_label'] ) ? trim( (string) $settings['digital_waiver_custom_label'] ) : '';
 
 	if ( '' !== $custom ) {
-		return $custom;
+		return function_exists( 'apg_withdrawal_translate_setting_string' )
+			? apg_withdrawal_translate_setting_string( $custom, 'Digital waiver custom label' )
+			: $custom;
 	}
 
 	return __( 'I request the immediate supply of the digital content and acknowledge that, once execution has begun, I will lose my right of withdrawal.', 'apg-withdrawal-for-woocommerce' );

@@ -2,7 +2,7 @@
 /*
 Plugin Name: APG Withdrawal for WooCommerce
 Requires Plugins: woocommerce
-Version: 0.5.0
+Version: 0.6.0
 Plugin URI: https://wordpress.org/plugins/apg-withdrawal-for-woocommerce/
 Description: Add to WooCommerce an online withdrawal workflow compliant with EU requirements.
 Author URI: https://artprojectgroup.es/
@@ -10,10 +10,10 @@ Author: Art Project Group
 License: GNU General Public License v3 or later
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 Requires at least: 6.0
-Tested up to: 7.0
+Tested up to: 7.1
 Requires PHP: 7.4
 WC requires at least: 7.0
-WC tested up to: 10.8.0
+WC tested up to: 10.9.0
 
 Text Domain: apg-withdrawal-for-woocommerce
 Domain Path: /languages
@@ -26,8 +26,25 @@ Domain Path: /languages
 defined( 'ABSPATH' ) || exit;
 
 define( 'apg_withdrawal_DIRECCION', plugin_basename( __FILE__ ) );
-define( 'apg_withdrawal_VERSION', '0.5.0' );
+define( 'apg_withdrawal_VERSION', '0.6.0' );
 define( 'apg_withdrawal_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
+
+add_filter(
+	'lang_dir_for_domain',
+	function ( $path, $domain ) {
+		if ( 'apg-withdrawal-for-woocommerce' !== $domain ) {
+			return $path;
+		}
+
+		if ( ! $path ) {
+			return apg_withdrawal_PLUGIN_DIR . 'languages/';
+		}
+
+		return $path;
+	},
+	10,
+	2
+);
 
 include_once 'includes/admin/funciones-apg.php';
 
@@ -521,7 +538,7 @@ if ( is_plugin_active( 'woocommerce/woocommerce.php' ) || is_network_only_plugin
 			'grace_days'               => strval( max( 0, intval( $opciones['grace_days'] ) ) ),
 			'withdrawal_days'          => strval( max( 14, intval( $opciones['withdrawal_days'] ) ) ),
 			'deadline_source'          => in_array( $opciones['deadline_source'], array( 'completed', 'created' ), true ) ? $opciones['deadline_source'] : 'completed',
-			'button_text'              => sanitize_text_field( $opciones['button_text'] ),
+			'button_text'              => apg_withdrawal_sanitize_button_text( $opciones['button_text'] ),
 			'delete_data_on_uninstall' => '1' === $opciones['delete_data_on_uninstall'] ? '1' : '0',
 			'order_status_map'   => array(
 				'accepted'  => $sanitize_wc_statuses( isset( $raw_map['accepted'] ) ? $raw_map['accepted'] : array() ),

@@ -251,3 +251,53 @@ function apg_withdrawal_email_order_withdrawal_link( $order, $sent_to_admin, $pl
 	}
 }
 add_action( 'woocommerce_email_after_order_table', 'apg_withdrawal_email_order_withdrawal_link', 10, 4 );
+
+/**
+ * Enriches the WooCommerce 10.9+ transactional-email log context with
+ * withdrawal-specific evidence (request CPT id, scope, SHA-256 receipt hash
+ * and its UTC timestamp) for the three emails shipped by this plugin.
+ *
+ * The added fields make the log forensically aligned with the burden of
+ * proof in Article 16 bis(8) of Directive 2011/83/EU: the same receipt
+ * hash sent to the customer can be matched against the log entry.
+ *
+ * Older WooCommerce versions (< 10.9) never apply this filter, so the
+ * registration is a no-op there.
+ *
+ * @param array         $context Existing log context built by EmailLogger.
+ * @param WC_Email|null $email   Email instance being logged.
+ * @return array Filtered context with withdrawal fields when applicable.
+ */
+function apg_withdrawal_email_log_context( $context, $email = null ) {
+	$email_id = '';
+	if ( $email instanceof WC_Email && isset( $email->id ) ) {
+		$email_id = (string) $email->id;
+	} elseif ( is_array( $context ) && isset( $context['email_type'] ) ) {
+		$email_id = (string) $context['email_type'];
+	}
+
+	if ( 0 !== strpos( $email_id, 'apg_withdrawal_' ) ) {
+		return $context;
+	}
+
+	$data = ( $email instanceof WC_Email && isset( $email->data ) && is_array( $email->data ) ) ? $email->data : array();
+
+	if ( ! empty( $data['post_id'] ) ) {
+		$context['withdrawal_post_id'] = (int) $data['post_id'];
+	}
+
+	if ( ! empty( $data['scope'] ) ) {
+		$context['withdrawal_scope'] = (string) $data['scope'];
+	}
+
+	if ( ! empty( $data['receipt_hash'] ) ) {
+		$context['receipt_hash'] = (string) $data['receipt_hash'];
+	}
+
+	if ( ! empty( $data['receipt_hash_timestamp'] ) ) {
+		$context['receipt_hash_timestamp'] = (string) $data['receipt_hash_timestamp'];
+	}
+
+	return $context;
+}
+add_filter( 'woocommerce_email_log_context', 'apg_withdrawal_email_log_context', 10, 2 );

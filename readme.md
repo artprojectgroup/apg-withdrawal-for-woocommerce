@@ -7,15 +7,15 @@ Tags: withdrawal, right of withdrawal, woocommerce, refund, consumer rights
 
 Requires at least: 6.0
 
-Tested up to: 7.0
+Tested up to: 7.1
 
-Stable tag: 0.5.0
+Stable tag: 0.6.0
 
 Requires PHP: 7.4
 
 WC requires at least: 7.0
 
-WC tested up to: 10.8.0
+WC tested up to: 10.9.0
 
 License: GNU General Public License v3 or later
 
@@ -90,6 +90,16 @@ El plugin no elimina automáticamente las solicitudes de desistimiento registrad
 **APG Desistimiento para WooCommerce** es un plugin gratuito. **Art Project Group** no proporciona soporte técnico gratuito, pero ofrece un servicio de [soporte técnico](https://artprojectgroup.es/tienda/ticket-de-soporte) de pago para instalación y configuración.
 
 ## Changelog
+### 0.6.0
+* Corregido: la traducción al español empaquetada con el plugin (y cualquier futuro idioma que viaje bajo `/languages`) no se cargaba en los sitios para los que translate.wordpress.org aún no había generado un paquete de idioma. El cargador just-in-time de WordPress solo inspecciona `wp-content/languages/plugins/`, así que el `.mo` incluido dentro del plugin se ignoraba. Ahora el plugin se engancha al filtro `lang_dir_for_domain` introducido en WordPress 6.6 para devolver la carpeta `/languages` empaquetada cuando no haya paquete de idioma disponible, sin recurrir a la llamada `load_plugin_textdomain()` desaconsejada por WP.org. En WordPress 6.5 y anteriores la traducción empaquetada seguirá sin cargarse hasta que se publique un paquete de idioma, pero el plugin sigue funcionando en el idioma de origen.
+* Integración con el log de emails transaccionales de WooCommerce 10.9: las tres clases `WC_Email` del plugin (acuse al cliente, notificación al administrador, cambio de estado) las recoge automáticamente el nuevo `EmailLogger` integrado. Cada entrada del log se enriquece mediante `woocommerce_email_log_context` con el ID de la solicitud de desistimiento, el alcance y el hash SHA-256 del acuse junto con su timestamp UTC, de forma que la entrada del log se puede contrastar con el email realmente entregado al cliente. El filtro se ignora silenciosamente en versiones anteriores de WooCommerce.
+* Red de seguridad para el etiquetado del Artículo 11 bis: un nuevo helper (`apg_withdrawal_label_is_ambiguous()`) detecta etiquetas de desistimiento que no cumplen el requisito de redacción inequívoca del Artículo 11 bis de la Directiva 2011/83/UE. Se utiliza en dos sitios: (a) el texto configurable del botón de confirmación (`Ajustes → Texto del botón`) muestra ahora un aviso en el admin si el comerciante guarda un texto ambiguo (por ejemplo "Contáctanos", "Gestionar pedido" o "Volver"); la elección no se bloquea, solo se señala; (b) el shortcode `[apg_withdrawal_link]` y el bloque `apg-withdrawal/link` lanzan `_doing_it_wrong()` (visible con `WP_DEBUG`) cuando se usa un atributo `label` ambiguo. Las listas de términos "válidos" y "vetados" se pueden personalizar vía los filtros `apg_withdrawal_label_unambiguous_terms` y `apg_withdrawal_label_ambiguous_terms`.
+* Rediseño del enlace al Anexo I.B en el formulario público: se sustituye el enlace largo inline por una frase descriptiva corta ("Si lo prefieres, puedes utilizar el modelo oficial (Anexo I.B).") y un botón "Imprimir" estilado con las clases nativas de botón de WooCommerce. El botón añade `?print=1` a la URL del Anexo I.B para que el diálogo de impresión del navegador se abra automáticamente al cargar la página (el botón "Imprimir o guardar como PDF" ya existente en la propia página sigue funcionando para quien llegue a la URL directamente).
+* Mejora del bloque del destinatario en el Anexo I.B: el estado y el país del comerciante se muestran ahora con sus nombres legibles (vía `WC()->countries->get_countries()` y `get_states()`) en lugar del código ISO `XX:YY` que almacena `woocommerce_default_country`, cada uno en su propio párrafo. Todos los párrafos del bloque terminan en punto, como corresponde a una comunicación formal.
+* Integración con WPML / Polylang para los textos configurables por el comerciante: el texto del botón de confirmación, la etiqueta personalizada de la renuncia al desistimiento de contenido digital y los cuatro avisos de exclusión por tipo se registran ahora con String Translation de WPML (Polylang incluye una capa de compatibilidad para la misma acción `wpml_register_single_string`) en el hook `init`. Cuando ninguno de los dos plugins está activo, el registro es un no-op y se renderiza el valor original sin cambios.
+* Rate limiting + honeypot en el formulario público: nuevo helper `apg_withdrawal_is_rate_limited()` que limita los envíos repetidos por par IP + email (política por defecto: 5 intentos cada 10 minutos, ambos valores filtrables vía `apg_withdrawal_rate_limit_max` y `apg_withdrawal_rate_limit_window`). Se renderiza un campo honeypot oculto en los dos pasos del formulario que descarta silenciosamente los envíos automatizados antes de persistir nada. La detección de la IP del cliente respeta las cabeceras comunes de proxies inversos y es filtrable mediante `apg_withdrawal_client_ip`.
+* Verificada la visibilidad continua del Artículo 11 bis durante los 14 días: la acción "Desistir del contrato aquí" en Mi cuenta → Pedidos se muestra para todo pedido cuyo plazo de desistimiento siga abierto, con independencia del estado de WooCommerce, cayendo automáticamente de `completed_date` a `created_date` para pedidos aún sin marcar como completados. No requiere cambio de código.
+
 ### 0.5.0
 * Cumplimiento de la Directiva (UE) 2023/2673 (que modifica la Directiva 2011/83/UE sobre derechos de los consumidores). El plugin pasa a cubrir las obligaciones adicionales introducidas por el nuevo Artículo 11 bis (función de desistimiento online) y los requisitos relacionados de información precontractual y carga de la prueba.
 * Nuevo meta a nivel de término *Tipo de desistimiento* en `product_cat`, con herencia automática en los productos que mantienen el valor "Desistimiento permitido (por defecto)". Cuando un producto pertenece a varias categorías con tipos en conflicto, gana el tipo más restrictivo (orden de prioridad: `excluded` > `personalized` > `digital` > `manual` > `allowed`).

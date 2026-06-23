@@ -13,3 +13,15 @@
 	opacity: 0.75;
 	font-style: italic;
 }
+
+.apg-withdrawal-model-link {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 8px 12px;
+	align-items: center;
+}
+
+.apg-withdrawal-honeypot {
+	position: absolute;
+	left: -9999px;
+}

@@ -179,6 +179,11 @@ function apg_withdrawal_render_confirmation_form( $name, $email, $order_id, $sco
 		}
 		?>
 		<input type="hidden" name="apg_withdrawal_confirm_inline" value="1">
+		<p class="apg-withdrawal-honeypot" aria-hidden="true">
+			<label><?php esc_html_e( 'Website (leave empty)', 'apg-withdrawal-for-woocommerce' ); ?>
+				<input type="text" name="apg_withdrawal_website" value="" autocomplete="off" tabindex="-1">
+			</label>
+		</p>
 		<input type="hidden" name="apg_withdrawal_name" value="<?php echo esc_attr( $name ); ?>">
 		<input type="hidden" name="apg_withdrawal_order" value="<?php echo esc_attr( $order_id ); ?>">
 		<input type="hidden" name="apg_withdrawal_email" value="<?php echo esc_attr( $email ); ?>">
@@ -208,7 +213,7 @@ function apg_withdrawal_render_confirmation_form( $name, $email, $order_id, $sco
 					<?php esc_html_e( 'Receipt of this request does not imply automatic acceptance of the right of withdrawal; the legally applicable exceptions may apply.', 'apg-withdrawal-for-woocommerce' ); ?>
 				</p>
 				<p class="form-row">
-					<button type="submit" class="button alt<?php echo esc_attr( wc_wp_theme_get_element_class_name( 'button' ) ? ' ' . wc_wp_theme_get_element_class_name( 'button' ) : '' ); ?>"><?php echo esc_html( $settings['button_text'] ); ?></button>
+					<button type="submit" class="button alt<?php echo esc_attr( wc_wp_theme_get_element_class_name( 'button' ) ? ' ' . wc_wp_theme_get_element_class_name( 'button' ) : '' ); ?>"><?php echo esc_html( function_exists( 'apg_withdrawal_translate_setting_string' ) ? apg_withdrawal_translate_setting_string( $settings['button_text'], 'Confirmation button text' ) : $settings['button_text'] ); ?></button>
 					<button type="button" class="button apg-withdrawal-back-btn<?php echo esc_attr( wc_wp_theme_get_element_class_name( 'button' ) ? ' ' . wc_wp_theme_get_element_class_name( 'button' ) : '' ); ?>"><?php esc_html_e( 'Cancel', 'apg-withdrawal-for-woocommerce' ); ?></button>
 				</p>
 			</div>
@@ -392,14 +397,25 @@ function apg_withdrawal_render_form( $atts = array() ) {
 			?>
 			<?php if ( function_exists( 'apg_withdrawal_get_model_form_url' ) ) : ?>
 				<p class="apg-withdrawal-model-link">
-					<a href="<?php echo esc_url( apg_withdrawal_get_model_form_url() ); ?>" target="_blank" rel="noopener">
-						<?php esc_html_e( 'Download the official model withdrawal form (Annex I.B)', 'apg-withdrawal-for-woocommerce' ); ?>
+					<span><?php esc_html_e( 'If you prefer, you can use the official model (Annex I.B).', 'apg-withdrawal-for-woocommerce' ); ?></span>
+					<a
+						href="<?php echo esc_url( add_query_arg( 'print', '1', apg_withdrawal_get_model_form_url() ) ); ?>"
+						target="_blank"
+						rel="noopener"
+						class="button<?php echo esc_attr( wc_wp_theme_get_element_class_name( 'button' ) ? ' ' . wc_wp_theme_get_element_class_name( 'button' ) : '' ); ?>"
+					>
+						<?php esc_html_e( 'Print', 'apg-withdrawal-for-woocommerce' ); ?>
 					</a>
 				</p>
 			<?php endif; ?>
 			<form method="post" action="<?php echo esc_url( $form_action ); ?>" class="apg-withdrawal-form">
 				<input type="hidden" name="apg_withdrawal_step" value="confirm">
 				<?php wp_nonce_field( 'apg_withdrawal_preview_action', 'apg_withdrawal_preview_nonce' ); ?>
+				<p class="apg-withdrawal-honeypot" aria-hidden="true">
+					<label><?php esc_html_e( 'Website (leave empty)', 'apg-withdrawal-for-woocommerce' ); ?>
+						<input type="text" name="apg_withdrawal_website" value="" autocomplete="off" tabindex="-1">
+					</label>
+				</p>
 				<h2><?php esc_html_e( 'Withdrawal request', 'apg-withdrawal-for-woocommerce' ); ?></h2>
 				<div class="apg-withdrawal-product-warning" hidden></div>
 				<div class="woocommerce-address-fields">
@@ -606,6 +622,7 @@ function apg_withdrawal_get_notice_message( $message ) {
 		'email'   => __( 'The email address is not valid.', 'apg-withdrawal-for-woocommerce' ),
 		'order'   => __( 'The order could not be matched with the email address provided.', 'apg-withdrawal-for-woocommerce' ),
 		'expired' => __( 'The withdrawal period for this order appears to have expired.', 'apg-withdrawal-for-woocommerce' ),
+		'throttle' => __( 'Too many attempts. Please wait a few minutes before trying again.', 'apg-withdrawal-for-woocommerce' ),
 		'general' => __( 'An error occurred while processing the withdrawal request.', 'apg-withdrawal-for-woocommerce' ),
 	);
 
