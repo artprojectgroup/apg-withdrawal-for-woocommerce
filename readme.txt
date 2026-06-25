@@ -4,7 +4,7 @@ Donate link: https://artprojectgroup.es/tienda/donacion
 Tags: withdrawal, right of withdrawal, woocommerce, refund, consumer rights
 Requires at least: 6.0
 Tested up to: 7.1
-Stable tag: 0.6.0
+Stable tag: 0.6.1
 Requires PHP: 7.4
 WC requires at least: 7.0
 WC tested up to: 10.9.0
@@ -88,6 +88,9 @@ The plugin does not delete withdrawal request records automatically. As a genera
 6. Edit withdrawal screen with full request details and status history.
 
 == Changelog ==
+= 0.6.1 =
+* Bundled translation now takes precedence over the centralised language pack: when the plugin ships a `.mo` (or `.l10n.php`) for the current locale under `/languages`, the `lang_dir_for_domain` filter returns that folder unconditionally, instead of only falling back to it when WordPress could not find anything in `wp-content/languages/plugins/`. Result: the locale shipped by the plugin (currently `es_ES`) is always rendered with the strings packaged in the current release, so new wording and changelog-driven copy adjustments reach users on the same day as the plugin update without waiting for translate.wordpress.org to regenerate its language pack. Locales for which the plugin does not bundle a translation continue to be loaded from the centralised system pack as before.
+
 = 0.6.0 =
 * Fixed: the plugin's bundled Spanish translation (and any future locale shipped under `/languages`) was not being loaded on sites where translate.wordpress.org had not yet generated a language pack. WordPress's just-in-time loader only inspects `wp-content/languages/plugins/`, so the `.mo` file shipped inside the plugin was ignored. The plugin now hooks the WordPress 6.6+ `lang_dir_for_domain` filter to return the bundled `/languages` folder when no language pack is available, without resorting to the WP.org-discouraged `load_plugin_textdomain()` call. On WordPress 6.5 and below the bundled translation will still not load until a language pack is published, but the plugin keeps working in the source language.
 * WooCommerce 10.9 transactional-email log integration: the three `WC_Email` classes shipped by the plugin (customer acknowledgement, admin notification, status update) are picked up automatically by the new built-in `EmailLogger`. Each log entry is enriched via `woocommerce_email_log_context` with the withdrawal request id, scope and the SHA-256 receipt hash plus its UTC timestamp, so the log entry can be cross-checked against the email actually delivered to the customer. The filter is silently ignored on older WooCommerce versions.
@@ -139,8 +142,8 @@ The plugin does not delete withdrawal request records automatically. As a genera
 * Initial release.
 
 == Upgrade Notice ==
-= 0.6.0 =
-* Fixes the bundled Spanish translation loading, integrates the WooCommerce 10.9 transactional-email log, adds Article 11a label safety net, WPML / Polylang support for configurable strings and rate limiting plus honeypot on the public form.
+= 0.6.1 =
+* The bundled translation now wins over the centralised language pack for any locale shipped under `/languages`, so the strings packaged with the current release are always rendered instead of waiting for translate.wordpress.org to regenerate.
 
 == Thanks ==
 Thanks to everyone who uses the plugin, helps improve it, makes a donation or encourages us with their comments.

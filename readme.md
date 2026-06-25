@@ -9,7 +9,7 @@ Requires at least: 6.0
 
 Tested up to: 7.1
 
-Stable tag: 0.6.0
+Stable tag: 0.6.1
 
 Requires PHP: 7.4
 
@@ -90,6 +90,9 @@ El plugin no elimina automáticamente las solicitudes de desistimiento registrad
 **APG Desistimiento para WooCommerce** es un plugin gratuito. **Art Project Group** no proporciona soporte técnico gratuito, pero ofrece un servicio de [soporte técnico](https://artprojectgroup.es/tienda/ticket-de-soporte) de pago para instalación y configuración.
 
 ## Changelog
+### 0.6.1
+* La traducción empaquetada con el plugin pasa a tener prioridad sobre el paquete de idioma centralizado: cuando el plugin viaja con un `.mo` (o `.l10n.php`) para el locale actual bajo `/languages`, el filtro `lang_dir_for_domain` devuelve esa carpeta sin condiciones, en lugar de hacerlo solo cuando WordPress no encuentre nada en `wp-content/languages/plugins/`. Resultado: el locale empaquetado por el plugin (actualmente `es_ES`) siempre se renderiza con las cadenas incluidas en la versión publicada, así que los textos nuevos y los retoques del changelog llegan a los usuarios el mismo día que se publica el plugin, sin esperar a que translate.wordpress.org regenere su paquete de idioma. Los locales para los que el plugin no empaqueta traducción se siguen cargando desde el paquete centralizado del sistema, igual que antes.
+
 ### 0.6.0
 * Corregido: la traducción al español empaquetada con el plugin (y cualquier futuro idioma que viaje bajo `/languages`) no se cargaba en los sitios para los que translate.wordpress.org aún no había generado un paquete de idioma. El cargador just-in-time de WordPress solo inspecciona `wp-content/languages/plugins/`, así que el `.mo` incluido dentro del plugin se ignoraba. Ahora el plugin se engancha al filtro `lang_dir_for_domain` introducido en WordPress 6.6 para devolver la carpeta `/languages` empaquetada cuando no haya paquete de idioma disponible, sin recurrir a la llamada `load_plugin_textdomain()` desaconsejada por WP.org. En WordPress 6.5 y anteriores la traducción empaquetada seguirá sin cargarse hasta que se publique un paquete de idioma, pero el plugin sigue funcionando en el idioma de origen.
 * Integración con el log de emails transaccionales de WooCommerce 10.9: las tres clases `WC_Email` del plugin (acuse al cliente, notificación al administrador, cambio de estado) las recoge automáticamente el nuevo `EmailLogger` integrado. Cada entrada del log se enriquece mediante `woocommerce_email_log_context` con el ID de la solicitud de desistimiento, el alcance y el hash SHA-256 del acuse junto con su timestamp UTC, de forma que la entrada del log se puede contrastar con el email realmente entregado al cliente. El filtro se ignora silenciosamente en versiones anteriores de WooCommerce.

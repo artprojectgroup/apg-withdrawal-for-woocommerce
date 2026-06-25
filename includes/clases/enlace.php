@@ -72,7 +72,7 @@ function apg_withdrawal_render_link_html( array $args = array() ) {
 				esc_html__( 'The withdrawal link label "%s" looks ambiguous. Article 11a of Directive 2011/83/EU requires the wording to make it clear to the consumer that they are exercising their right of withdrawal.', 'apg-withdrawal-for-woocommerce' ),
 				esc_html( (string) $args['label'] )
 			),
-			'0.6.0'
+			'0.6.1'
 		);
 	}
 
