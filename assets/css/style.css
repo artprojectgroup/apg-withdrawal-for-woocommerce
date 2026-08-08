@@ -338,3 +338,14 @@ table.apg-table select {
         padding: 10px;
     }
 }
+
+/* Refund breakdown inside the withdrawal request metabox. */
+ul.apg-withdrawal-refund-lines {
+    margin: 0 0 8px;
+}
+
+ul.apg-withdrawal-refund-lines li {
+    margin: 0 0 4px;
+    padding-left: 12px;
+    text-indent: -12px;
+}

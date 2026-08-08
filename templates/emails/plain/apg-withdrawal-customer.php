@@ -56,11 +56,19 @@ if ( 'partial' === ( $data['scope'] ?? 'full' ) && ! empty( $data['products'] ) 
 	printf( esc_html__( 'Products', 'apg-withdrawal-for-woocommerce' ) . ': %s' . "\n", esc_html( implode( ', ', (array) ( $data['products'] ?? array() ) ) ) );
 }
 
+if ( $data['iban'] ?? '' ) {
+	printf( esc_html__( 'Account for the refund', 'apg-withdrawal-for-woocommerce' ) . ': %s' . "\n", esc_html( $data['iban'] ?? '' ) );
+}
+
 if ( $data['details'] ?? '' ) {
 	printf( esc_html__( 'Additional details', 'apg-withdrawal-for-woocommerce' ) . ': %s' . "\n", esc_html( $data['details'] ?? '' ) );
 }
 
 echo "\n";
+
+if ( ! empty( $data['statutory_reference'] ) ) {
+	echo esc_html( $data['statutory_reference'] ) . "\n\n";
+}
 
 if ( ! empty( $data['receipt_hash'] ) ) {
 	printf(

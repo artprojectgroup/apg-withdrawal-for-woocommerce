@@ -118,6 +118,14 @@ function apg_withdrawal_data_exporter( $email_address, $page = 1 ) { // phpcs:ig
 				'value' => (string) get_post_meta( $post_id, '_apg_withdrawal_status', true ),
 			),
 			array(
+				'name'  => __( 'Account for the refund', 'apg-withdrawal-for-woocommerce' ),
+				'value' => apg_withdrawal_format_iban( get_post_meta( $post_id, '_apg_withdrawal_iban', true ) ),
+			),
+			array(
+				'name'  => __( 'Email confirmed at (UTC)', 'apg-withdrawal-for-woocommerce' ),
+				'value' => (string) get_post_meta( $post_id, '_apg_withdrawal_email_verified', true ),
+			),
+			array(
 				'name'  => __( 'IP', 'apg-withdrawal-for-woocommerce' ),
 				'value' => (string) get_post_meta( $post_id, '_apg_withdrawal_ip', true ),
 			),
@@ -201,6 +209,11 @@ function apg_withdrawal_data_eraser( $email_address, $page = 1 ) { // phpcs:igno
 				update_post_meta( $post_id, $personal_key, $redacted_marker );
 			}
 		}
+
+		// The refund account is banking data with no evidentiary value for the
+		// declaration itself, so it is removed outright rather than redacted: a
+		// placeholder in an IBAN field reads as a malformed account number.
+		delete_post_meta( $post_id, '_apg_withdrawal_iban' );
 
 		// Customer-supplied free text potentially contains personal data too.
 		$order_ref = (string) get_post_meta( $post_id, '_apg_withdrawal_order', true );

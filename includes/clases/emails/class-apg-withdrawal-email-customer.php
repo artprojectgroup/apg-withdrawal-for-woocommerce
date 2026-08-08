@@ -76,20 +76,12 @@ if ( ! class_exists( 'APG_Withdrawal_Email_Customer', false ) ) :
 			if ( $post_id && 'partial' === $scope ) {
 				$stored_items = get_post_meta( absint( $post_id ), '_apg_withdrawal_products', true );
 				$wc_order_id  = absint( get_post_meta( absint( $post_id ), '_apg_withdrawal_wc_order_id', true ) );
-				if ( $wc_order_id && is_array( $stored_items ) && function_exists( 'wc_get_order' ) ) {
-					$wc_order = wc_get_order( $wc_order_id );
-					if ( $wc_order ) {
-						foreach ( $wc_order->get_items() as $item_id => $item ) {
-							if ( in_array( (string) $item_id, array_map( 'strval', $stored_items ), true ) ) {
-								$products_list[] = sprintf(
-									/* translators: 1: product name, 2: quantity. */
-									__( '%1$s x %2$d', 'apg-withdrawal-for-woocommerce' ),
-									$item->get_name(),
-									$item->get_quantity()
-								);
-							}
-						}
-					}
+				if ( $wc_order_id && is_array( $stored_items ) ) {
+					$products_list = apg_withdrawal_get_selected_product_labels(
+						apg_withdrawal_get_order( $wc_order_id ),
+						$stored_items,
+						apg_withdrawal_get_request_quantities( $post_id )
+					);
 				}
 			}
 
@@ -103,6 +95,8 @@ if ( ! class_exists( 'APG_Withdrawal_Email_Customer', false ) ) :
 				'request_date'            => $request_date,
 				'details'                 => $post_obj ? $post_obj->post_content : '',
 				'products'                => $products_list,
+				'iban'                    => $post_id ? apg_withdrawal_format_iban( get_post_meta( absint( $post_id ), '_apg_withdrawal_iban', true ) ) : '',
+				'statutory_reference'     => apg_withdrawal_get_statutory_reference(),
 				'receipt_hash'            => $post_id ? (string) get_post_meta( absint( $post_id ), '_apg_withdrawal_receipt_hash', true ) : '',
 				'receipt_hash_timestamp'  => $post_id ? (string) get_post_meta( absint( $post_id ), '_apg_withdrawal_receipt_hash_timestamp', true ) : '',
 			);

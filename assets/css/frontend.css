@@ -1,12 +1,39 @@
 @charset "UTF-8";
 
-.apg-withdrawal-products-row select,
-.apg-withdrawal-products-row .select2-container {
-	width: 100%;
-}
-
 .apg-withdrawal-products-row .description {
 	display: block;
+}
+
+.apg-withdrawal-items {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+/*
+ * WCAG 2.2 success criterion 2.5.8 (Target Size, minimum) requires every target
+ * to span 24x24 CSS pixels, unless the offset to each adjacent target already
+ * reaches 24 pixels. The rules below take that spacing route on purpose: they
+ * guarantee the row height and the separation between consecutive rows without
+ * resizing the checkbox or the number input, so the controls keep whatever
+ * appearance the active theme gives them.
+ *
+ * The criterion is not part of WCAG 2.1 AA, the level EN 301 549 v3.2.1 requires
+ * today, but it is part of WCAG 2.2 AA, which v4.1.1 of that standard adopts.
+ */
+.apg-withdrawal-item {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 8px 16px;
+	align-items: center;
+	justify-content: space-between;
+	min-height: 24px;
+	padding: 6px 0;
+}
+
+.apg-withdrawal-item-quantity input {
+	width: 5em;
+	min-height: 24px;
 }
 
 .woocommerce-MyAccount-content a.button.apg_withdrawal_expired {

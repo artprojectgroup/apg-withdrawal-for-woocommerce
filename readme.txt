@@ -4,10 +4,10 @@ Donate link: https://artprojectgroup.es/tienda/donacion
 Tags: withdrawal, right of withdrawal, woocommerce, refund, consumer rights
 Requires at least: 6.0
 Tested up to: 7.1
-Stable tag: 0.6.1
+Stable tag: 0.7.0
 Requires PHP: 7.4
 WC requires at least: 7.0
-WC tested up to: 10.9.0
+WC tested up to: 11.0.0
 License: GNU General Public License v3 or later
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -18,19 +18,28 @@ Add to WooCommerce an online withdrawal workflow with customer form, My Account 
 
 = Features =
 * Customer withdrawal form via the `[apg_withdrawal_form]` shortcode.
+* Partial withdrawal down to the unit: the customer ticks the order lines and adjusts how many units of each one they are withdrawing from.
 * Configurable withdrawal window (days) and deadline source (completed or created date).
 * Optional extra grace days on top of the standard withdrawal window.
 * Active request detection: hides the withdrawal button if a request is already open for the order.
 * Optional digital-content waiver checkbox at checkout (both classic shortcode and block-based checkout): a configurable selector chooses when to display it — never, only on virtual products (or per-product `_apg_withdrawal_type = digital`), on every order, or on selected categories and/or selected products. The customer's choice is persisted to order meta as legal evidence.
-* Admin request log with full request details (custom post type).
+* Admin request log with full request details (custom post type), status views with counts, bulk status changes and sortable status column.
+* Own WooCommerce order status *Withdrawal requested*, optionally applied to the order as soon as a declaration is received, so affected orders can be filtered, sorted and bulk-edited with the native tools.
+* Optional refund account (IBAN) validated with the international control digits (ISO 7064 MOD-97-10).
+* Optional double opt-in for guests: the request is held until the customer opens a single-use link sent to the email address on the order, while keeping the date and time of the original submission.
+* Jurisdiction setting (EU baseline / Spain) that governs the statutory reference shown to the customer.
+* REST API under `apg-withdrawal/v1` to list, read, create and progress requests from headless storefronts and back-office integrations.
 * IP address and browser identifier storage options for legal evidence.
 * Email notification to the store admin on every new request.
 * Automatic customer acknowledgement email on submission.
 * Customer status update emails when the request is accepted, rejected or completed.
 * Automation: updates the withdrawal request status automatically when the linked WooCommerce order changes status.
 * My Account integration: customers can view their withdrawal request history.
-* CSV export of all withdrawal requests.
+* CSV export of withdrawal requests, honouring the status currently selected in the list, with protection against spreadsheet formula injection.
 * 100% compatible with HPOS (High-Performance Order Storage).
+* Public form built to WCAG 2.1 AA — the level EN 301 549 requires today — with the WCAG 2.2 target-size criterion already met: grouped and labelled controls, live regions for dynamic notices and focus moved to each new step.
+* One-click WooCommerce refund built from the request: the declared lines and quantities, capped by whatever is still refundable on the order. Always started by hand, never automatically. Works with Redsys and Bizum out of the box.
+* WPML and Polylang ready, both through `wpml-config.xml` and through runtime string registration.
 
 = Translations =
 * English: by [Art Project Group](https://artprojectgroup.es/) (default language).
@@ -73,6 +82,33 @@ Typical recommended placements:
 * The Terms and Conditions / Privacy Policy pages, alongside the rest of the consumer information required by Article 6.1.h of Directive 2011/83/EU.
 * The order processing / completed emails (the plugin already injects the link there automatically via `woocommerce_email_after_order_table`).
 
+= What happens if my store does not offer the withdrawal function? =
+Article 11a of Directive 2011/83/EU has applied throughout the EU since 19 June 2026, regardless of whether each Member State has transposed it. Spain had not done so at the time of this release — the European Commission issued a reasoned opinion against Spain in June 2026 — but the obligation applies by direct effect, and non-compliance is penalised through the general regime of the TRLGDCU, whose fines reach 100,000 € for minor infringements, 1,000,000 € for serious ones and 4,000,000 € (or 4% of the turnover in Spain, whichever is higher) for very serious ones. Check the regime applicable in your own country: this note is informative and is not legal advice.
+
+= Can I ask the customer for a bank account? =
+Yes, in *WooCommerce → Withdrawal → Request handling → Account for the refund (IBAN)*, either as an optional or as a required field. It is disabled by default. The number is validated with the international control digits (ISO 7064 MOD-97-10) before being accepted, is stored alongside the request, is included in the privacy exporter and is deleted outright by the privacy eraser. Only enable it when you genuinely cannot refund through the original payment method.
+
+= How do I stop somebody else from submitting a withdrawal in a customer's name? =
+Enable *Confirm guest requests by email?*. A visitor who is not logged in then has their request held while a single-use link is sent to the address recorded on the order; only opening it registers the declaration. The request keeps the date and time of the original submission, so the customer never loses days of their withdrawal period. Logged-in customers are unaffected, since WordPress has already authenticated them.
+
+= Is the plugin accessible? Does it help with the European Accessibility Act? =
+The public form targets **WCAG 2.1 level AA**, which is what EN 301 549 — the standard the European Accessibility Act points to — requires today: the line-item selector is a labelled `fieldset` of native checkboxes and number inputs operable with a keyboard, dynamic notices are live regions, and focus moves to each new step of the flow. It also already satisfies the WCAG 2.2 target-size criterion (2.5.8), which arrives with version 4.1.1 of that standard, and the guest confirmation link is the pattern WCAG 2.2 recommends for accessible authentication (3.3.8), since it asks the customer for no cognitive test.
+
+Two caveats. First, the Accessibility Act (Directive (EU) 2019/882, in Spain Law 11/2023) has applied to e-commerce **since 28 June 2025**, and it binds *the shop*, not a single plugin: colour contrast, focus visibility and page structure come from your theme, and the responsibility for the store as a whole is the merchant's. Second, companies with fewer than 10 employees **and** a turnover below 2 million euros are exempt from the obligations on services. Check your own situation: this note is informative and is not legal advice.
+
+= Can I refund the customer from the withdrawal request? =
+Yes. Each request shows a *Refund* panel with the amount the declaration implies — the declared lines at their declared quantities, plus the standard delivery cost when the withdrawal covers the whole contract, as Article 13(1) of Directive 2011/83/EU requires — always capped by whatever is still refundable on the order, so a refund you already issued by hand is never handed out twice. Nothing happens until you press the button. By default the refund is only *recorded* in WooCommerce, without moving money or touching stock; two checkboxes let you send it through the payment gateway (when the gateway supports it) and restock the returned products. The `apg_withdrawal_refund_plan` filter lets you adjust the figures, for instance to deduct the diminished value of returned goods.
+
+= Does it work with Redsys and Bizum? =
+Yes, and nothing extra needs installing. Bizum runs on Redsys for e-commerce, and the WooCommerce implementations of Redsys — José Conti's paid gateway, Codection's, the official unified module — issue refunds through the standard WooCommerce refund API. The refund panel uses that same API, so ticking *Send the money back through Redsys* reaches your virtual POS directly. The panel names the gateway it is about to use, so you always know where the money is going.
+
+Three things worth knowing. Redsys accepts **both full and partial refunds**, so a partial withdrawal is returned as declared. **When the customer sees the money depends on their bank**, typically between 2 and 31 days — the 14-day limit in Article 13(1) of Directive 2011/83/EU applies to you *issuing* the refund, not to their bank crediting it. And if you use a Redsys gateway that does not implement refunds, such as the free Light edition, the panel says so and records the refund in WooCommerce without moving money, so you can issue it from your bank's back office and keep the accounting straight.
+
+When a gateway rejects a refund, the reason it gives — the SIS code, in the case of Redsys — is shown in the error notice instead of a generic failure, so you have something to act on.
+
+= Does the plugin have a REST API? =
+Yes, under the `apg-withdrawal/v1` namespace. `GET /requests` and `GET /requests/<id>` list and read requests, and `PUT /requests/<id>` moves one through the workflow; all three require the `manage_woocommerce` capability. `POST /requests` registers a declaration coming from a headless storefront and is public, exactly like the public form: it goes through the same processor, so the order must match the email address, the rate limiter applies and the guest email verification kicks in when you enabled it.
+
 = How long should I keep the withdrawal request records? =
 The plugin does not delete withdrawal request records automatically. As a general recommendation, keep them for at least **5 years** after their creation — the typical statute of limitations for consumer and contractual actions in many EU jurisdictions. Always check the applicable retention period in your country before deleting old records or running the plugin's CSV export + uninstall flow.
 
@@ -88,6 +124,25 @@ The plugin does not delete withdrawal request records automatically. As a genera
 6. Edit withdrawal screen with full request details and status history.
 
 == Changelog ==
+= 0.7.0 =
+* Partial withdrawal down to the unit. The "Specific products only" scope no longer works as an all-or-nothing selector per line: the form now renders one row per order line with a checkbox and a quantity input capped at the units originally ordered, so a customer who bought three units and is returning one declares exactly that. The units are stored in `_apg_withdrawal_quantities`, travel through the confirmation screen, and are shown in the acknowledgement email, the request detail screen and the CSV export as "Product x 1 of 3". They are also folded into the SHA-256 receipt hash as `item:units` pairs, so the digest covers the quantities and not just which lines were selected. Requests registered before this release keep working and are read as "all the units of the selected lines", which is what they meant.
+* Withdrawal status workflow in the requests list. The post-status views ("All | Published"), which carried no meaning for this post type, are replaced with one link per withdrawal status showing its count, resolved in a single grouped query. The status column becomes sortable, a bulk action per status lets a batch of requests be moved through the workflow at once — going through `apg_withdrawal_change_status()`, so each one still gets its log entry and, when enabled, its customer notification — and the *Export CSV* button now exports the status currently on screen instead of always the whole log.
+* Own WooCommerce order status `wc-apg-withdrawal` ("Withdrawal requested"), registered for both the legacy and the HPOS storage, available in the order editor dropdown, in the orders list views, as a bulk action and inside the plugin's own Automation mapping. A new setting, *Order status when a request is received*, optionally moves the linked order to any status — the new one or an existing one — as soon as a declaration is registered. Disabled by default, so updating changes nothing until you opt in.
+* Optional refund account (IBAN) on the public form, configurable as hidden (default), optional or required. The number is normalised, checked against the ISO 13616 structure and the ISO 7064 MOD-97-10 control digits before being accepted, and surfaces in the confirmation screen, the acknowledgement email, the request detail screen and the CSV export. It is exposed by the privacy exporter and, unlike the other personal fields, is deleted outright rather than redacted by the eraser: a placeholder in an IBAN field would read as a malformed account number, and the account has no evidentiary value for the declaration itself.
+* Optional double opt-in for guest declarations. The public form already refuses any order whose billing email does not match the address typed by the visitor, but for a guest checkout that pair may be known to somebody other than the consumer. With *Confirm guest requests by email?* enabled, a submission from a visitor who is not logged in is parked server-side and a single-use link is emailed to the address on the order; only opening it registers the declaration. Critically, the moment that counts legally is the one at which the consumer sent the form, so the original timestamp travels inside the parked payload and becomes the request's date and the timestamp covered by the receipt hash — the customer never loses days of their withdrawal period to their own inbox. Tokens are stored as SHA-256 digests, are single use and expire after 24 hours (filterable via `apg_withdrawal_verification_ttl`).
+* Jurisdiction layer. A new *Jurisdiction* setting (`EU` baseline / `ES`) governs the statutory reference shown on the confirmation screen and in the acknowledgement email. Spain has not transposed Directive (EU) 2023/2673 yet, so both options currently apply the same requirements and the Spanish one additionally cites the TRLGDCU; the point of the layer is that every jurisdiction-specific branch goes through `apg_withdrawal_jurisdiction_supports()`, so the national extras can be switched on in one place once they reach the BOE instead of being retrofitted across the codebase. Both the jurisdiction and the feature matrix are filterable.
+* REST API under the `apg-withdrawal/v1` namespace. `GET /requests` (paginated, filterable by status and order), `GET /requests/<id>` and `PUT /requests/<id>` require `manage_woocommerce`; `POST /requests` is public so decoupled storefronts can register a declaration, and routes through the very same processor as the public form — order/email match, rate limiting and, when enabled, guest email verification all apply, and a parked submission answers `202` with `pending_verification`. The refund account is only echoed back to a caller that can manage WooCommerce. A new `apg_withdrawal_request_registered` action fires once a declaration is fully registered.
+* Refund the customer straight from the withdrawal request. Each request gains a *Refund* panel that works out what the declaration implies — the declared lines at their declared quantities, plus the standard delivery cost when the withdrawal covers the whole contract, as Article 13(1) of Directive 2011/83/EU requires — and caps every figure by what is still refundable on the order, so a refund issued by hand beforehand can never be duplicated. Nothing is ever refunded automatically: the merchant presses the button, and by default the refund is only recorded in WooCommerce without moving money or touching stock, with opt-in checkboxes to push it through the payment gateway (offered only when the gateway supports refunds) and to restock. Creating it requires the same capability WooCommerce itself asks for to refund an order, writes an order note and is filterable through `apg_withdrawal_refund_plan`.
+* Redsys and Bizum reach the refund panel with no extra integration, because those gateways implement the standard WooCommerce refund API and the panel drives that API. The panel now names the gateway it is about to use instead of talking about an anonymous "payment gateway", spells out for Redsys and Bizum that partial refunds are accepted and that the customer's bank takes 2 to 31 days to credit the money — the Article 13(1) deadline binds the trader issuing the refund, not the bank crediting it — and, when the active gateway cannot refund programmatically (the free Redsys Light edition, for instance), says so and records the refund without moving money. Gateway detection is filterable through `apg_withdrawal_gateway_info`.
+* A refund the gateway refuses now surfaces the reason the gateway gave — the SIS code, for Redsys — instead of a generic failure notice.
+* Fixed: the printable Annex I.B model form left nowhere to actually write. The minimum height sat on the field container, which the caption already filled, so each rule ended up flush under its own label. The writing space now belongs to the ruled lines themselves and each field gets as many as its answer needs — three for the description of the goods and for the consumer's address, two for the signature, one for the dates and the name.
+* Fixed: the Annex I.B page no longer opens the print dialog by itself. Auto-printing on load was both an unrequested context change and the root of a Safari bug where a cancelled print left the browser printing blank sheets from then on. Printing now always starts from the button, after the web fonts and one paint have settled. A repaint on `afterprint` — and on the print media query ceasing to match, because Safari is inconsistent about which of the two it emits when the dialog is dismissed — also fixes the page being left blank after closing the dialog. The public form's link is labelled "Open the model form" and announces that it opens in a new tab.
+* Annex I.B printing polish: A4 page box with 16 mm margins, and captions kept on the same sheet as their ruled lines.
+* Accessibility pass on the public form, targeting WCAG 2.1 AA. The line-item selector is now a labelled `fieldset` of native checkboxes and number inputs instead of a multi-select widget, so it is operable with a keyboard and announceable by screen readers; the dynamic notices became live regions (`role="alert"` for the order error, `role="status"` for the product warning); and focus is moved to the newly injected content after every AJAX step, which previously left it on a button that no longer existed (3.2.2 and 4.1.3). The line rows are also spaced so they already satisfy the WCAG 2.2 target-size criterion (2.5.8), which is not part of WCAG 2.1 AA but arrives with version 4.1.1 of EN 301 549 — the standard the European Accessibility Act points to, and which has bound e-commerce since 28 June 2025.
+* `wpml-config.xml` shipped with the plugin, so WPML and Polylang pick up the six merchant-configurable strings and the withdrawal-type metas without any code running. The runtime `wpml_register_single_string` registration added in 0.6.0 stays in place for setups that read strings that way.
+* Declared compatibility with WooCommerce 11.0.
+* New FAQ entries on the penalty regime for not offering the withdrawal function, the refund account, the guest double opt-in and the REST API.
+
 = 0.6.1 =
 * Bundled translation now takes precedence over the centralised language pack: when the plugin ships a `.mo` (or `.l10n.php`) for the current locale under `/languages`, the `lang_dir_for_domain` filter returns that folder unconditionally, instead of only falling back to it when WordPress could not find anything in `wp-content/languages/plugins/`. Result: the locale shipped by the plugin (currently `es_ES`) is always rendered with the strings packaged in the current release, so new wording and changelog-driven copy adjustments reach users on the same day as the plugin update without waiting for translate.wordpress.org to regenerate its language pack. Locales for which the plugin does not bundle a translation continue to be loaded from the centralised system pack as before.
 
@@ -142,8 +197,8 @@ The plugin does not delete withdrawal request records automatically. As a genera
 * Initial release.
 
 == Upgrade Notice ==
-= 0.6.1 =
-* The bundled translation now wins over the centralised language pack for any locale shipped under `/languages`, so the strings packaged with the current release are always rendered instead of waiting for translate.wordpress.org to regenerate.
+= 0.7.0 =
+* Partial withdrawal down to the unit, refunds created straight from a request (Redsys and Bizum included), status views and bulk actions, own order status, optional IBAN, guest double opt-in, REST API and an accessibility pass. Fixes the printable Annex I.B. Compatible with WooCommerce 11.0.
 
 == Thanks ==
 Thanks to everyone who uses the plugin, helps improve it, makes a donation or encourages us with their comments.

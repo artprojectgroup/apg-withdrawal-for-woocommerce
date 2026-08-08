@@ -167,6 +167,10 @@ function apg_withdrawal_get_settings() {
 		'exclusion_notice_digital'        => '',
 		'exclusion_notice_personalized'   => '',
 		'exclusion_notice_manual'         => '',
+		'jurisdiction'                    => 'EU',
+		'iban_field'                      => 'hidden',
+		'guest_verification'              => '0',
+		'order_status_on_request'         => '',
 	);
 
 	return wp_parse_args( get_option( 'apg_withdrawal_settings', array() ), $defaults );
@@ -338,6 +342,171 @@ function apg_withdrawal_sanitize_button_text( $value ) {
 	}
 
 	return $value;
+}
+
+/**
+ * Returns the jurisdiction the plugin should behave as, as configured in
+ * `Settings → Jurisdiction`. The value drives the legal wording surfaced to the
+ * consumer and is the single extension point where a national transposition can
+ * add requirements on top of the EU baseline without re-architecting the plugin.
+ *
+ * At the time of writing Spain has NOT transposed Directive (EU) 2023/2673 —
+ * the Commission issued a reasoned opinion in June 2026 — so `ES` behaves
+ * exactly like `EU` except for the statutory reference shown to the consumer.
+ * When the transposing instrument reaches the BOE, the extra requirements go
+ * behind `apg_withdrawal_jurisdiction_supports()` rather than being scattered
+ * across the codebase.
+ *
+ * @return string Jurisdiction code, currently `EU` or `ES`.
+ */
+function apg_withdrawal_get_jurisdiction() {
+	$settings     = apg_withdrawal_get_settings();
+	$jurisdiction = isset( $settings['jurisdiction'] ) ? strtoupper( (string) $settings['jurisdiction'] ) : 'EU';
+
+	if ( ! in_array( $jurisdiction, apg_withdrawal_get_jurisdictions(), true ) ) {
+		$jurisdiction = 'EU';
+	}
+
+	/**
+	 * Filters the effective jurisdiction. Useful for multi-store setups that
+	 * resolve the jurisdiction from the customer's country instead of a single
+	 * store-wide setting.
+	 *
+	 * @param string $jurisdiction Jurisdiction code resolved from settings.
+	 */
+	return (string) apply_filters( 'apg_withdrawal_jurisdiction', $jurisdiction );
+}
+
+/**
+ * Returns the jurisdictions the plugin knows about, as code => label.
+ *
+ * @return array<string,string>
+ */
+function apg_withdrawal_get_jurisdictions() {
+	return array(
+		'EU' => __( 'European Union (baseline)', 'apg-withdrawal-for-woocommerce' ),
+		'ES' => __( 'Spain', 'apg-withdrawal-for-woocommerce' ),
+	);
+}
+
+/**
+ * Reports whether the active jurisdiction requires a given extra behaviour on
+ * top of the EU baseline. Every jurisdiction-specific branch in the plugin must
+ * go through this function so the Spanish transposition can be switched on in a
+ * single place once it is published in the BOE.
+ *
+ * Known features:
+ *   - `statutory_reference` — supported by every jurisdiction; the wording of
+ *     the reference itself is resolved by
+ *     {@see apg_withdrawal_get_statutory_reference()}.
+ *
+ * @param string $feature Feature slug.
+ * @return bool True when the active jurisdiction requires the feature.
+ */
+function apg_withdrawal_jurisdiction_supports( $feature ) {
+	$jurisdiction = apg_withdrawal_get_jurisdiction();
+
+	$matrix = array(
+		'EU' => array( 'statutory_reference' => true ),
+		'ES' => array( 'statutory_reference' => true ),
+	);
+
+	$supported = isset( $matrix[ $jurisdiction ][ $feature ] ) ? (bool) $matrix[ $jurisdiction ][ $feature ] : false;
+
+	/**
+	 * Filters whether a jurisdiction-specific feature is required.
+	 *
+	 * @param bool   $supported    Resolved value from the built-in matrix.
+	 * @param string $feature      Feature slug being queried.
+	 * @param string $jurisdiction Active jurisdiction code.
+	 */
+	return (bool) apply_filters( 'apg_withdrawal_jurisdiction_supports', $supported, $feature, $jurisdiction );
+}
+
+/**
+ * Returns the statutory reference shown to the consumer on the confirmation
+ * screen and in the acknowledgement email, worded for the active jurisdiction.
+ *
+ * @return string Translated reference, or empty string when the feature is off.
+ */
+function apg_withdrawal_get_statutory_reference() {
+	if ( ! apg_withdrawal_jurisdiction_supports( 'statutory_reference' ) ) {
+		return '';
+	}
+
+	if ( 'ES' === apg_withdrawal_get_jurisdiction() ) {
+		return __( 'This request is governed by Articles 102 to 108 of Royal Legislative Decree 1/2007 (TRLGDCU) and by Article 11a of Directive 2011/83/EU, added by Directive (EU) 2023/2673, which applies directly from 19 June 2026.', 'apg-withdrawal-for-woocommerce' );
+	}
+
+	return __( 'This request is governed by Directive 2011/83/EU on consumer rights, as amended by Directive (EU) 2023/2673, whose Article 11a has applied since 19 June 2026.', 'apg-withdrawal-for-woocommerce' );
+}
+
+/**
+ * Normalises an IBAN for storage and comparison: removes every character that
+ * is not a letter or a digit and uppercases the rest.
+ *
+ * @param string $iban Raw IBAN as typed by the customer.
+ * @return string Normalised IBAN (no spaces, uppercase).
+ */
+function apg_withdrawal_normalize_iban( $iban ) {
+	return strtoupper( preg_replace( '/[^A-Za-z0-9]/', '', (string) $iban ) );
+}
+
+/**
+ * Validates an IBAN against the ISO 13616 structure and the ISO 7064 MOD-97-10
+ * checksum: the first four characters are moved to the end, every letter is
+ * replaced by its position in the alphabet plus 9 (A = 10 … Z = 35) and the
+ * resulting number must leave a remainder of 1 when divided by 97.
+ *
+ * The modulo is computed in chunks so the value never exceeds PHP's integer
+ * range, which matters because a full IBAN expands to up to 68 digits.
+ *
+ * Country-specific length tables are deliberately not enforced: they change as
+ * new countries join the scheme, and the checksum already rejects the
+ * overwhelming majority of typos.
+ *
+ * @param string $iban IBAN to validate (spaces and punctuation are ignored).
+ * @return bool True when the IBAN is structurally valid and the checksum matches.
+ */
+function apg_withdrawal_validate_iban( $iban ) {
+	$iban = apg_withdrawal_normalize_iban( $iban );
+
+	if ( strlen( $iban ) < 15 || strlen( $iban ) > 34 ) {
+		return false;
+	}
+
+	if ( ! preg_match( '/^[A-Z]{2}[0-9]{2}[A-Z0-9]+$/', $iban ) ) {
+		return false;
+	}
+
+	$rearranged = substr( $iban, 4 ) . substr( $iban, 0, 4 );
+	$numeric    = '';
+
+	for ( $index = 0, $length = strlen( $rearranged ); $index < $length; $index++ ) {
+		$character = $rearranged[ $index ];
+		$numeric  .= ctype_alpha( $character ) ? (string) ( ord( $character ) - 55 ) : $character;
+	}
+
+	$remainder = 0;
+
+	foreach ( str_split( $numeric, 7 ) as $chunk ) {
+		$remainder = (int) ( ( $remainder . $chunk ) % 97 );
+	}
+
+	return 1 === $remainder;
+}
+
+/**
+ * Formats a stored IBAN in groups of four characters for display, matching the
+ * printed convention (`ES91 2100 0418 4502 0005 1332`).
+ *
+ * @param string $iban Stored IBAN.
+ * @return string Grouped IBAN, or empty string when there is nothing to format.
+ */
+function apg_withdrawal_format_iban( $iban ) {
+	$iban = apg_withdrawal_normalize_iban( $iban );
+
+	return '' === $iban ? '' : trim( chunk_split( $iban, 4, ' ' ) );
 }
 
 /**

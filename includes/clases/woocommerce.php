@@ -67,35 +67,81 @@ function apg_withdrawal_get_customer_orders( $email = '', $user_id = 0 ) {
 }
 
 /**
- * Returns an associative array of line-item ID to product label for an order.
+ * Returns the structured line-item data of an order: for each line item, the
+ * product name, the ordered quantity and a ready-to-print label. This is the
+ * canonical source used by the public form (which renders one selectable row
+ * with a quantity input per line item), the confirmation screen, the admin
+ * detail view, the CSV export and the acknowledgement email.
  *
  * @param WC_Order|bool $order WooCommerce order object or false.
- * @return array Associative array of item_id => label string.
+ * @return array<string,array{name:string,quantity:int,label:string}> Keyed by line-item ID.
  */
-function apg_withdrawal_get_order_products( $order ) {
-	$products = array();
+function apg_withdrawal_get_order_items_data( $order ) {
+	$items = array();
 
 	if ( ! $order || ! is_callable( array( $order, 'get_items' ) ) ) {
-		return $products;
+		return $items;
 	}
 
 	foreach ( $order->get_items() as $item_id => $item ) {
-		$products[ (string) $item_id ] = sprintf(
-			/* translators: 1: product name, 2: quantity. */
-			__( '%1$s x %2$d', 'apg-withdrawal-for-woocommerce' ),
-			$item->get_name(),
-			$item->get_quantity()
+		$name     = $item->get_name();
+		$quantity = max( 1, (int) $item->get_quantity() );
+
+		$items[ (string) $item_id ] = array(
+			'name'     => $name,
+			'quantity' => $quantity,
+			'label'    => sprintf(
+				/* translators: 1: product name, 2: quantity. */
+				__( '%1$s x %2$d', 'apg-withdrawal-for-woocommerce' ),
+				$name,
+				$quantity
+			),
 		);
 	}
 
-	return $products;
+	return $items;
 }
 
 /**
- * Builds a map of order ID to product labels for an array of orders.
+ * Clamps the quantities submitted for a partial withdrawal to what the order
+ * actually contains: every entry must reference a line item of the order, and
+ * the quantity is bounded to the interval [1, ordered quantity]. Line items
+ * that were not selected are dropped, and selected items with no explicit
+ * quantity default to the full ordered quantity.
+ *
+ * @param WC_Order|bool     $order    WooCommerce order object or false.
+ * @param array<int,string> $selected Selected line-item IDs.
+ * @param array             $raw      Raw quantities keyed by line-item ID.
+ * @return array<string,int> Sanitised quantities keyed by line-item ID.
+ */
+function apg_withdrawal_sanitize_item_quantities( $order, $selected, $raw ) {
+	$items      = apg_withdrawal_get_order_items_data( $order );
+	$raw        = is_array( $raw ) ? $raw : array();
+	$quantities = array();
+
+	foreach ( $selected as $item_id ) {
+		$item_id = (string) $item_id;
+
+		if ( ! isset( $items[ $item_id ] ) ) {
+			continue;
+		}
+
+		$ordered  = $items[ $item_id ]['quantity'];
+		$quantity = isset( $raw[ $item_id ] ) ? (int) $raw[ $item_id ] : $ordered;
+
+		$quantities[ $item_id ] = max( 1, min( $ordered, $quantity ) );
+	}
+
+	return $quantities;
+}
+
+/**
+ * Builds a map of order ID to line-item data for an array of orders. Consumed
+ * by the frontend script to rebuild the selectable item list (with its quantity
+ * inputs and their maximums) whenever the customer picks a different order.
  *
  * @param WC_Order[] $orders Array of WooCommerce order objects.
- * @return array Associative array of order_id => product labels array.
+ * @return array Associative array of order_id => line-item data array.
  */
 function apg_withdrawal_get_orders_products_map( $orders ) {
 	$map = array();
@@ -105,32 +151,81 @@ function apg_withdrawal_get_orders_products_map( $orders ) {
 			continue;
 		}
 
-		$map[ (string) $order->get_id() ] = apg_withdrawal_get_order_products( $order );
+		$map[ (string) $order->get_id() ] = apg_withdrawal_get_order_items_data( $order );
 	}
 
 	return $map;
 }
 
 /**
- * Returns the product labels for a set of selected line-item IDs within an order.
+ * Returns the product labels for a set of selected line-item IDs within an
+ * order. When per-line quantities are supplied and the customer is withdrawing
+ * from fewer units than were ordered, the label spells out both figures so the
+ * evidence trail records exactly what was declared.
  *
- * @param WC_Order|bool $order            WooCommerce order object or false.
- * @param array         $selected_products Array of selected line-item IDs.
+ * @param WC_Order|bool     $order             WooCommerce order object or false.
+ * @param array             $selected_products Array of selected line-item IDs.
+ * @param array<string,int> $quantities        Optional quantities keyed by line-item ID.
  * @return array Array of product label strings.
  */
-function apg_withdrawal_get_selected_product_labels( $order, $selected_products ) {
-	$labels   = array();
-	$products = apg_withdrawal_get_order_products( $order );
+function apg_withdrawal_get_selected_product_labels( $order, $selected_products, $quantities = array() ) {
+	$labels = array();
+	$items  = apg_withdrawal_get_order_items_data( $order );
 
 	foreach ( $selected_products as $item_id ) {
 		$item_id = (string) $item_id;
 
-		if ( isset( $products[ $item_id ] ) ) {
-			$labels[] = $products[ $item_id ];
+		if ( ! isset( $items[ $item_id ] ) ) {
+			continue;
 		}
+
+		$ordered  = $items[ $item_id ]['quantity'];
+		$withdrew = isset( $quantities[ $item_id ] ) ? max( 1, min( $ordered, (int) $quantities[ $item_id ] ) ) : $ordered;
+
+		if ( $withdrew < $ordered ) {
+			$labels[] = sprintf(
+				/* translators: 1: product name, 2: units being withdrawn, 3: units originally ordered. */
+				__( '%1$s x %2$d of %3$d', 'apg-withdrawal-for-woocommerce' ),
+				$items[ $item_id ]['name'],
+				$withdrew,
+				$ordered
+			);
+			continue;
+		}
+
+		$labels[] = sprintf(
+			/* translators: 1: product name, 2: quantity. */
+			__( '%1$s x %2$d', 'apg-withdrawal-for-woocommerce' ),
+			$items[ $item_id ]['name'],
+			$withdrew
+		);
 	}
 
 	return $labels;
+}
+
+/**
+ * Returns the stored per-line quantities of a withdrawal request, falling back
+ * to an empty array for requests created before 0.7.0 (whose labels then show
+ * the full ordered quantity, which is what those requests meant).
+ *
+ * @param int $post_id Withdrawal request post ID.
+ * @return array<string,int>
+ */
+function apg_withdrawal_get_request_quantities( $post_id ) {
+	$quantities = get_post_meta( absint( $post_id ), '_apg_withdrawal_quantities', true );
+
+	if ( ! is_array( $quantities ) ) {
+		return array();
+	}
+
+	$clean = array();
+
+	foreach ( $quantities as $item_id => $quantity ) {
+		$clean[ (string) $item_id ] = max( 1, (int) $quantity );
+	}
+
+	return $clean;
 }
 
 /**

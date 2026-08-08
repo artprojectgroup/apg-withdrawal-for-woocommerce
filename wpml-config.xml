@@ -1,0 +1,19 @@
+<wpml-config>
+	<admin-texts>
+		<key name="apg_withdrawal_settings">
+			<key name="button_text" />
+			<key name="digital_waiver_custom_label" />
+			<key name="exclusion_notice_excluded" />
+			<key name="exclusion_notice_digital" />
+			<key name="exclusion_notice_personalized" />
+			<key name="exclusion_notice_manual" />
+		</key>
+	</admin-texts>
+	<custom-fields>
+		<custom-field action="copy">_apg_withdrawal_type</custom-field>
+		<custom-field action="translate">_apg_withdrawal_custom_reason</custom-field>
+	</custom-fields>
+	<custom-term-fields>
+		<custom-term-field action="copy">_apg_withdrawal_type</custom-term-field>
+	</custom-term-fields>
+</wpml-config>

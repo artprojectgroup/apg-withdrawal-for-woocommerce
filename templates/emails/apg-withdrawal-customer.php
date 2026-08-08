@@ -74,6 +74,12 @@ printf( esc_html__( 'Hello %s,', 'apg-withdrawal-for-woocommerce' ), esc_html( $
 			<td style="text-align:left;border:1px solid #eee;padding:12px;"><?php echo esc_html( implode( ', ', (array) ( $data['products'] ?? array() ) ) ); ?></td>
 		</tr>
 		<?php endif; ?>
+		<?php if ( $data['iban'] ?? '' ) : ?>
+		<tr>
+			<th scope="row" style="text-align:left;border:1px solid #eee;padding:12px;"><?php esc_html_e( 'Account for the refund', 'apg-withdrawal-for-woocommerce' ); ?></th>
+			<td style="text-align:left;border:1px solid #eee;padding:12px;"><?php echo esc_html( $data['iban'] ?? '' ); ?></td>
+		</tr>
+		<?php endif; ?>
 		<?php if ( $data['details'] ?? '' ) : ?>
 		<tr>
 			<th scope="row" style="text-align:left;border:1px solid #eee;padding:12px;"><?php esc_html_e( 'Additional details', 'apg-withdrawal-for-woocommerce' ); ?></th>
@@ -82,6 +88,10 @@ printf( esc_html__( 'Hello %s,', 'apg-withdrawal-for-woocommerce' ), esc_html( $
 		<?php endif; ?>
 	</tbody>
 </table>
+
+<?php if ( ! empty( $data['statutory_reference'] ) ) : ?>
+<p style="font-size:13px;color:#555;"><?php echo esc_html( $data['statutory_reference'] ); ?></p>
+<?php endif; ?>
 
 <?php if ( ! empty( $data['receipt_hash'] ) ) : ?>
 <p style="font-size:13px;color:#555;border-top:1px solid #eee;padding-top:12px;">

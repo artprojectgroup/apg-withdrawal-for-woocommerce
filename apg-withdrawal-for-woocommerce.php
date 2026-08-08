@@ -2,7 +2,7 @@
 /*
 Plugin Name: APG Withdrawal for WooCommerce
 Requires Plugins: woocommerce
-Version: 0.6.1
+Version: 0.7.0
 Plugin URI: https://wordpress.org/plugins/apg-withdrawal-for-woocommerce/
 Description: Add to WooCommerce an online withdrawal workflow compliant with EU requirements.
 Author URI: https://artprojectgroup.es/
@@ -13,7 +13,7 @@ Requires at least: 6.0
 Tested up to: 7.1
 Requires PHP: 7.4
 WC requires at least: 7.0
-WC tested up to: 10.9.0
+WC tested up to: 11.0.0
 
 Text Domain: apg-withdrawal-for-woocommerce
 Domain Path: /languages
@@ -26,7 +26,7 @@ Domain Path: /languages
 defined( 'ABSPATH' ) || exit;
 
 define( 'apg_withdrawal_DIRECCION', plugin_basename( __FILE__ ) );
-define( 'apg_withdrawal_VERSION', '0.6.1' );
+define( 'apg_withdrawal_VERSION', '0.7.0' );
 define( 'apg_withdrawal_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 
 add_filter(
@@ -140,6 +140,10 @@ if ( is_plugin_active( 'woocommerce/woocommerce.php' ) || is_network_only_plugin
 			include_once 'includes/clases/checkout.php';
 			include_once 'includes/clases/rgpd.php';
 			include_once 'includes/clases/enlace.php';
+			include_once 'includes/clases/estado-pedido.php';
+			include_once 'includes/clases/verificacion.php';
+			include_once 'includes/clases/rest.php';
+			include_once 'includes/clases/reembolso.php';
 		}
 
 		/**
@@ -510,6 +514,10 @@ if ( is_plugin_active( 'woocommerce/woocommerce.php' ) || is_network_only_plugin
 			'exclusion_notice_digital'        => '',
 			'exclusion_notice_personalized'   => '',
 			'exclusion_notice_manual'         => '',
+			'jurisdiction'                    => 'EU',
+			'iban_field'                      => 'hidden',
+			'guest_verification'              => '0',
+			'order_status_on_request'         => '',
 		);
 
 		$opciones = wp_parse_args( is_array( $opciones ) ? $opciones : array(), $predeterminadas );
@@ -525,6 +533,11 @@ if ( is_plugin_active( 'woocommerce/woocommerce.php' ) || is_network_only_plugin
 		$raw_notice_digital      = isset( $opciones['exclusion_notice_digital'] ) ? $opciones['exclusion_notice_digital'] : '';
 		$raw_notice_personalized = isset( $opciones['exclusion_notice_personalized'] ) ? $opciones['exclusion_notice_personalized'] : '';
 		$raw_notice_manual       = isset( $opciones['exclusion_notice_manual'] ) ? $opciones['exclusion_notice_manual'] : '';
+		$raw_jurisdiction        = isset( $opciones['jurisdiction'] ) ? strtoupper( sanitize_key( $opciones['jurisdiction'] ) ) : 'EU';
+		$raw_iban_field          = isset( $opciones['iban_field'] ) ? sanitize_key( $opciones['iban_field'] ) : 'hidden';
+		$raw_guest_verification  = isset( $opciones['guest_verification'] ) ? (string) $opciones['guest_verification'] : '0';
+		$raw_order_status        = isset( $opciones['order_status_on_request'] ) ? sanitize_key( $opciones['order_status_on_request'] ) : '';
+		$wc_statuses             = function_exists( 'wc_get_order_statuses' ) ? wc_get_order_statuses() : array();
 
 		$sanitize_wc_statuses = function ( $statuses ) {
 			if ( ! is_array( $statuses ) ) {
@@ -562,6 +575,10 @@ if ( is_plugin_active( 'woocommerce/woocommerce.php' ) || is_network_only_plugin
 			'exclusion_notice_digital'        => sanitize_textarea_field( $raw_notice_digital ),
 			'exclusion_notice_personalized'   => sanitize_textarea_field( $raw_notice_personalized ),
 			'exclusion_notice_manual'         => sanitize_textarea_field( $raw_notice_manual ),
+			'jurisdiction'                    => in_array( $raw_jurisdiction, array_keys( apg_withdrawal_get_jurisdictions() ), true ) ? $raw_jurisdiction : 'EU',
+			'iban_field'                      => in_array( $raw_iban_field, array( 'hidden', 'optional', 'required' ), true ) ? $raw_iban_field : 'hidden',
+			'guest_verification'              => '1' === $raw_guest_verification ? '1' : '0',
+			'order_status_on_request'         => isset( $wc_statuses[ $raw_order_status ] ) ? $raw_order_status : '',
 		);
 	}
 

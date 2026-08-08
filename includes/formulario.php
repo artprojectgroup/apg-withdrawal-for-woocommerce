@@ -86,6 +86,21 @@ $tab = 1;
 				</th>
 				<td class="forminp"><input id="apg_withdrawal_settings[button_text]" name="apg_withdrawal_settings[button_text]" type="text" value="<?php echo esc_attr( $apg_withdrawal_settings['button_text'] ); ?>" tabindex="<?php echo esc_attr( $tab ); $tab++; ?>" /></td>
 			</tr>
+			<tr valign="top">
+				<th scope="row" class="titledesc">
+					<label for="apg_withdrawal_settings[jurisdiction]">
+						<?php esc_html_e( 'Jurisdiction', 'apg-withdrawal-for-woocommerce' ); ?>
+					</label>
+				</th>
+				<td class="forminp">
+					<select id="apg_withdrawal_settings[jurisdiction]" name="apg_withdrawal_settings[jurisdiction]" class="wc-enhanced-select" tabindex="<?php echo esc_attr( $tab ); $tab++; ?>">
+						<?php foreach ( apg_withdrawal_get_jurisdictions() as $apg_jurisdiction_code => $apg_jurisdiction_label ) : ?>
+						<option value="<?php echo esc_attr( $apg_jurisdiction_code ); ?>" <?php selected( isset( $apg_withdrawal_settings['jurisdiction'] ) ? $apg_withdrawal_settings['jurisdiction'] : 'EU', $apg_jurisdiction_code ); ?>><?php echo esc_html( $apg_jurisdiction_label ); ?></option>
+						<?php endforeach; ?>
+					</select>
+					<p class="description"><?php esc_html_e( 'Decides which statutory reference is shown to the customer on the confirmation screen. Spain has not transposed Directive (EU) 2023/2673 yet, so both options currently apply the same requirements; the Spanish option additionally cites the TRLGDCU and is where any national extras will be switched on once they reach the BOE.', 'apg-withdrawal-for-woocommerce' ); ?></p>
+				</td>
+			</tr>
 				<tr valign="top">
 					<th scope="row" class="titledesc">
 						<label for="apg_withdrawal_settings[withdrawal_days]">
@@ -158,6 +173,53 @@ $tab = 1;
 			'completed' => __( 'Completed', 'apg-withdrawal-for-woocommerce' ),
 		);
 		?>
+
+		<h3><?php esc_html_e( 'Request handling', 'apg-withdrawal-for-woocommerce' ); ?></h3>
+		<p><?php esc_html_e( 'How a withdrawal declaration is captured and what it does to the linked order.', 'apg-withdrawal-for-woocommerce' ); ?></p>
+		<table class="form-table apg-table">
+			<tr valign="top">
+				<th scope="row" class="titledesc">
+					<label for="apg_withdrawal_settings[order_status_on_request]">
+						<?php esc_html_e( 'Order status when a request is received', 'apg-withdrawal-for-woocommerce' ); ?>
+					</label>
+				</th>
+				<td class="forminp">
+					<select id="apg_withdrawal_settings[order_status_on_request]" name="apg_withdrawal_settings[order_status_on_request]" class="wc-enhanced-select" tabindex="<?php echo esc_attr( $tab ); $tab++; ?>">
+						<option value=""><?php esc_html_e( 'Do not change the order status', 'apg-withdrawal-for-woocommerce' ); ?></option>
+						<?php foreach ( $wc_order_statuses as $apg_wc_status_key => $apg_wc_status_label ) : ?>
+						<option value="<?php echo esc_attr( $apg_wc_status_key ); ?>" <?php selected( isset( $apg_withdrawal_settings['order_status_on_request'] ) ? $apg_withdrawal_settings['order_status_on_request'] : '', $apg_wc_status_key ); ?>><?php echo esc_html( $apg_wc_status_label ); ?></option>
+						<?php endforeach; ?>
+					</select>
+					<p class="description"><?php esc_html_e( 'The plugin registers its own "Withdrawal requested" order status, so the affected orders can be filtered, sorted and bulk-edited with the native WooCommerce tools. Leave the default to keep the order untouched.', 'apg-withdrawal-for-woocommerce' ); ?></p>
+				</td>
+			</tr>
+			<tr valign="top">
+				<th scope="row" class="titledesc">
+					<label for="apg_withdrawal_settings[iban_field]">
+						<?php esc_html_e( 'Account for the refund (IBAN)', 'apg-withdrawal-for-woocommerce' ); ?>
+					</label>
+				</th>
+				<td class="forminp">
+					<select id="apg_withdrawal_settings[iban_field]" name="apg_withdrawal_settings[iban_field]" class="wc-enhanced-select" tabindex="<?php echo esc_attr( $tab ); $tab++; ?>">
+						<option value="hidden" <?php selected( isset( $apg_withdrawal_settings['iban_field'] ) ? $apg_withdrawal_settings['iban_field'] : 'hidden', 'hidden' ); ?>><?php esc_html_e( 'Do not ask for it', 'apg-withdrawal-for-woocommerce' ); ?></option>
+						<option value="optional" <?php selected( isset( $apg_withdrawal_settings['iban_field'] ) ? $apg_withdrawal_settings['iban_field'] : 'hidden', 'optional' ); ?>><?php esc_html_e( 'Ask for it, optional', 'apg-withdrawal-for-woocommerce' ); ?></option>
+						<option value="required" <?php selected( isset( $apg_withdrawal_settings['iban_field'] ) ? $apg_withdrawal_settings['iban_field'] : 'hidden', 'required' ); ?>><?php esc_html_e( 'Ask for it, required', 'apg-withdrawal-for-woocommerce' ); ?></option>
+					</select>
+					<p class="description"><?php esc_html_e( 'Useful when the amount cannot be returned through the original payment method. The number is validated with the international IBAN control digits (ISO 7064 MOD-97-10) before being accepted, is stored with the request as banking data, is included in the privacy exporter and is deleted outright by the privacy eraser. Only enable it if you actually need it.', 'apg-withdrawal-for-woocommerce' ); ?></p>
+				</td>
+			</tr>
+			<tr valign="top">
+				<th scope="row" class="titledesc">
+					<label for="apg_withdrawal_settings[guest_verification]">
+						<?php esc_html_e( 'Confirm guest requests by email?', 'apg-withdrawal-for-woocommerce' ); ?>
+					</label>
+				</th>
+				<td class="forminp">
+					<input id="apg_withdrawal_settings[guest_verification]" name="apg_withdrawal_settings[guest_verification]" type="checkbox" value="1" <?php checked( isset( $apg_withdrawal_settings['guest_verification'] ) ? $apg_withdrawal_settings['guest_verification'] : '0', '1' ); ?> tabindex="<?php echo esc_attr( $tab ); $tab++; ?>" />
+					<p class="description"><?php esc_html_e( 'When a visitor who is not logged in submits the form, the request is held and a single-use link is sent to the email address on the order; only opening that link registers it. The request keeps the date and time of the original submission, so the customer never loses days of their withdrawal period. Logged-in customers are unaffected.', 'apg-withdrawal-for-woocommerce' ); ?></p>
+				</td>
+			</tr>
+		</table>
 
 		<h3><?php esc_html_e( 'Automation', 'apg-withdrawal-for-woocommerce' ); ?></h3>
 		<p><?php esc_html_e( 'Automatically update withdrawal request status when the linked WooCommerce order changes status.', 'apg-withdrawal-for-woocommerce' ); ?></p>

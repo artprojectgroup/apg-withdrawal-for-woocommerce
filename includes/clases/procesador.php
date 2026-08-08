@@ -81,6 +81,28 @@ function apg_withdrawal_honeypot_was_filled() {
 }
 
 /**
+ * Reports whether a string is a well-formed `Y-m-d H:i:s` timestamp denoting a
+ * real calendar date. Used to decide whether the declaration timestamp carried
+ * by a verified submission can be trusted, or a fresh one has to be minted.
+ *
+ * @param string $value Candidate timestamp.
+ * @return bool
+ */
+function apg_withdrawal_is_mysql_datetime( $value ) {
+	$value = (string) $value;
+
+	if ( ! preg_match( '/^(\d{4})-(\d{2})-(\d{2}) (\d{2}):(\d{2}):(\d{2})$/', $value, $parts ) ) {
+		return false;
+	}
+
+	if ( ! wp_checkdate( (int) $parts[2], (int) $parts[3], (int) $parts[1], $value ) ) {
+		return false;
+	}
+
+	return (int) $parts[4] < 24 && (int) $parts[5] < 60 && (int) $parts[6] < 60;
+}
+
+/**
  * Redirects the browser to the withdrawal form page with a notice query argument.
  *
  * @param string $notice Notice key to append as a query parameter.
@@ -104,22 +126,33 @@ function apg_withdrawal_redirect_with_notice( $notice ) {
 /**
  * Validates and persists a withdrawal request from the submitted form data.
  *
- * @param array $data Associative array with keys 'order', 'name', 'email', 'phone', 'scope', 'details' and 'products'.
- * @return string Result key: 'success', 'fields', 'email', 'order', 'expired' or 'general'.
+ * When guest e-mail verification is enabled and the submission has not been
+ * confirmed yet, the validated payload is parked instead of being registered
+ * and a single-use link is sent to the address recorded on the order — see
+ * `includes/clases/verificacion.php`.
+ *
+ * @param array $data Associative array with keys 'order', 'name', 'email', 'phone', 'scope',
+ *                    'details', 'products', 'quantities', 'iban' and, for confirmed guest
+ *                    submissions, 'verified' plus the original 'declared_at' timestamp.
+ * @return string Result key: 'success', 'verify_sent', 'fields', 'email', 'iban', 'order',
+ *                'expired', 'throttle' or 'general'.
  */
 function apg_withdrawal_process_submission_data( $data ) {
 	if ( apg_withdrawal_honeypot_was_filled() ) {
 		return 'success';
 	}
 
-	$order_ref = isset( $data['order'] ) ? sanitize_text_field( $data['order'] ) : '';
-	$name      = isset( $data['name'] ) ? sanitize_text_field( $data['name'] ) : '';
-	$email     = isset( $data['email'] ) ? sanitize_email( $data['email'] ) : '';
-	$phone     = isset( $data['phone'] ) ? sanitize_text_field( $data['phone'] ) : '';
-	$scope     = isset( $data['scope'] ) ? sanitize_key( $data['scope'] ) : 'full';
-	$details   = isset( $data['details'] ) ? sanitize_textarea_field( $data['details'] ) : '';
-	$products  = isset( $data['products'] ) && is_array( $data['products'] ) ? array_map( 'sanitize_text_field', $data['products'] ) : array();
-	$settings  = apg_withdrawal_get_settings();
+	$order_ref   = isset( $data['order'] ) ? sanitize_text_field( $data['order'] ) : '';
+	$name        = isset( $data['name'] ) ? sanitize_text_field( $data['name'] ) : '';
+	$email       = isset( $data['email'] ) ? sanitize_email( $data['email'] ) : '';
+	$phone       = isset( $data['phone'] ) ? sanitize_text_field( $data['phone'] ) : '';
+	$scope       = isset( $data['scope'] ) ? sanitize_key( $data['scope'] ) : 'full';
+	$details     = isset( $data['details'] ) ? sanitize_textarea_field( $data['details'] ) : '';
+	$products    = isset( $data['products'] ) && is_array( $data['products'] ) ? array_map( 'sanitize_text_field', $data['products'] ) : array();
+	$raw_amounts = isset( $data['quantities'] ) && is_array( $data['quantities'] ) ? $data['quantities'] : array();
+	$iban        = isset( $data['iban'] ) ? apg_withdrawal_normalize_iban( $data['iban'] ) : '';
+	$verified    = ! empty( $data['verified'] );
+	$settings    = apg_withdrawal_get_settings();
 
 	if ( apg_withdrawal_is_rate_limited( $email ) ) {
 		return 'throttle';
@@ -137,10 +170,67 @@ function apg_withdrawal_process_submission_data( $data ) {
 		return 'fields';
 	}
 
+	$iban_mode = isset( $settings['iban_field'] ) ? (string) $settings['iban_field'] : 'hidden';
+
+	if ( 'hidden' === $iban_mode ) {
+		$iban = '';
+	} elseif ( 'required' === $iban_mode && '' === $iban ) {
+		return 'fields';
+	}
+
+	if ( '' !== $iban && ! apg_withdrawal_validate_iban( $iban ) ) {
+		return 'iban';
+	}
+
 	$validation = apg_withdrawal_validate_order( $order_ref, $email, $settings );
 
 	if ( ! $validation['valid'] ) {
 		return $validation['error'];
+	}
+
+	$quantities = 'partial' === $scope
+		? apg_withdrawal_sanitize_item_quantities( $validation['order'], $products, $raw_amounts )
+		: array();
+
+	if ( 'partial' === $scope && empty( $quantities ) ) {
+		return 'fields';
+	}
+
+	// The declaration is dated when the consumer sent it. A submission that
+	// travelled through the e-mail verification loop carries the moment that was
+	// recorded server-side before the link was issued, so it survives the round
+	// trip intact; any other path is dated now. The timestamp is only honoured
+	// for an already-verified payload, which comes from a server-side transient
+	// and never from the browser, so it cannot be used to backdate a request.
+	$declared_at = $verified && isset( $data['declared_at'] ) ? sanitize_text_field( $data['declared_at'] ) : '';
+
+	if ( ! apg_withdrawal_is_mysql_datetime( $declared_at ) ) {
+		$declared_at = current_time( 'mysql', true );
+	}
+
+	if ( ! $verified && apg_withdrawal_guest_verification_required() ) {
+		$payload = array(
+			'order'       => $order_ref,
+			'name'        => $name,
+			'email'       => $email,
+			'phone'       => $phone,
+			'scope'       => $scope,
+			'details'     => $details,
+			'products'    => $products,
+			'quantities'  => $quantities,
+			'iban'        => $iban,
+			'declared_at' => $declared_at,
+		);
+
+		$token = apg_withdrawal_store_pending_verification( $payload );
+
+		if ( ! $token ) {
+			return 'general';
+		}
+
+		apg_withdrawal_send_verification_email( $payload, apg_withdrawal_get_verification_url( $token, apg_withdrawal_get_current_form_url() ) );
+
+		return 'verify_sent';
 	}
 
 	$post_id = wp_insert_post(
@@ -154,7 +244,9 @@ function apg_withdrawal_process_submission_data( $data ) {
 				,
 				$name
 			),
-			'post_content' => $details,
+			'post_content'  => $details,
+			'post_date_gmt' => $declared_at,
+			'post_date'     => get_date_from_gmt( $declared_at ),
 		),
 		true
 	);
@@ -169,9 +261,18 @@ function apg_withdrawal_process_submission_data( $data ) {
 		update_post_meta( $post_id, '_apg_withdrawal_deadline_source', $validation['source'] );
 		update_post_meta( $post_id, '_apg_withdrawal_deadline_date', $validation['date'] );
 		update_post_meta( $post_id, '_apg_withdrawal_products', $products );
+		update_post_meta( $post_id, '_apg_withdrawal_quantities', $quantities );
 
 		if ( $phone ) {
 			update_post_meta( $post_id, '_apg_withdrawal_phone', $phone );
+		}
+
+		if ( '' !== $iban ) {
+			update_post_meta( $post_id, '_apg_withdrawal_iban', $iban );
+		}
+
+		if ( $verified ) {
+			update_post_meta( $post_id, '_apg_withdrawal_email_verified', current_time( 'mysql', true ) );
 		}
 
 		if ( '1' === $settings['store_ip'] ) {
@@ -190,7 +291,16 @@ function apg_withdrawal_process_submission_data( $data ) {
 		// pipe-separated concatenation of the receipt's user-visible fields plus
 		// the GMT timestamp recorded with it, so the consumer can reconstruct
 		// and verify the digest from the data shown in the acknowledgement email.
-		$receipt_timestamp = current_time( 'mysql', true );
+		// Partial requests fold each line item into an `id:units` pair so the
+		// digest also covers the quantities that were declared.
+		$hashed_products = array();
+
+		foreach ( $products as $item_id ) {
+			$hashed_products[] = isset( $quantities[ (string) $item_id ] )
+				? $item_id . ':' . $quantities[ (string) $item_id ]
+				: (string) $item_id;
+		}
+
 		$receipt_canonical = implode(
 			'|',
 			array(
@@ -198,32 +308,68 @@ function apg_withdrawal_process_submission_data( $data ) {
 				$email,
 				$order_ref,
 				$scope,
-				implode( ',', $products ),
+				implode( ',', $hashed_products ),
 				$details,
-				$receipt_timestamp,
+				$declared_at,
 			)
 		);
 		$receipt_hash      = hash( 'sha256', $receipt_canonical );
 		update_post_meta( $post_id, '_apg_withdrawal_receipt_hash', $receipt_hash );
-		update_post_meta( $post_id, '_apg_withdrawal_receipt_hash_timestamp', $receipt_timestamp );
+		update_post_meta( $post_id, '_apg_withdrawal_receipt_hash_timestamp', $declared_at );
 
 		apg_withdrawal_add_order_note( $validation['order'], $post_id, $scope, $details );
+		apg_withdrawal_maybe_set_order_status( $validation['order'], $post_id );
 
 		// Customer acknowledgement: capture delivery status (mailer acceptance,
 		// not real recipient delivery) as legal evidence under Art. 16 bis(8).
 		$initial_delivery = apg_withdrawal_send_with_delivery_capture(
-			function () use ( $email, $name, $order_ref, $scope, $post_id, $phone ) {
-				apg_withdrawal_send_customer_email( $email, $name, $order_ref, $scope, $post_id, current_time( 'mysql' ), $phone );
+			function () use ( $email, $name, $order_ref, $scope, $post_id, $phone, $declared_at ) {
+				apg_withdrawal_send_customer_email( $email, $name, $order_ref, $scope, $post_id, get_date_from_gmt( $declared_at ), $phone );
 			}
 		);
 		update_post_meta( $post_id, '_apg_withdrawal_initial_email_delivery', $initial_delivery );
 
 		apg_withdrawal_send_admin_email( $post_id, $name, $email, $order_ref, $scope, $details, $settings['notification_email'], $phone );
+
+		/**
+		 * Fires once a withdrawal declaration has been fully registered: metadata
+		 * written, order note added and notifications dispatched.
+		 *
+		 * @param int   $post_id Withdrawal request post ID.
+		 * @param array $data    Submission payload as received by the processor.
+		 */
+		do_action( 'apg_withdrawal_request_registered', $post_id, $data );
 	} else {
 		return 'general';
 	}
 
 	return 'success';
+}
+
+/**
+ * Reads the hidden fields carried by the confirmation step into the shape
+ * expected by {@see apg_withdrawal_process_submission_data()}. Every value is
+ * only unslashed here; the processor sanitises each field individually with the
+ * callback that matches its type.
+ *
+ * Callers must have verified `apg_withdrawal_confirm_nonce` before invoking it.
+ *
+ * @return array Submission payload.
+ */
+function apg_withdrawal_read_confirmation_post() {
+	// phpcs:disable WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Nonce verified by every caller; each field is sanitised inside apg_withdrawal_process_submission_data().
+	return array(
+		'order'       => isset( $_POST['apg_withdrawal_order'] ) ? wp_unslash( $_POST['apg_withdrawal_order'] ) : '',
+		'name'        => isset( $_POST['apg_withdrawal_name'] ) ? wp_unslash( $_POST['apg_withdrawal_name'] ) : '',
+		'email'       => isset( $_POST['apg_withdrawal_email'] ) ? wp_unslash( $_POST['apg_withdrawal_email'] ) : '',
+		'phone'       => isset( $_POST['apg_withdrawal_phone'] ) ? wp_unslash( $_POST['apg_withdrawal_phone'] ) : '',
+		'scope'       => isset( $_POST['apg_withdrawal_scope'] ) ? wp_unslash( $_POST['apg_withdrawal_scope'] ) : 'full',
+		'details'     => isset( $_POST['apg_withdrawal_details'] ) ? wp_unslash( $_POST['apg_withdrawal_details'] ) : '',
+		'iban'        => isset( $_POST['apg_withdrawal_iban'] ) ? wp_unslash( $_POST['apg_withdrawal_iban'] ) : '',
+		'products'    => isset( $_POST['apg_withdrawal_products'] ) && is_array( $_POST['apg_withdrawal_products'] ) ? wp_unslash( $_POST['apg_withdrawal_products'] ) : array(),
+		'quantities'  => isset( $_POST['apg_withdrawal_quantities'] ) && is_array( $_POST['apg_withdrawal_quantities'] ) ? wp_unslash( $_POST['apg_withdrawal_quantities'] ) : array(),
+	);
+	// phpcs:enable WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 }
 
 /**
@@ -236,19 +382,7 @@ function apg_withdrawal_confirm_submission() {
 		apg_withdrawal_redirect_with_notice( 'nonce' );
 	}
 
-	$notice = apg_withdrawal_process_submission_data(
-		array(
-			'order'    => isset( $_POST['apg_withdrawal_order'] ) ? wp_unslash( $_POST['apg_withdrawal_order'] ) : '', // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Sanitized individually before use
-			'name'     => isset( $_POST['apg_withdrawal_name'] ) ? wp_unslash( $_POST['apg_withdrawal_name'] ) : '', // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Sanitized individually before use
-			'email'    => isset( $_POST['apg_withdrawal_email'] ) ? wp_unslash( $_POST['apg_withdrawal_email'] ) : '', // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Sanitized individually before use
-			'phone'    => isset( $_POST['apg_withdrawal_phone'] ) ? wp_unslash( $_POST['apg_withdrawal_phone'] ) : '', // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Sanitized individually before use
-			'scope'    => isset( $_POST['apg_withdrawal_scope'] ) ? wp_unslash( $_POST['apg_withdrawal_scope'] ) : 'full', // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Sanitized individually before use
-			'details'  => isset( $_POST['apg_withdrawal_details'] ) ? wp_unslash( $_POST['apg_withdrawal_details'] ) : '', // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Sanitized individually before use
-			'products' => isset( $_POST['apg_withdrawal_products'] ) && is_array( $_POST['apg_withdrawal_products'] ) ? wp_unslash( $_POST['apg_withdrawal_products'] ) : array(), // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Sanitized individually before use
-		)
-	);
-
-	apg_withdrawal_redirect_with_notice( $notice );
+	apg_withdrawal_redirect_with_notice( apg_withdrawal_process_submission_data( apg_withdrawal_read_confirmation_post() ) );
 }
 add_action( 'admin_post_apg_withdrawal_confirm', 'apg_withdrawal_confirm_submission' );
 add_action( 'admin_post_nopriv_apg_withdrawal_confirm', 'apg_withdrawal_confirm_submission' );
@@ -283,6 +417,8 @@ function apg_withdrawal_ajax_preview() {
 	$details  = isset( $_POST['details'] ) ? sanitize_textarea_field( wp_unslash( $_POST['details'] ) ) : '';
 	$acceptance = isset( $_POST['acceptance'] ) ? sanitize_text_field( wp_unslash( $_POST['acceptance'] ) ) : '';
 	$products = isset( $_POST['products'] ) && is_array( $_POST['products'] ) ? array_map( 'sanitize_text_field', wp_unslash( $_POST['products'] ) ) : array();
+	$amounts  = isset( $_POST['quantities'] ) && is_array( $_POST['quantities'] ) ? wp_unslash( $_POST['quantities'] ) : array(); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Cast to bounded integers by apg_withdrawal_sanitize_item_quantities().
+	$iban     = isset( $_POST['iban'] ) ? apg_withdrawal_normalize_iban( wp_unslash( $_POST['iban'] ) ) : ''; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Normaliser strips every character outside [A-Z0-9].
 	$settings = apg_withdrawal_get_settings();
 
 	if ( empty( $name ) || empty( $email ) || empty( $order_id ) || empty( $acceptance ) ) {
@@ -309,6 +445,26 @@ function apg_withdrawal_ajax_preview() {
 		);
 	}
 
+	$iban_mode = isset( $settings['iban_field'] ) ? (string) $settings['iban_field'] : 'hidden';
+
+	if ( 'hidden' === $iban_mode ) {
+		$iban = '';
+	} elseif ( 'required' === $iban_mode && '' === $iban ) {
+		wp_send_json_error(
+			array(
+				'message' => apg_withdrawal_render_notice_html( 'fields' ),
+			)
+		);
+	}
+
+	if ( '' !== $iban && ! apg_withdrawal_validate_iban( $iban ) ) {
+		wp_send_json_error(
+			array(
+				'message' => apg_withdrawal_render_notice_html( 'iban' ),
+			)
+		);
+	}
+
 	$validation = apg_withdrawal_validate_order( $order_id, $email, $settings );
 
 	if ( ! $validation['valid'] ) {
@@ -319,8 +475,20 @@ function apg_withdrawal_ajax_preview() {
 		);
 	}
 
+	$quantities = 'partial' === $scope
+		? apg_withdrawal_sanitize_item_quantities( $validation['order'], $products, $amounts )
+		: array();
+
+	if ( 'partial' === $scope && empty( $quantities ) ) {
+		wp_send_json_error(
+			array(
+				'message' => apg_withdrawal_render_notice_html( 'fields' ),
+			)
+		);
+	}
+
 	$html  = apg_withdrawal_render_notice_html( '' );
-	$html .= apg_withdrawal_render_confirmation_form( $name, $email, $order_id, $scope, $details, $products, $validation['order'], $settings, apg_withdrawal_get_current_form_url(), $phone, $validation['expired_warning'] );
+	$html .= apg_withdrawal_render_confirmation_form( $name, $email, $order_id, $scope, $details, $products, $validation['order'], $settings, apg_withdrawal_get_current_form_url(), $phone, $validation['expired_warning'], $quantities, $iban );
 
 	wp_send_json_success(
 		array(
@@ -345,19 +513,9 @@ function apg_withdrawal_ajax_confirm() {
 		);
 	}
 
-	$notice = apg_withdrawal_process_submission_data(
-		array(
-			'order'    => isset( $_POST['apg_withdrawal_order'] ) ? wp_unslash( $_POST['apg_withdrawal_order'] ) : '', // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Sanitized individually before use
-			'name'     => isset( $_POST['apg_withdrawal_name'] ) ? wp_unslash( $_POST['apg_withdrawal_name'] ) : '', // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Sanitized individually before use
-			'email'    => isset( $_POST['apg_withdrawal_email'] ) ? wp_unslash( $_POST['apg_withdrawal_email'] ) : '', // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Sanitized individually before use
-			'phone'    => isset( $_POST['apg_withdrawal_phone'] ) ? wp_unslash( $_POST['apg_withdrawal_phone'] ) : '', // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Sanitized individually before use
-			'scope'    => isset( $_POST['apg_withdrawal_scope'] ) ? wp_unslash( $_POST['apg_withdrawal_scope'] ) : 'full', // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Sanitized individually before use
-			'details'  => isset( $_POST['apg_withdrawal_details'] ) ? wp_unslash( $_POST['apg_withdrawal_details'] ) : '', // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Sanitized individually before use
-			'products' => isset( $_POST['apg_withdrawal_products'] ) && is_array( $_POST['apg_withdrawal_products'] ) ? wp_unslash( $_POST['apg_withdrawal_products'] ) : array(), // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Sanitized individually before use
-		)
-	);
+	$notice = apg_withdrawal_process_submission_data( apg_withdrawal_read_confirmation_post() );
 
-	if ( 'success' !== $notice ) {
+	if ( ! in_array( $notice, array( 'success', 'verify_sent' ), true ) ) {
 		wp_send_json_error(
 			array(
 				'message' => apg_withdrawal_render_notice_html( $notice ),
@@ -367,7 +525,7 @@ function apg_withdrawal_ajax_confirm() {
 
 	wp_send_json_success(
 		array(
-			'html' => apg_withdrawal_render_notice_html( 'success' ),
+			'html' => apg_withdrawal_render_notice_html( $notice ),
 		)
 	);
 }

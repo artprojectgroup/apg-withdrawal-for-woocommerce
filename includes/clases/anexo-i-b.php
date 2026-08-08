@@ -92,6 +92,26 @@ function apg_withdrawal_get_merchant_data_for_model_form() {
 }
 
 /**
+ * Renders one field of the model form: its caption plus the blank ruled lines
+ * the consumer writes on. The number of lines is what gives each field its
+ * writing space, so it is sized after the answer it expects — a postal address
+ * needs more room than a date.
+ *
+ * @param string $label Field caption.
+ * @param int    $lines Number of ruled lines to draw underneath.
+ * @return string Escaped HTML for the field.
+ */
+function apg_withdrawal_render_model_form_field( $label, $lines = 1 ) {
+	$html = '<div class="field"><span class="field-label">' . esc_html( $label ) . '</span>';
+
+	for ( $line = 0; $line < max( 1, (int) $lines ); $line++ ) {
+		$html .= '<span class="field-line"></span>';
+	}
+
+	return $html . '</div>';
+}
+
+/**
  * Renders the printable Annex I.B HTML page and terminates the response.
  * Called only after the `apg_withdrawal_model_form` query argument is detected.
  *
@@ -100,9 +120,8 @@ function apg_withdrawal_get_merchant_data_for_model_form() {
 function apg_withdrawal_render_model_form() {
 	nocache_headers();
 
-	$merchant   = apg_withdrawal_get_merchant_data_for_model_form();
-	$lang       = function_exists( 'get_bloginfo' ) ? get_bloginfo( 'language' ) : 'en';
-	$auto_print = isset( $_GET['print'] ) && '1' === sanitize_text_field( wp_unslash( $_GET['print'] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Public read-only endpoint.
+	$merchant = apg_withdrawal_get_merchant_data_for_model_form();
+	$lang     = function_exists( 'get_bloginfo' ) ? get_bloginfo( 'language' ) : 'en';
 
 	// phpcs:disable WordPress.Security.EscapeOutput.OutputNotEscaped -- Output composed of esc_html'd parts.
 	?><!DOCTYPE html>
@@ -119,21 +138,35 @@ function apg_withdrawal_render_model_form() {
 		.intro { font-style: italic; color: #555; margin-bottom: 28px; }
 		.addressee { margin: 16px 0 32px; padding: 16px 20px; border-left: 4px solid #555; background: #f7f7f7; }
 		.addressee p { margin: 4px 0; }
-		.field { margin: 24px 0; border-bottom: 1px solid #aaa; padding-bottom: 4px; min-height: 26px; }
+
+		/*
+		 * The writing space belongs to the ruled lines, never to the container:
+		 * putting a min-height on `.field` only stretched the box the caption
+		 * already filled, which left the rule sitting flush under the caption
+		 * with nowhere to actually write.
+		 */
+		.field { margin: 20px 0; }
 		.field-label { font-weight: 600; display: block; margin-bottom: 6px; }
+		.field-line { display: block; height: 2.4em; border-bottom: 1px solid #999; }
 		.print-actions { text-align: right; margin: 24px 0; }
 		.print-actions button { font: inherit; padding: 8px 16px; cursor: pointer; }
 		footer { font-size: 0.85em; color: #777; margin-top: 40px; border-top: 1px solid #ccc; padding-top: 12px; }
+
+		@page { size: A4; margin: 16mm; }
+
 		@media print {
-			body { margin: 0; max-width: none; padding: 0 12mm; }
+			body { margin: 0; max-width: none; padding: 0; }
 			.print-actions { display: none; }
 			.addressee { background: #fff; }
+			/* Keep a caption and its ruled lines on the same sheet. */
+			.field, .addressee, footer { break-inside: avoid; page-break-inside: avoid; }
+			h1, h2 { break-after: avoid; page-break-after: avoid; }
 		}
 	</style>
 </head>
 <body>
 	<div class="print-actions">
-		<button type="button" onclick="window.print();"><?php echo esc_html__( 'Print or save as PDF', 'apg-withdrawal-for-woocommerce' ); ?></button>
+		<button type="button" id="apg-withdrawal-print"><?php echo esc_html__( 'Print or save as PDF', 'apg-withdrawal-for-woocommerce' ); ?></button>
 	</div>
 
 	<h1><?php echo esc_html__( 'Model withdrawal form', 'apg-withdrawal-for-woocommerce' ); ?></h1>
@@ -159,37 +192,97 @@ function apg_withdrawal_render_model_form() {
 	</div>
 
 	<p><?php echo esc_html__( 'I/We (*) hereby give notice that I/We (*) withdraw from my/our (*) contract of sale of the following goods (*) / for the provision of the following service (*):', 'apg-withdrawal-for-woocommerce' ); ?></p>
-	<div class="field">
-		<span class="field-label"><?php echo esc_html__( 'Description of goods / service', 'apg-withdrawal-for-woocommerce' ); ?></span>
-	</div>
 
-	<div class="field">
-		<span class="field-label"><?php echo esc_html__( 'Ordered on (*) / received on (*)', 'apg-withdrawal-for-woocommerce' ); ?></span>
-	</div>
-
-	<div class="field">
-		<span class="field-label"><?php echo esc_html__( 'Name of consumer(s)', 'apg-withdrawal-for-woocommerce' ); ?></span>
-	</div>
-
-	<div class="field">
-		<span class="field-label"><?php echo esc_html__( 'Address of consumer(s)', 'apg-withdrawal-for-woocommerce' ); ?></span>
-	</div>
-
-	<div class="field">
-		<span class="field-label"><?php echo esc_html__( 'Signature of consumer(s) (only if this form is notified on paper)', 'apg-withdrawal-for-woocommerce' ); ?></span>
-	</div>
-
-	<div class="field">
-		<span class="field-label"><?php echo esc_html__( 'Date', 'apg-withdrawal-for-woocommerce' ); ?></span>
-	</div>
+	<?php
+	echo apg_withdrawal_render_model_form_field( __( 'Description of goods / service', 'apg-withdrawal-for-woocommerce' ), 3 );
+	echo apg_withdrawal_render_model_form_field( __( 'Ordered on (*) / received on (*)', 'apg-withdrawal-for-woocommerce' ), 1 );
+	echo apg_withdrawal_render_model_form_field( __( 'Name of consumer(s)', 'apg-withdrawal-for-woocommerce' ), 1 );
+	echo apg_withdrawal_render_model_form_field( __( 'Address of consumer(s)', 'apg-withdrawal-for-woocommerce' ), 3 );
+	echo apg_withdrawal_render_model_form_field( __( 'Signature of consumer(s) (only if this form is notified on paper)', 'apg-withdrawal-for-woocommerce' ), 2 );
+	echo apg_withdrawal_render_model_form_field( __( 'Date', 'apg-withdrawal-for-woocommerce' ), 1 );
+	?>
 
 	<footer>
 		<p>(*) <?php echo esc_html__( 'Delete as appropriate.', 'apg-withdrawal-for-woocommerce' ); ?></p>
 		<p><?php echo esc_html__( 'Model withdrawal form pursuant to Annex I.B of Directive 2011/83/EU on consumer rights.', 'apg-withdrawal-for-woocommerce' ); ?></p>
 	</footer>
-	<?php if ( $auto_print ) : ?>
-	<script>window.addEventListener('load', function () { window.print(); });</script>
-	<?php endif; ?>
+	<script>
+	( function () {
+		/*
+		 * Safari leaves the document blank once the print dialog is dismissed: the
+		 * DOM survives but the page loses its rendering. Forcing a reflow brings the
+		 * painted page back, and it is a no-op in browsers that never lost it.
+		 *
+		 * Both signals are wired because Safari is inconsistent about which one it
+		 * emits when the dialog is cancelled rather than confirmed; `repainting`
+		 * keeps the work to once per print cycle when it emits both.
+		 */
+		var repainting = false;
+
+		var repaint = function () {
+			if ( repainting || ! document.body ) {
+				return;
+			}
+
+			repainting = true;
+
+			window.requestAnimationFrame( function () {
+				var body     = document.body;
+				var previous = body.style.display;
+
+				body.style.display = 'none';
+				void body.offsetHeight;
+				body.style.display = previous;
+				repainting = false;
+			} );
+		};
+
+		window.addEventListener( 'afterprint', repaint );
+
+		if ( window.matchMedia ) {
+			var printQuery = window.matchMedia( 'print' );
+			var onChange   = function ( event ) {
+				if ( ! event.matches ) {
+					repaint();
+				}
+			};
+
+			if ( printQuery.addEventListener ) {
+				printQuery.addEventListener( 'change', onChange );
+			} else if ( printQuery.addListener ) {
+				printQuery.addListener( onChange );
+			}
+		}
+
+		var button = document.getElementById( 'apg-withdrawal-print' );
+
+		if ( ! button ) {
+			return;
+		}
+
+		/*
+		 * Safari also renders an empty sheet when window.print() runs before layout
+		 * and web fonts have settled — which is what happened while this page
+		 * auto-printed on load, and the bad state survived into any later print.
+		 * Printing now only ever happens from this button (a real user gesture),
+		 * and waits for the fonts and one paint before handing over to the browser.
+		 */
+		button.addEventListener( 'click', function () {
+			var print = function () {
+				window.requestAnimationFrame( function () {
+					window.print();
+				} );
+			};
+
+			if ( document.fonts && document.fonts.ready && document.fonts.ready.then ) {
+				document.fonts.ready.then( print ).catch( print );
+				return;
+			}
+
+			print();
+		} );
+	}() );
+	</script>
 </body>
 </html>
 	<?php
