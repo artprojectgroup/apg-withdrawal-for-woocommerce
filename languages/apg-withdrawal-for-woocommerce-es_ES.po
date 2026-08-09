@@ -78,7 +78,7 @@ msgstr "APG Desistimiento para WooCommerce requiere que WooCommerce esté instal
 #: includes/admin/funciones-apg.php:337
 #, php-format
 msgid "The confirmation button label \"%s\" looks ambiguous. Article 11a of Directive 2011/83/EU (added by Directive (EU) 2023/2673) requires the wording to make it clear to the consumer that they are exercising their right of withdrawal. Consider using \"Confirm withdrawal\" or an equivalent unambiguous wording in your language."
-msgstr "El texto del botón de confirmación «%s» parece ambiguo. El Artículo 11 bis de la Directiva 2011/83/UE (añadido por la Directiva (UE) 2023/2673) exige que la redacción deje claro al consumidor que está ejerciendo su derecho de desistimiento. Considera utilizar «Confirmar desistimiento» o una redacción inequívoca equivalente en tu idioma."
+msgstr "El texto del botón de confirmación «%s» parece ambiguo. El artículo 11 bis de la Directiva 2011/83/UE (añadido por la Directiva (UE) 2023/2673) exige que la redacción deje claro al consumidor que está ejerciendo su derecho de desistimiento. Plantéate utilizar «Confirmar desistimiento» o una formulación equivalente que no dé lugar a dudas en tu idioma."
 
 #: includes/admin/funciones-apg.php:387
 msgid "European Union (baseline)"
@@ -350,7 +350,7 @@ msgstr "Hasta"
 
 #: includes/clases/admin/solicitudes.php:428
 msgid "Email delivery"
-msgstr "Entrega del correo"
+msgstr "Entrega del correo electrónico"
 
 #: includes/clases/admin/solicitudes.php:435
 msgid "System"
@@ -362,7 +362,7 @@ msgstr "— (no enviado)"
 
 #: includes/clases/admin/solicitudes.php:473
 msgid "Accepted by the mailer at"
-msgstr "Aceptado por el mailer a las"
+msgstr "Aceptado por el servicio de envío a las"
 
 #: includes/clases/admin/solicitudes.php:480
 msgid "Failed"
@@ -486,7 +486,7 @@ msgstr "Aviso de exclusión del desistimiento"
 
 #: includes/clases/aviso-producto.php:120
 msgid "Displays the exclusion-from-withdrawal notice for the current product (or for an explicit product ID), driven by the product / category withdrawal type."
-msgstr "Muestra el aviso de exclusión del desistimiento para el producto actual (o para un ID de producto explícito), según el tipo de desistimiento del producto o de la categoría."
+msgstr "Muestra el aviso de exclusión del desistimiento para el producto actual (o para un ID de producto concreto), determinado por el tipo de desistimiento del producto o de la categoría."
 
 #: includes/clases/categoria.php:23 includes/clases/producto.php:40
 msgid "Withdrawal allowed (default)"
@@ -554,7 +554,7 @@ msgstr "Hemos recibido correctamente tu solicitud de desistimiento."
 #: templates/emails/apg-withdrawal-customer.php:27
 #: templates/emails/plain/apg-withdrawal-customer.php:26
 msgid "Your request will be reviewed in accordance with consumer and user protection legislation and the conditions applicable to the contracted order."
-msgstr "Tu solicitud será revisada de conformidad con la legislación de protección de los consumidores y usuarios y las condiciones aplicables al pedido contratado."
+msgstr "Tu solicitud será revisada de conformidad con la legislación de protección de los consumidores y usuarios y con las condiciones aplicables al pedido contratado."
 
 #: includes/clases/emails.php:101
 #: templates/emails/plain/apg-withdrawal-admin.php:24
@@ -583,7 +583,7 @@ msgstr "Fecha y hora"
 #: templates/emails/apg-withdrawal-customer.php:109
 #: templates/emails/plain/apg-withdrawal-customer.php:82
 msgid "Should the right of withdrawal be applicable, it may be necessary to return the product in accordance with the instructions provided by the store."
-msgstr "Si el derecho de desistimiento fuera aplicable, puede ser necesario que devuelvas el producto de acuerdo con las instrucciones proporcionadas por la tienda."
+msgstr "Si el derecho de desistimiento fuera aplicable, puede ser necesario devolver el producto de acuerdo con las instrucciones proporcionadas por la tienda."
 
 #. translators: 1: site name, 2: order reference.
 #: includes/clases/emails.php:148
@@ -616,7 +616,7 @@ msgstr "Derecho de desistimiento: %s"
 
 #: includes/clases/emails.php:249
 msgid "Exercise your right of withdrawal"
-msgstr "Ejercer tu derecho de desistimiento"
+msgstr "Ejerce tu derecho de desistimiento"
 
 #: includes/clases/emails/class-apg-withdrawal-email-admin.php:23
 msgid "New withdrawal request (admin)"
@@ -657,7 +657,7 @@ msgstr "Enviado al cliente cuando cambia el estado de su solicitud de desistimie
 
 #: includes/clases/emails/class-apg-withdrawal-email-status.php:49
 msgid "Update on your withdrawal request #{order_number}"
-msgstr "Actualización sobre tu solicitud de desistimiento nº {order_number}"
+msgstr "Actualización sobre tu solicitud de desistimiento #{order_number}"
 
 #: includes/clases/emails/class-apg-withdrawal-email-status.php:59
 msgid "Withdrawal request update"
@@ -667,7 +667,7 @@ msgstr "Actualización de la solicitud de desistimiento"
 #: includes/clases/enlace.php:72
 #, php-format
 msgid "The withdrawal link label \"%s\" looks ambiguous. Article 11a of Directive 2011/83/EU requires the wording to make it clear to the consumer that they are exercising their right of withdrawal."
-msgstr "El texto del enlace de desistimiento «%s» parece ambiguo. El Artículo 11 bis de la Directiva 2011/83/UE exige que la redacción deje claro al consumidor que está ejerciendo su derecho de desistimiento."
+msgstr "La etiqueta del enlace de desistimiento «%s» parece ambigua. El artículo 11 bis de la Directiva 2011/83/UE exige que la redacción deje claro al consumidor que está ejerciendo su derecho de desistimiento."
 
 #: includes/clases/enlace.php:133
 msgid "Withdrawal link"
@@ -687,7 +687,7 @@ msgstr "Desistimiento solicitado"
 msgid "Withdrawal requested <span class=\"count\">(%s)</span>"
 msgid_plural "Withdrawal requested <span class=\"count\">(%s)</span>"
 msgstr[0] "Desistimiento solicitado <span class=\"count\">(%s)</span>"
-msgstr[1] "Desistimiento solicitado <span class=\"count\">(%s)</span>"
+msgstr[1] "Desistimientos solicitados <span class=\"count\">(%s)</span>"
 
 #. translators: %s: order status label.
 #: includes/clases/estado-pedido.php:104
@@ -855,11 +855,11 @@ msgstr "Según la configuración de este producto, el derecho de desistimiento p
 
 #: includes/clases/formulario.php:679
 msgid "This order contains digital content. If execution began with your prior express consent and you acknowledged the loss of the right of withdrawal at purchase, this right may no longer apply."
-msgstr "Este pedido contiene contenido digital. Si la ejecución comenzó con tu consentimiento expreso previo y reconociste la pérdida del derecho de desistimiento en el momento de la compra, es posible que este derecho ya no sea aplicable."
+msgstr "Este pedido contiene contenido digital. Si la ejecución comenzó con tu consentimiento previo expreso y reconociste la pérdida del derecho de desistimiento en el momento de la compra, este derecho puede ya no ser aplicable."
 
 #: includes/clases/formulario.php:680
 msgid "This order contains personalised products. The right of withdrawal does not apply to goods made to your specifications or clearly personalised."
-msgstr "Este pedido contiene productos personalizados. El derecho de desistimiento no se aplica a los bienes fabricados según tus especificaciones o claramente personalizados."
+msgstr "Este pedido contiene productos personalizados. El derecho de desistimiento no es aplicable a bienes confeccionados conforme a tus especificaciones o claramente personalizados."
 
 #: includes/clases/formulario.php:681
 msgid "This request requires manual review. The store will evaluate whether the right of withdrawal applies to this order."
@@ -946,7 +946,7 @@ msgstr "Aviso de exclusión personalizado (opcional)"
 
 #: includes/clases/producto.php:67
 msgid "If set, this text overrides the default notice text for this specific product (configured per type in the plugin settings). Leave empty to use the per-type default."
-msgstr "Si se rellena, este texto sustituye al texto de aviso por defecto para este producto en concreto (configurado por tipo en los ajustes del plugin). Déjalo vacío para usar el texto por defecto del tipo."
+msgstr "Si se rellena, este texto sobrescribe el texto de aviso por defecto para este producto concreto (configurado por tipo en los ajustes del plugin). Déjalo vacío para usar el texto por defecto del tipo correspondiente."
 
 #: includes/clases/reembolso.php:59
 msgid "This request is not linked to a WooCommerce order."
@@ -1080,7 +1080,7 @@ msgstr "[redactado]"
 #: includes/clases/rgpd.php:236
 #, php-format
 msgid "Withdrawal request #%d was anonymised and retained for legal evidence. The associated WooCommerce order reference was preserved."
-msgstr "La solicitud de desistimiento #%d ha sido anonimizada y conservada como evidencia legal. Se ha conservado la referencia al pedido de WooCommerce asociada."
+msgstr "La solicitud de desistimiento #%d ha sido anonimizada y conservada como evidencia legal. Se ha preservado la referencia al pedido de WooCommerce asociado."
 
 #. translators: %s: site name.
 #: includes/clases/verificacion.php:142
@@ -1120,11 +1120,11 @@ msgstr "Este producto contiene contenido digital. Si solicitaste su suministro i
 
 #: includes/clases/woocommerce.php:427
 msgid "This product is made to your specifications or clearly personalised, and is therefore excluded from the right of withdrawal."
-msgstr "Este producto está fabricado según tus especificaciones o claramente personalizado, y por tanto está excluido del derecho de desistimiento."
+msgstr "Este producto se confecciona conforme a tus especificaciones o está claramente personalizado, por lo que queda excluido del derecho de desistimiento."
 
 #: includes/clases/woocommerce.php:429
 msgid "The applicability of the right of withdrawal on this product will be reviewed manually by the store after a request is submitted."
-msgstr "La aplicabilidad del derecho de desistimiento sobre este producto será revisada manualmente por la tienda tras el envío de la solicitud."
+msgstr "La aplicabilidad del derecho de desistimiento sobre este producto será revisada manualmente por la tienda tras enviar una solicitud."
 
 #. translators: 1: scope label, 2: log id.
 #: includes/clases/woocommerce.php:575
@@ -1144,11 +1144,11 @@ msgstr "Ejercer derecho de desistimiento"
 
 #: includes/clases/woocommerce.php:622
 msgid "Use this page to exercise your right of withdrawal for WooCommerce orders."
-msgstr "Utiliza esta página para ejercer tu derecho de desistimiento en pedidos de WooCommerce."
+msgstr "Utiliza esta página para ejercer tu derecho de desistimiento sobre pedidos de WooCommerce."
 
 #: includes/cuadro-informacion.php:17
 msgid "If you enjoy this plugin and find it helpful, please make a donation:"
-msgstr "Si has disfrutado y te ha sido útil este plugin, por favor haz una donación:"
+msgstr "Si te gusta y te resulta útil este plugin, por favor haz una donación:"
 
 #: includes/cuadro-informacion.php:29
 msgid "Follow us:"
@@ -1180,11 +1180,11 @@ msgstr "Correo electrónico de notificación"
 
 #: includes/formulario.php:39
 msgid "Merchant phone (optional)"
-msgstr "Teléfono del comerciante (opcional)"
+msgstr "Teléfono del vendedor (opcional)"
 
 #: includes/formulario.php:44
 msgid "Phone number displayed alongside the store name, address and email in the printable Annex I.B model withdrawal form. Leave empty to omit the phone line."
-msgstr "Número de teléfono que se muestra junto al nombre de la tienda, la dirección y el correo electrónico en el modelo imprimible de formulario de desistimiento del Anexo I.B. Déjalo vacío para omitir la línea del teléfono."
+msgstr "Número de teléfono que se muestra junto al nombre, la dirección y el correo electrónico de la tienda en el modelo imprimible de formulario de desistimiento del Anexo I.B. Déjalo vacío para omitir la línea del teléfono."
 
 #: includes/formulario.php:50
 msgid "Withdrawal page"
@@ -1250,7 +1250,7 @@ msgstr "¿Borrar todos los datos al desinstalar?"
 
 #: includes/formulario.php:161
 msgid "If checked, all withdrawal requests, their metadata and the plugin settings will be permanently deleted when the plugin is uninstalled. Leave unchecked to keep your data."
-msgstr "Si está marcado, todas las solicitudes de desistimiento, sus metadatos y los ajustes del plugin se eliminarán de forma permanente al desinstalar el plugin. Déjalo desmarcado para conservar tus datos."
+msgstr "Si se marca, todas las solicitudes de desistimiento, sus metadatos y los ajustes del plugin se eliminarán de forma permanente al desinstalar el plugin. Déjalo sin marcar para conservar tus datos."
 
 #: includes/formulario.php:177
 msgid "Request handling"
@@ -1328,7 +1328,7 @@ msgstr "Notificaciones de correo electrónico al cliente"
 
 #: includes/formulario.php:265
 msgid "Send an email to the customer when the withdrawal request status changes. Configure content in"
-msgstr "Enviar un correo electrónico al cliente cuando cambie el estado de la solicitud de desistimiento. Configura el contenido en"
+msgstr "Envía un correo electrónico al cliente cuando cambie el estado de la solicitud de desistimiento. Configura el contenido en"
 
 #: includes/formulario.php:266
 msgid "WooCommerce &rsaquo; Settings &rsaquo; Emails"
@@ -1350,7 +1350,7 @@ msgstr "Textos de aviso de exclusión"
 
 #: includes/formulario.php:308
 msgid "Text shown on the product page (between the price and the Add to Cart button) and inside the withdrawal request form for products classified with each withdrawal type. Edit any field to override the built-in default. Leave a field empty to keep the translated default text."
-msgstr "Texto mostrado en la ficha del producto (entre el precio y el botón Añadir al carrito) y dentro del formulario de solicitud de desistimiento para los productos clasificados con cada tipo de desistimiento. Edita cualquier campo para sobrescribir el valor por defecto. Déjalo vacío para conservar el texto por defecto traducido."
+msgstr "Texto que se muestra en la ficha del producto (entre el precio y el botón «Añadir al carrito») y dentro del formulario de solicitud de desistimiento para los productos clasificados con cada tipo de desistimiento. Edita cualquier campo para anular el texto por defecto. Deja un campo vacío para conservar el texto por defecto traducido."
 
 #: includes/formulario.php:333
 msgid "Digital content waiver"
@@ -1358,7 +1358,7 @@ msgstr "Renuncia al desistimiento de contenido digital"
 
 #: includes/formulario.php:334
 msgid "Show an optional acknowledgement at checkout when the customer is buying digital content or virtual services subject to the immediate-execution waiver of the right of withdrawal. The list of products that trigger this checkbox is driven by the per-product / per-category \"Withdrawal type\" field (mark them as \"Digital content\")."
-msgstr "Muestra una aceptación opcional en el checkout cuando el cliente compra contenido digital o servicios virtuales sujetos a la renuncia al derecho de desistimiento por ejecución inmediata. La lista de productos que disparan esta casilla la determina el campo «Tipo de desistimiento» por producto o por categoría (márcalos como «Contenido digital»)."
+msgstr "Muestra una aceptación opcional al finalizar la compra, cuando el cliente compra contenido digital o servicios virtuales sujetos a la renuncia al derecho de desistimiento por ejecución inmediata. La lista de productos que activan esta casilla se determina por el campo «Tipo de desistimiento» por producto / por categoría (márcalos como «Contenido digital»)."
 
 #: includes/formulario.php:338
 msgid "When to show the checkbox"
@@ -1366,7 +1366,7 @@ msgstr "Cuándo mostrar la casilla"
 
 #: includes/formulario.php:347
 msgid "Never (disabled)"
-msgstr "Nunca (desactivada)"
+msgstr "Nunca (desactivado)"
 
 #: includes/formulario.php:348
 msgid "On products classified as digital content"
@@ -1382,7 +1382,7 @@ msgstr "Texto personalizado de la casilla"
 
 #: includes/formulario.php:367
 msgid "Pre-filled with the default acknowledgement text. Edit it to customise it, or clear the field to revert to the default at any time."
-msgstr "Pre-rellenado con el texto de aceptación por defecto. Edítalo para personalizarlo, o vacía el campo para volver al texto por defecto en cualquier momento."
+msgstr "Rellenado previamente con el texto de aceptación por defecto. Edítalo para personalizarlo, o vacía el campo para volver al texto por defecto en cualquier momento."
 
 #: templates/emails/apg-withdrawal-admin.php:25
 #: templates/emails/apg-withdrawal-customer.php:29
@@ -1413,12 +1413,12 @@ msgstr "Tras revisar tu solicitud, lamentamos informarte de que ha sido rechazad
 #: templates/emails/apg-withdrawal-status.php:21
 #: templates/emails/plain/apg-withdrawal-status.php:21
 msgid "We are writing to confirm that the processing of your withdrawal request has been completed and the applicable refund has been arranged."
-msgstr "Te escribimos para confirmar que el procesamiento de tu solicitud de desistimiento ha sido completado y el reembolso aplicable ha sido tramitado."
+msgstr "Te escribimos para confirmarte que la tramitación de tu solicitud de desistimiento se ha completado y se ha gestionado el reembolso correspondiente."
 
 #: templates/emails/apg-withdrawal-status.php:30
 #: templates/emails/plain/apg-withdrawal-status.php:30
 msgid "We are writing to inform you of an update to your withdrawal request."
-msgstr "Te escribimos para informarte de una actualización en tu solicitud de desistimiento."
+msgstr "Te escribimos para informarte de una actualización sobre tu solicitud de desistimiento."
 
 #: templates/emails/apg-withdrawal-status.php:43
 #: templates/emails/plain/apg-withdrawal-status.php:35

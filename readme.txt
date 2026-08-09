@@ -4,7 +4,7 @@ Donate link: https://artprojectgroup.es/tienda/donacion
 Tags: withdrawal, right of withdrawal, woocommerce, refund, consumer rights
 Requires at least: 6.0
 Tested up to: 7.1
-Stable tag: 0.7.0
+Stable tag: 0.7.1
 Requires PHP: 7.4
 WC requires at least: 7.0
 WC tested up to: 11.0.0
@@ -124,6 +124,9 @@ The plugin does not delete withdrawal request records automatically. As a genera
 6. Edit withdrawal screen with full request details and status history.
 
 == Changelog ==
+= 0.7.1 =
+* Spanish translation reviewed against the wording approved on translate.wordpress.org: 27 strings corrected for terminology and current orthography — "artículo" in lower case as Spanish requires, "al finalizar la compra" instead of the anglicism "checkout", "servicio de envío" instead of "mailer", "solo" without the accent the RAE dropped. Since 0.6.1 the bundled translation takes precedence over the centralised language pack, so these corrections only reach the shop through a plugin update — which is what this release is for. The model withdrawal form of Annex I.B was deliberately left untouched, pending a check of its wording against Annex B of the TRLGDCU. No code changes.
+
 = 0.7.0 =
 * Partial withdrawal down to the unit. The "Specific products only" scope no longer works as an all-or-nothing selector per line: the form now renders one row per order line with a checkbox and a quantity input capped at the units originally ordered, so a customer who bought three units and is returning one declares exactly that. The units are stored in `_apg_withdrawal_quantities`, travel through the confirmation screen, and are shown in the acknowledgement email, the request detail screen and the CSV export as "Product x 1 of 3". They are also folded into the SHA-256 receipt hash as `item:units` pairs, so the digest covers the quantities and not just which lines were selected. Requests registered before this release keep working and are read as "all the units of the selected lines", which is what they meant.
 * Withdrawal status workflow in the requests list. The post-status views ("All | Published"), which carried no meaning for this post type, are replaced with one link per withdrawal status showing its count, resolved in a single grouped query. The status column becomes sortable, a bulk action per status lets a batch of requests be moved through the workflow at once — going through `apg_withdrawal_change_status()`, so each one still gets its log entry and, when enabled, its customer notification — and the *Export CSV* button now exports the status currently on screen instead of always the whole log.
@@ -197,8 +200,8 @@ The plugin does not delete withdrawal request records automatically. As a genera
 * Initial release.
 
 == Upgrade Notice ==
-= 0.7.0 =
-* Partial withdrawal down to the unit, refunds created straight from a request (Redsys and Bizum included), status views and bulk actions, own order status, optional IBAN, guest double opt-in, REST API and an accessibility pass. Fixes the printable Annex I.B. Compatible with WooCommerce 11.0.
+= 0.7.1 =
+* Spanish translation reviewed and corrected in 27 strings, for terminology and current orthography. Because the bundled translation takes precedence over the centralised language pack, only a plugin update delivers them. No code changes.
 
 == Thanks ==
 Thanks to everyone who uses the plugin, helps improve it, makes a donation or encourages us with their comments.

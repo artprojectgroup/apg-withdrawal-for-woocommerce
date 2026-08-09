@@ -9,7 +9,7 @@ Requires at least: 6.0
 
 Tested up to: 7.1
 
-Stable tag: 0.7.0
+Stable tag: 0.7.1
 
 Requires PHP: 7.4
 
@@ -126,6 +126,9 @@ El plugin no elimina automáticamente las solicitudes de desistimiento registrad
 **APG Desistimiento para WooCommerce** es un plugin gratuito. **Art Project Group** no proporciona soporte técnico gratuito, pero ofrece un servicio de [soporte técnico](https://artprojectgroup.es/tienda/ticket-de-soporte) de pago para instalación y configuración.
 
 ## Changelog
+### 0.7.1
+* Traducción al español revisada frente a la redacción aprobada en translate.wordpress.org: 27 cadenas corregidas de terminología y ortografía —«artículo» en minúscula, como pide el español; «al finalizar la compra» en lugar del anglicismo «checkout»; «servicio de envío» en lugar de «mailer»; «solo» sin la tilde que suprimió la RAE—. Como desde la 0.6.1 la traducción empaquetada tiene preferencia sobre el paquete de idioma centralizado, estas correcciones solo llegan a la tienda mediante una actualización del plugin, que es para lo que sirve esta versión. El modelo de formulario de desistimiento del Anexo I.B se ha dejado deliberadamente sin tocar, a la espera de contrastar su redacción con el Anexo B del TRLGDCU. Sin cambios en el código.
+
 ### 0.7.0
 * Desistimiento parcial hasta la unidad. El alcance «Solo productos concretos» deja de comportarse como un selector de todo o nada por línea: el formulario muestra ahora una fila por línea del pedido con una casilla y un campo de cantidad limitado a las unidades originalmente compradas, de modo que quien compró tres unidades y devuelve una declara exactamente eso. Las unidades se guardan en `_apg_withdrawal_quantities`, viajan por la pantalla de confirmación y se muestran en el correo de acuse de recibo, en la ficha de la solicitud y en la exportación CSV como «Producto x 1 de 3». Además se incorporan al hash SHA-256 del acuse como pares `línea:unidades`, para que el resumen criptográfico cubra las cantidades y no solo qué líneas se seleccionaron. Las solicitudes registradas antes de esta versión siguen funcionando y se leen como «todas las unidades de las líneas seleccionadas», que es lo que significaban.
 * Flujo de estados en el listado de solicitudes. Las vistas por estado de publicación («Todo | Publicado»), que no significaban nada para este tipo de contenido, se sustituyen por un enlace por cada estado de desistimiento con su contador, resuelto en una única consulta agrupada. La columna de estado pasa a ser ordenable, una acción en lote por estado permite tramitar varias solicitudes a la vez —pasando por `apg_withdrawal_change_status()`, así que cada una sigue generando su entrada en el historial y, si está activado, su aviso al cliente— y el botón *Exportar CSV* exporta ahora el estado que se está viendo en pantalla en lugar de todo el registro.
