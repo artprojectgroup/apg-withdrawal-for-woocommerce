@@ -78,7 +78,7 @@ msgstr "APG Desistimiento para WooCommerce requiere que WooCommerce esté instal
 #: includes/admin/funciones-apg.php:337
 #, php-format
 msgid "The confirmation button label \"%s\" looks ambiguous. Article 11a of Directive 2011/83/EU (added by Directive (EU) 2023/2673) requires the wording to make it clear to the consumer that they are exercising their right of withdrawal. Consider using \"Confirm withdrawal\" or an equivalent unambiguous wording in your language."
-msgstr "El texto del botón de confirmación «%s» parece ambiguo. El artículo 11 bis de la Directiva 2011/83/UE (añadido por la Directiva (UE) 2023/2673) exige que la redacción deje claro al consumidor que está ejerciendo su derecho de desistimiento. Plantéate utilizar «Confirmar desistimiento» o una formulación equivalente que no dé lugar a dudas en tu idioma."
+msgstr "El texto del botón de confirmación \"%s\" parece ambiguo. El artículo 11 bis de la Directiva 2011/83/UE (añadido por la Directiva (UE) 2023/2673) exige que la redacción deje claro al consumidor que está ejerciendo su derecho de desistimiento. Plantéate utilizar \"Confirmar desistimiento\" o una formulación equivalente que no dé lugar a dudas en tu idioma."
 
 #: includes/admin/funciones-apg.php:387
 msgid "European Union (baseline)"
@@ -667,7 +667,7 @@ msgstr "Actualización de la solicitud de desistimiento"
 #: includes/clases/enlace.php:72
 #, php-format
 msgid "The withdrawal link label \"%s\" looks ambiguous. Article 11a of Directive 2011/83/EU requires the wording to make it clear to the consumer that they are exercising their right of withdrawal."
-msgstr "La etiqueta del enlace de desistimiento «%s» parece ambigua. El artículo 11 bis de la Directiva 2011/83/UE exige que la redacción deje claro al consumidor que está ejerciendo su derecho de desistimiento."
+msgstr "La etiqueta del enlace de desistimiento \"%s\" parece ambigua. El artículo 11 bis de la Directiva 2011/83/UE exige que la redacción deje claro al consumidor que está ejerciendo su derecho de desistimiento."
 
 #: includes/clases/enlace.php:133
 msgid "Withdrawal link"
@@ -938,7 +938,7 @@ msgstr "Solicitud de desistimiento %1$s - %2$s"
 
 #: includes/clases/producto.php:56
 msgid "Defines whether the right of withdrawal applies to this product. Shown as a notice to the customer in the withdrawal form. Leave on \"Withdrawal allowed (default)\" to let the product inherit the type from its categories."
-msgstr "Define si el derecho de desistimiento es aplicable a este producto. Se muestra como aviso al cliente en el formulario de desistimiento. Déjalo en «Desistimiento permitido (por defecto)» para que el producto herede el tipo de sus categorías."
+msgstr "Define si el derecho de desistimiento es aplicable a este producto. Se muestra como aviso al cliente en el formulario de desistimiento. Déjalo en \"Desistimiento permitido (por defecto)\" para que el producto herede el tipo de sus categorías."
 
 #: includes/clases/producto.php:66
 msgid "Custom exclusion notice (optional)"
@@ -1270,7 +1270,7 @@ msgstr "No cambiar el estado del pedido"
 
 #: includes/formulario.php:193
 msgid "The plugin registers its own \"Withdrawal requested\" order status, so the affected orders can be filtered, sorted and bulk-edited with the native WooCommerce tools. Leave the default to keep the order untouched."
-msgstr "El plugin registra su propio estado de pedido «Desistimiento solicitado», de modo que los pedidos afectados se pueden filtrar, ordenar y editar en lote con las herramientas nativas de WooCommerce. Deja el valor por defecto para no tocar el pedido."
+msgstr "El plugin registra su propio estado de pedido \"Desistimiento solicitado\", de modo que los pedidos afectados se pueden filtrar, ordenar y editar en lote con las herramientas nativas de WooCommerce. Deja el valor por defecto para no tocar el pedido."
 
 #: includes/formulario.php:204
 msgid "Do not ask for it"
@@ -1350,7 +1350,7 @@ msgstr "Textos de aviso de exclusión"
 
 #: includes/formulario.php:308
 msgid "Text shown on the product page (between the price and the Add to Cart button) and inside the withdrawal request form for products classified with each withdrawal type. Edit any field to override the built-in default. Leave a field empty to keep the translated default text."
-msgstr "Texto que se muestra en la ficha del producto (entre el precio y el botón «Añadir al carrito») y dentro del formulario de solicitud de desistimiento para los productos clasificados con cada tipo de desistimiento. Edita cualquier campo para anular el texto por defecto. Deja un campo vacío para conservar el texto por defecto traducido."
+msgstr "Texto que se muestra en la ficha del producto (entre el precio y el botón \"Añadir al carrito\") y dentro del formulario de solicitud de desistimiento para los productos clasificados con cada tipo de desistimiento. Edita cualquier campo para anular el texto por defecto. Deja un campo vacío para conservar el texto por defecto traducido."
 
 #: includes/formulario.php:333
 msgid "Digital content waiver"
@@ -1358,7 +1358,7 @@ msgstr "Renuncia al desistimiento de contenido digital"
 
 #: includes/formulario.php:334
 msgid "Show an optional acknowledgement at checkout when the customer is buying digital content or virtual services subject to the immediate-execution waiver of the right of withdrawal. The list of products that trigger this checkbox is driven by the per-product / per-category \"Withdrawal type\" field (mark them as \"Digital content\")."
-msgstr "Muestra una aceptación opcional al finalizar la compra, cuando el cliente compra contenido digital o servicios virtuales sujetos a la renuncia al derecho de desistimiento por ejecución inmediata. La lista de productos que activan esta casilla se determina por el campo «Tipo de desistimiento» por producto / por categoría (márcalos como «Contenido digital»)."
+msgstr "Muestra una aceptación opcional al finalizar la compra, cuando el cliente compra contenido digital o servicios virtuales sujetos a la renuncia al derecho de desistimiento por ejecución inmediata. La lista de productos que activan esta casilla se determina por el campo \"Tipo de desistimiento\" por producto / por categoría (márcalos como \"Contenido digital\")."
 
 #: includes/formulario.php:338
 msgid "When to show the checkbox"
