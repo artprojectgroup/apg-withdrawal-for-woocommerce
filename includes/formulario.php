@@ -19,6 +19,7 @@ $tab = 1;
 	<h2><?php esc_html_e( 'APG Withdrawal Options.', 'apg-withdrawal-for-woocommerce' ); ?></h2>
 	<h3><a href="<?php echo esc_url( $apg_withdrawal['plugin_url'] ); ?>" title="Art Project Group"><?php echo esc_html( $apg_withdrawal['plugin'] ); ?></a></h3>
 	<p><?php esc_html_e( 'Add to WooCommerce an online withdrawal workflow with customer form, My Account integration and admin request log.', 'apg-withdrawal-for-woocommerce' ); ?></p>
+	<?php apg_withdrawal_print_core_feature_warning(); ?>
 	<?php include 'cuadro-informacion.php'; ?>
 	<form id="formulario" method="post" action="options.php">
 		<?php settings_fields( 'apg_withdrawal_settings_group' ); ?>

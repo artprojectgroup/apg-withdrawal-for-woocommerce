@@ -2,7 +2,7 @@
 /*
 Plugin Name: APG Withdrawal for WooCommerce
 Requires Plugins: woocommerce
-Version: 0.7.1
+Version: 0.7.2
 Plugin URI: https://wordpress.org/plugins/apg-withdrawal-for-woocommerce/
 Description: Add to WooCommerce an online withdrawal workflow compliant with EU requirements.
 Author URI: https://artprojectgroup.es/
@@ -13,7 +13,7 @@ Requires at least: 6.0
 Tested up to: 7.1
 Requires PHP: 7.4
 WC requires at least: 7.0
-WC tested up to: 11.0.0
+WC tested up to: 11.1.0
 
 Text Domain: apg-withdrawal-for-woocommerce
 Domain Path: /languages
@@ -26,7 +26,7 @@ Domain Path: /languages
 defined( 'ABSPATH' ) || exit;
 
 define( 'apg_withdrawal_DIRECCION', plugin_basename( __FILE__ ) );
-define( 'apg_withdrawal_VERSION', '0.7.1' );
+define( 'apg_withdrawal_VERSION', '0.7.2' );
 define( 'apg_withdrawal_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 
 add_filter(
@@ -262,7 +262,19 @@ if ( is_plugin_active( 'woocommerce/woocommerce.php' ) || is_network_only_plugin
 					'show_in_rest'       => false,
 					'query_var'          => false,
 					'rewrite'            => false,
-					'capability_type'    => 'post',
+					/*
+					 * Withdrawal requests hold the consumer's name, e-mail, phone,
+					 * refund account, IP and user agent, so they are governed by the
+					 * capabilities that govern orders rather than by the generic post
+					 * ones. With 'post', `edit_post` resolved to `edit_others_posts`,
+					 * which the Editor role holds: an editor could list and open every
+					 * request at edit.php?post_type=apg_withdrawal even though the menu
+					 * entry, the CSV export and the REST routes all ask for
+					 * `manage_woocommerce`. Mapping to WooCommerce's own shop_order
+					 * capabilities puts administrators and shop managers back in charge
+					 * with no migration: the roles already carry them.
+					 */
+					'capability_type'    => array( 'shop_order', 'shop_orders' ),
 					'map_meta_cap'       => true,
 					'has_archive'        => false,
 					'hierarchical'       => false,
@@ -320,7 +332,7 @@ if ( is_plugin_active( 'woocommerce/woocommerce.php' ) || is_network_only_plugin
 			$user  = wp_get_current_user();
 			$email = $user && ! empty( $user->user_email ) ? $user->user_email : '';
 
-			echo apg_withdrawal_render_form( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Output is built entirely with escaped values inside apg_withdrawal_render_form()
+			apg_withdrawal_print_form(
 				array(
 					'email' => $email,
 				)

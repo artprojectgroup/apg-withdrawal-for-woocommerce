@@ -4,10 +4,10 @@ Donate link: https://artprojectgroup.es/tienda/donacion
 Tags: withdrawal, right of withdrawal, woocommerce, refund, consumer rights
 Requires at least: 6.0
 Tested up to: 7.1
-Stable tag: 0.7.1
+Stable tag: 0.7.2
 Requires PHP: 7.4
 WC requires at least: 7.0
-WC tested up to: 11.0.0
+WC tested up to: 11.1.0
 License: GNU General Public License v3 or later
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -37,6 +37,7 @@ Add to WooCommerce an online withdrawal workflow with customer form, My Account 
 * My Account integration: customers can view their withdrawal request history.
 * CSV export of withdrawal requests, honouring the status currently selected in the list, with protection against spreadsheet formula injection.
 * 100% compatible with HPOS (High-Performance Order Storage).
+* Warning when WooCommerce 11.1's own order withdrawal feature is switched on at the same time, so the shop never offers customers two unconnected forms.
 * Public form built to WCAG 2.1 AA — the level EN 301 549 requires today — with the WCAG 2.2 target-size criterion already met: grouped and labelled controls, live regions for dynamic notices and focus moved to each new step.
 * One-click WooCommerce refund built from the request: the declared lines and quantities, capped by whatever is still refundable on the order. Always started by hand, never automatically. Works with Redsys and Bizum out of the box.
 * WPML and Polylang ready, both through `wpml-config.xml` and through runtime string registration.
@@ -64,8 +65,13 @@ In the plugin settings you can configure the notification email, the withdrawal 
 = Is the plugin compatible with HPOS? =
 Yes. The plugin is fully compatible with WooCommerce High-Performance Order Storage.
 
+= WooCommerce 11.1 has its own withdrawal feature. Can I use both? =
+You can, but you should not. WooCommerce 11.1 added *Order withdrawal* under WooCommerce → Settings → Advanced → Features, off by default. With both running, your customers reach two different forms at two different addresses, each keeping its own record and sending its own acknowledgement, and neither knows about the other: the same declaration can be registered twice and answered twice. The plugin detects the core feature and warns you, with a link to the screen where you turn it off.
+
+The core feature covers the basics: a form, a review step, acknowledgement emails, matching to the order and a note on it. This plugin adds what a shop needs around that — withdrawal type per product and per category with inheritance and the exclusion notice on the product page, the Article 16(m) digital-content waiver at checkout with its structured log, the printable Annex I.B model form, the SHA-256 receipt hash for the burden of proof of Article 16a(8), the WooCommerce refund panel driven by the declared lines, the GDPR exporter, eraser and anonymisation, and the REST API. Pick one of the two and turn the other off.
+
 = Can guest customers submit a withdrawal request? =
-Yes. The form supports both logged-in customers (with pre-filled data and order selector) and guests (with email lookup of their orders).
+Yes. A logged-in customer gets their data pre-filled and picks from a dropdown of their own orders. A guest types the order number and the email address recorded on the order, which is the pair the plugin validates before accepting any declaration — the same proof WooCommerce asks for in its own order tracking. The plugin never lists a customer's orders to a visitor who has only supplied an email address.
 
 = Where should I place the withdrawal link? =
 The withdrawal form page is auto-created on activation and contains the `[apg_withdrawal_form]` shortcode. To comply with Article 11a of Directive 2011/83/EU (added by Directive 2023/2673), the link to that page should be prominently visible and easy to find on the storefront. The plugin gives you several tools to place it; deciding *where* to place it is the merchant's (or their web designer's) responsibility:
@@ -124,6 +130,17 @@ The plugin does not delete withdrawal request records automatically. As a genera
 6. Edit withdrawal screen with full request details and status history.
 
 == Changelog ==
+= 0.7.2 =
+* The public form no longer exposes other people's orders: an email address in the page URL listed that customer's purchase history, and an order number on its own showed the contents and the total of any order.
+* Withdrawal requests move to WooCommerce's order capabilities, so the Editor role can no longer read or change the consumer data they hold.
+* The rate limiter can no longer be bypassed with a forged proxy header, and the review step now has a ceiling of its own.
+* The review screen works again without JavaScript: it was printed through a filter that strips forms, leaving the customer nothing to submit.
+* Quick Edit on a product category no longer resets its withdrawal type to "allowed".
+* The bulk-action and refund result notices are signed by the redirect that emits them and verified before being shown.
+* Output escaping and nonce verification reworked: the plugin now ships with no security exceptions marked on its output.
+* Warning when WooCommerce 11.1's own order withdrawal feature is switched on at the same time, with a link to the screen where you turn it off, plus a new FAQ entry on what each of the two covers.
+* Compatibility with WooCommerce 11.1 verified.
+
 = 0.7.1 =
 * Spanish translation reviewed against the wording approved on translate.wordpress.org: 27 strings corrected for terminology and current orthography — "artículo" in lower case as Spanish requires, "al finalizar la compra" instead of the anglicism "checkout", "servicio de envío" instead of "mailer", "solo" without the accent the RAE dropped. Since 0.6.1 the bundled translation takes precedence over the centralised language pack, so these corrections only reach the shop through a plugin update — which is what this release is for. The model withdrawal form of Annex I.B was deliberately left untouched, pending a check of its wording against Annex B of the TRLGDCU. No code changes.
 
@@ -200,8 +217,8 @@ The plugin does not delete withdrawal request records automatically. As a genera
 * Initial release.
 
 == Upgrade Notice ==
-= 0.7.1 =
-* Spanish translation reviewed and corrected in 27 strings, for terminology and current orthography. Because the bundled translation takes precedence over the centralised language pack, only a plugin update delivers them. No code changes.
+= 0.7.2 =
+* Security release: the public form could be made to list the orders of any email address, and to show the contents and the total of any order from its number alone. Update as soon as you can.
 
 == Thanks ==
 Thanks to everyone who uses the plugin, helps improve it, makes a donation or encourages us with their comments.

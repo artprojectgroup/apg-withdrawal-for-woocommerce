@@ -161,13 +161,11 @@ function apg_withdrawal_render_notice_html( $message ) {
  * @param bool          $expired_warning   Whether to display an expired-period warning.
  * @param array         $quantities        Units being withdrawn, keyed by line-item ID.
  * @param string        $iban              Optional normalised IBAN for the refund.
- * @return string HTML confirmation form markup.
+ * @return void
  */
-function apg_withdrawal_render_confirmation_form( $name, $email, $order_id, $scope, $details, $selected_products, $current_order, $settings, $form_action, $phone = '', $expired_warning = false, $quantities = array(), $iban = '' ) {
+function apg_withdrawal_print_confirmation_form( $name, $email, $order_id, $scope, $details, $selected_products, $current_order, $settings, $form_action, $phone = '', $expired_warning = false, $quantities = array(), $iban = '' ) {
 	$statutory_reference = function_exists( 'apg_withdrawal_get_statutory_reference' ) ? apg_withdrawal_get_statutory_reference() : '';
 	$needs_verification  = function_exists( 'apg_withdrawal_guest_verification_required' ) && apg_withdrawal_guest_verification_required();
-
-	ob_start();
 	?>
 	<form class="apg-withdrawal-confirmation" method="post" action="<?php echo esc_url( $form_action ); ?>" aria-labelledby="apg-withdrawal-confirmation-title">
 		<h2 id="apg-withdrawal-confirmation-title" tabindex="-1"><?php esc_html_e( 'Review your withdrawal request', 'apg-withdrawal-for-woocommerce' ); ?></h2>
@@ -240,8 +238,37 @@ function apg_withdrawal_render_confirmation_form( $name, $email, $order_id, $sco
 		</div>
 	</form>
 	<?php
+}
 
-	return ob_get_clean();
+/**
+ * Returns the confirmation form as a string, for the AJAX step that has to hand
+ * the markup back in a JSON payload.
+ *
+ * Note for callers: this markup is a form with inputs and buttons, so it must
+ * never be run through `wp_kses_post()` — that allowlist drops every one of
+ * those tags and leaves the customer looking at a review screen with nothing to
+ * submit. Print it with apg_withdrawal_print_confirmation_form() instead.
+ *
+ * @param string        $name              Customer full name.
+ * @param string        $email             Customer email address.
+ * @param string        $order_id          Order reference value.
+ * @param string        $scope             Withdrawal scope ('full' or 'partial').
+ * @param string        $details           Optional additional details.
+ * @param array         $selected_products Array of selected line-item IDs.
+ * @param WC_Order|bool $current_order     WooCommerce order object or false.
+ * @param array         $settings          Plugin settings array.
+ * @param string        $form_action       Form action URL.
+ * @param string        $phone             Optional customer phone number.
+ * @param bool          $expired_warning   Whether to display an expired-period warning.
+ * @param array         $quantities        Units being withdrawn, keyed by line-item ID.
+ * @param string        $iban              Optional normalised IBAN for the refund.
+ * @return string HTML confirmation form markup.
+ */
+function apg_withdrawal_render_confirmation_form( $name, $email, $order_id, $scope, $details, $selected_products, $current_order, $settings, $form_action, $phone = '', $expired_warning = false, $quantities = array(), $iban = '' ) {
+	ob_start();
+	apg_withdrawal_print_confirmation_form( $name, $email, $order_id, $scope, $details, $selected_products, $current_order, $settings, $form_action, $phone, $expired_warning, $quantities, $iban );
+
+	return (string) ob_get_clean();
 }
 
 /**
@@ -257,11 +284,10 @@ function apg_withdrawal_render_confirmation_form( $name, $email, $order_id, $sco
  * @param array<string,array{name:string,quantity:int,label:string}> $items      Line-item data.
  * @param array<int,string>                                          $selected   Selected line-item IDs.
  * @param array<string,int>                                          $quantities Units per line item.
- * @return string Escaped HTML for the contents of the item list.
+ * @return void
  */
-function apg_withdrawal_render_item_rows( $items, $selected, $quantities = array() ) {
+function apg_withdrawal_print_item_rows( $items, $selected, $quantities = array() ) {
 	$selected = array_map( 'strval', (array) $selected );
-	$html     = '';
 
 	foreach ( $items as $item_id => $item ) {
 		$item_id     = (string) $item_id;
@@ -270,38 +296,39 @@ function apg_withdrawal_render_item_rows( $items, $selected, $quantities = array
 		$quantity    = isset( $quantities[ $item_id ] ) ? max( 1, min( $ordered, (int) $quantities[ $item_id ] ) ) : $ordered;
 		$checkbox_id = 'apg_withdrawal_item_' . $item_id;
 		$quantity_id = 'apg_withdrawal_qty_' . $item_id;
-
-		$html .= sprintf(
-			'<li class="apg-withdrawal-item">
-				<label class="checkbox" for="%1$s"><input type="checkbox" id="%1$s" name="products[]" value="%2$s"%3$s> %4$s</label>
-				<label class="apg-withdrawal-item-quantity" for="%5$s">%6$s <input type="number" id="%5$s" name="quantities[%2$s]" value="%7$d" min="1" max="%8$d" step="1" inputmode="numeric"%9$s></label>
-			</li>',
-			esc_attr( $checkbox_id ),
-			esc_attr( $item_id ),
-			checked( $is_selected, true, false ),
-			esc_html( isset( $item['label'] ) ? $item['label'] : '' ),
-			esc_attr( $quantity_id ),
-			esc_html__( 'Units', 'apg-withdrawal-for-woocommerce' ),
-			$quantity,
-			$ordered,
-			$is_selected ? '' : ' disabled'
-		);
+		?>
+		<li class="apg-withdrawal-item">
+			<label class="checkbox" for="<?php echo esc_attr( $checkbox_id ); ?>">
+				<input type="checkbox" id="<?php echo esc_attr( $checkbox_id ); ?>" name="products[]" value="<?php echo esc_attr( $item_id ); ?>"<?php checked( $is_selected ); ?>>
+				<?php echo esc_html( isset( $item['label'] ) ? $item['label'] : '' ); ?>
+			</label>
+			<label class="apg-withdrawal-item-quantity" for="<?php echo esc_attr( $quantity_id ); ?>">
+				<?php esc_html_e( 'Units', 'apg-withdrawal-for-woocommerce' ); ?>
+				<input type="number" id="<?php echo esc_attr( $quantity_id ); ?>" name="quantities[<?php echo esc_attr( $item_id ); ?>]" value="<?php echo esc_attr( $quantity ); ?>" min="1" max="<?php echo esc_attr( $ordered ); ?>" step="1" inputmode="numeric"<?php disabled( $is_selected, false ); ?>>
+			</label>
+		</li>
+		<?php
 	}
-
-	return $html;
 }
 
 /**
- * Renders a WooCommerce-styled form field, falling back to a custom renderer if needed.
+ * Prints a WooCommerce-styled form field, falling back to a custom renderer
+ * when `wc_form_field()` is not available.
+ *
+ * The function prints instead of returning so that the escaping is visible at
+ * the point of output: every caller is a plain `apg_withdrawal_print_field()`
+ * with no `echo`, and no security sniff has to be suppressed at the call site.
  *
  * @param string $key   Field name/ID attribute.
  * @param array  $args  Field configuration arguments (type, label, required, options, etc.).
  * @param mixed  $value Current field value.
- * @return string HTML field markup.
+ * @return void
  */
-function apg_withdrawal_render_field( $key, $args, $value = null ) {
+function apg_withdrawal_print_field( $key, $args, $value = null ) {
 	if ( apg_withdrawal_ensure_wc_form_field() ) {
-		return wc_form_field( $key, $args, $value );
+		wc_form_field( $key, $args, $value );
+
+		return;
 	}
 
 	$defaults = array(
@@ -315,22 +342,13 @@ function apg_withdrawal_render_field( $key, $args, $value = null ) {
 		'description'       => '',
 		'custom_attributes' => array(),
 	);
-	$args     = wp_parse_args( $args, $defaults );
-	$type     = $args['type'];
-	$classes  = implode( ' ', array_map( 'sanitize_html_class', (array) $args['class'] ) );
+	$args          = wp_parse_args( $args, $defaults );
+	$type          = $args['type'];
+	$classes       = implode( ' ', array_map( 'sanitize_html_class', (array) $args['class'] ) );
 	$input_classes = implode( ' ', array_map( 'sanitize_html_class', (array) $args['input_class'] ) );
 	$required_text = $args['required'] ? '&nbsp;<span class="required" aria-hidden="true">*</span>' : '&nbsp;<span class="optional">(' . esc_html__( 'optional', 'apg-withdrawal-for-woocommerce' ) . ')</span>';
 	$label_class   = $args['required'] ? 'required_field' : '';
-	$attr_required = $args['required'] ? ' aria-required="true" required' : '';
-	$attr_auto     = $args['autocomplete'] ? ' autocomplete="' . esc_attr( $args['autocomplete'] ) . '"' : '';
-	$attr_custom   = '';
-	if ( ! empty( $args['custom_attributes'] ) && is_array( $args['custom_attributes'] ) ) {
-		foreach ( $args['custom_attributes'] as $attr_key => $attr_val ) {
-			$attr_custom .= ' ' . esc_attr( $attr_key ) . '="' . esc_attr( $attr_val ) . '"';
-		}
-	}
-
-	ob_start();
+	$custom_attrs  = ! empty( $args['custom_attributes'] ) && is_array( $args['custom_attributes'] ) ? $args['custom_attributes'] : array();
 	?>
 	<p class="form-row <?php echo esc_attr( $classes ); ?>" id="<?php echo esc_attr( $key ); ?>_field">
 		<label for="<?php echo esc_attr( $key ); ?>" class="<?php echo esc_attr( $label_class ); ?>">
@@ -338,20 +356,32 @@ function apg_withdrawal_render_field( $key, $args, $value = null ) {
 		</label>
 		<span class="woocommerce-input-wrapper">
 			<?php if ( 'select' === $type ) : ?>
-				<select name="<?php echo esc_attr( $key ); ?>" id="<?php echo esc_attr( $key ); ?>" class="<?php echo esc_attr( $input_classes ); ?>"<?php echo esc_attr( $attr_required ); ?>>
+				<select name="<?php echo esc_attr( $key ); ?>" id="<?php echo esc_attr( $key ); ?>" class="<?php echo esc_attr( $input_classes ); ?>"<?php echo $args['required'] ? ' aria-required="true" required' : ''; ?>>
 					<?php foreach ( $args['options'] as $option_value => $option_label ) : ?>
 						<option value="<?php echo esc_attr( $option_value ); ?>" <?php selected( (string) $value, (string) $option_value ); ?>><?php echo esc_html( $option_label ); ?></option>
 					<?php endforeach; ?>
 				</select>
 			<?php elseif ( 'textarea' === $type ) : ?>
-				<textarea name="<?php echo esc_attr( $key ); ?>" id="<?php echo esc_attr( $key ); ?>" class="<?php echo esc_attr( $input_classes ); ?>" rows="5"<?php echo esc_attr( $attr_required ) . esc_attr( $attr_auto ); ?>><?php echo esc_textarea( (string) $value ); ?></textarea>
+				<textarea name="<?php echo esc_attr( $key ); ?>" id="<?php echo esc_attr( $key ); ?>" class="<?php echo esc_attr( $input_classes ); ?>" rows="5"<?php echo $args['required'] ? ' aria-required="true" required' : ''; ?><?php echo $args['autocomplete'] ? ' autocomplete="' . esc_attr( $args['autocomplete'] ) . '"' : ''; ?>><?php echo esc_textarea( (string) $value ); ?></textarea>
 			<?php elseif ( 'checkbox' === $type ) : ?>
 				<label class="checkbox" for="<?php echo esc_attr( $key ); ?>">
-					<input type="checkbox" name="<?php echo esc_attr( $key ); ?>" id="<?php echo esc_attr( $key ); ?>" value="1"<?php checked( ! empty( $value ) ); ?><?php echo esc_attr( $attr_required ); ?>>
+					<input type="checkbox" name="<?php echo esc_attr( $key ); ?>" id="<?php echo esc_attr( $key ); ?>" value="1"<?php checked( ! empty( $value ) ); ?><?php echo $args['required'] ? ' aria-required="true" required' : ''; ?>>
 					<?php echo esc_html( $args['label'] ); ?>
 				</label>
 			<?php else : ?>
-				<input type="<?php echo esc_attr( $type ); ?>" class="<?php echo esc_attr( $input_classes ); ?>" name="<?php echo esc_attr( $key ); ?>" id="<?php echo esc_attr( $key ); ?>" value="<?php echo esc_attr( (string) $value ); ?>"<?php echo $attr_required . $attr_auto . $attr_custom; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- All parts pre-escaped above ?><?php echo $args['description'] ? ' aria-describedby="' . esc_attr( $key ) . '-description"' : ''; ?>>
+				<input
+					type="<?php echo esc_attr( $type ); ?>"
+					class="<?php echo esc_attr( $input_classes ); ?>"
+					name="<?php echo esc_attr( $key ); ?>"
+					id="<?php echo esc_attr( $key ); ?>"
+					value="<?php echo esc_attr( (string) $value ); ?>"
+					<?php echo $args['required'] ? ' aria-required="true" required' : ''; ?>
+					<?php echo $args['autocomplete'] ? ' autocomplete="' . esc_attr( $args['autocomplete'] ) . '"' : ''; ?>
+					<?php foreach ( $custom_attrs as $attr_key => $attr_value ) : ?>
+						<?php echo esc_attr( $attr_key ); ?>="<?php echo esc_attr( $attr_value ); ?>"
+					<?php endforeach; ?>
+					<?php echo $args['description'] ? ' aria-describedby="' . esc_attr( $key ) . '-description"' : ''; ?>
+				>
 			<?php endif; ?>
 		</span>
 		<?php if ( $args['description'] ) : ?>
@@ -359,17 +389,18 @@ function apg_withdrawal_render_field( $key, $args, $value = null ) {
 		<?php endif; ?>
 	</p>
 	<?php
-
-	return ob_get_clean();
 }
 
 /**
- * Renders the full withdrawal request form, handling both step display and submission.
+ * Prints the full withdrawal request form, handling both step display and
+ * submission. Prints rather than returns so callers need no `echo` and no
+ * escaping suppression; {@see apg_withdrawal_render_form()} wraps it for the
+ * shortcode, which has to hand a string back to WordPress.
  *
  * @param array $atts Optional shortcode/function attributes ('order_id', 'email').
- * @return string HTML markup for the complete withdrawal form.
+ * @return void
  */
-function apg_withdrawal_render_form( $atts = array() ) {
+function apg_withdrawal_print_form( $atts = array() ) {
 	$atts = wp_parse_args(
 		$atts,
 		array(
@@ -397,7 +428,13 @@ function apg_withdrawal_render_form( $atts = array() ) {
 	$iban_mode         = isset( $settings['iban_field'] ) ? (string) $settings['iban_field'] : 'hidden';
 	$selected_products = apg_withdrawal_get_request_array( 'products', 'sanitize_text_field' );
 	$selected_quantities = apg_withdrawal_get_request_array( 'quantities', 'absint' );
-	$all_orders        = apg_withdrawal_get_customer_orders( $email, $current_user_id );
+
+	// The pick-an-order dropdown lists orders, with their number, date, total and
+	// line items, so it is only ever built for the account WordPress has already
+	// authenticated, and from that account's own orders. Resolving it from the
+	// e-mail in the request instead would hand the purchase history of any
+	// address to whoever types it in the query string.
+	$all_orders        = $current_user_id ? apg_withdrawal_get_customer_orders( '', $current_user_id ) : array();
 	$active_order_ids  = function_exists( 'apg_withdrawal_get_order_ids_with_active_requests' ) ? apg_withdrawal_get_order_ids_with_active_requests() : array();
 	$orders            = array_filter(
 		$all_orders,
@@ -410,7 +447,15 @@ function apg_withdrawal_render_form( $atts = array() ) {
 	);
 	$orders_map        = apg_withdrawal_get_orders_products_map( $orders );
 	$orders_warning    = function_exists( 'apg_withdrawal_get_orders_warning_map' ) ? apg_withdrawal_get_orders_warning_map( $orders, $settings ) : array();
-	$current_order     = $order_id ? apg_withdrawal_get_order( $order_id ) : false;
+
+	// Same rule for the order the form is currently working on: it is only
+	// resolved once the requester has proved they may see it — the logged-in
+	// customer it belongs to, or a visitor who supplied the e-mail recorded on
+	// it. That is the very check the submission itself has to pass, so nothing
+	// legitimate is lost and an order ID on its own stops being enough to read
+	// the contents and the total of somebody else's order.
+	$order_validation  = $order_id ? apg_withdrawal_validate_order( $order_id, $email, $settings ) : array( 'valid' => false );
+	$current_order     = ! empty( $order_validation['valid'] ) ? $order_validation['order'] : false;
 	$order_products    = $current_order ? apg_withdrawal_get_order_items_data( $current_order ) : array();
 	$form_action       = apg_withdrawal_get_current_form_url();
 
@@ -433,19 +478,21 @@ function apg_withdrawal_render_form( $atts = array() ) {
 		$message = 'fields';
 	}
 
-	if ( 'confirm' === $step && $current_order ) {
-		$validation      = apg_withdrawal_validate_order( $order_id, $email, $settings );
-		$expired_warning = $validation['expired_warning'];
+	if ( 'confirm' === $step ) {
+		if ( ! $current_order ) {
+			$step    = 'request';
+			$message = 'order';
+		} else {
+			$expired_warning = ! empty( $order_validation['expired_warning'] );
+		}
 	}
 
-	ob_start();
 	?>
 	<div class="woocommerce apg-withdrawal-form-wrapper">
-		<div class="apg-withdrawal-order-error" role="alert" hidden></div>
 		<?php echo wp_kses_post( apg_withdrawal_render_notice_html( $message ) ); ?>
 
 		<?php if ( 'confirm' === $step ) : ?>
-			<?php echo wp_kses_post( apg_withdrawal_render_confirmation_form( $name, $email, $order_id, $scope, $details, $selected_products, $current_order, $settings, $form_action, $phone, $expired_warning, apg_withdrawal_sanitize_item_quantities( $current_order, $selected_products, $selected_quantities ), $iban ) ); ?>
+			<?php apg_withdrawal_print_confirmation_form( $name, $email, $order_id, $scope, $details, $selected_products, $current_order, $settings, $form_action, $phone, $expired_warning, apg_withdrawal_sanitize_item_quantities( $current_order, $selected_products, $selected_quantities ), $iban ); ?>
 		<?php else : ?>
 			<?php
 			if ( function_exists( 'wc_print_notice' ) ) {
@@ -485,7 +532,7 @@ function apg_withdrawal_render_form( $atts = array() ) {
 				<div class="woocommerce-address-fields">
 					<div class="woocommerce-address-fields__field-wrapper">
 						<?php
-						echo apg_withdrawal_render_field( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Internal function returns sanitized HTML
+						apg_withdrawal_print_field(
 							'name',
 							array(
 								'type'         => 'text',
@@ -499,7 +546,7 @@ function apg_withdrawal_render_form( $atts = array() ) {
 							$name
 						);
 
-						echo apg_withdrawal_render_field( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Internal function returns sanitized HTML
+						apg_withdrawal_print_field(
 							'email',
 							array(
 								'type'         => 'email',
@@ -513,7 +560,7 @@ function apg_withdrawal_render_form( $atts = array() ) {
 							$email
 						);
 
-						echo apg_withdrawal_render_field( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Internal function returns sanitized HTML
+						apg_withdrawal_print_field(
 							'phone',
 							array(
 								'type'         => 'tel',
@@ -540,7 +587,7 @@ function apg_withdrawal_render_form( $atts = array() ) {
 								$order_options[ $order->get_id() ] = $label;
 							}
 
-							echo apg_withdrawal_render_field( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Internal function returns sanitized HTML
+							apg_withdrawal_print_field(
 								'order_id',
 								array(
 									'type'        => 'select',
@@ -554,7 +601,7 @@ function apg_withdrawal_render_form( $atts = array() ) {
 								$order_id
 							);
 						} else {
-							echo apg_withdrawal_render_field( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Internal function returns sanitized HTML
+							apg_withdrawal_print_field(
 								'order_id',
 								array(
 									'type'              => 'text',
@@ -569,7 +616,7 @@ function apg_withdrawal_render_form( $atts = array() ) {
 							);
 						}
 
-						echo apg_withdrawal_render_field( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Internal function returns sanitized HTML
+						apg_withdrawal_print_field(
 							'scope',
 							array(
 								'type'        => 'select',
@@ -590,13 +637,13 @@ function apg_withdrawal_render_form( $atts = array() ) {
 								<legend><?php esc_html_e( 'Products to withdraw', 'apg-withdrawal-for-woocommerce' ); ?></legend>
 								<p class="description" id="products_description"><?php esc_html_e( 'Tick the products you are withdrawing from and, if you are keeping some of the units, lower the quantity.', 'apg-withdrawal-for-woocommerce' ); ?></p>
 								<ul class="apg-withdrawal-items" aria-describedby="products_description">
-									<?php echo apg_withdrawal_render_item_rows( $order_products, $selected_products, $selected_quantities ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Internal function returns fully escaped HTML ?>
+									<?php apg_withdrawal_print_item_rows( $order_products, $selected_products, $selected_quantities ); ?>
 								</ul>
 							</fieldset>
 						</div>
 						<?php
 						if ( 'hidden' !== $iban_mode ) {
-							echo apg_withdrawal_render_field( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Internal function returns sanitized HTML
+							apg_withdrawal_print_field(
 								'iban',
 								array(
 									'type'              => 'text',
@@ -616,7 +663,7 @@ function apg_withdrawal_render_form( $atts = array() ) {
 							);
 						}
 
-						echo apg_withdrawal_render_field( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Internal function returns sanitized HTML
+						apg_withdrawal_print_field(
 							'details',
 							array(
 								'type'        => 'textarea',
@@ -652,27 +699,23 @@ function apg_withdrawal_render_form( $atts = array() ) {
 					true
 				);
 				$apg_notice_placeholder    = '__APG_NOTICE_MESSAGE__';
-				$apg_order_error_template = function_exists( 'wc_print_notice' ) ? wc_print_notice( $apg_notice_placeholder, 'error', array(), true ) : '';
 				$apg_product_warn_template = function_exists( 'wc_print_notice' ) ? wc_print_notice( $apg_notice_placeholder, 'notice', array(), true ) : '';
 
 				wp_localize_script(
 					$apg_withdrawal_script_handle,
 					'apgWithdrawal',
 					array(
-						'ordersNonce'           => wp_create_nonce( 'apg_withdrawal_guest_orders' ),
+						'orderItemsNonce'       => wp_create_nonce( 'apg_withdrawal_order_items' ),
 						'productsMap'           => $orders_map,
 						'selectedProducts'      => array_values( $selected_products ),
 						'selectedQuantities'    => (object) $selected_quantities,
 						'ajaxUrl'               => admin_url( 'admin-ajax.php' ),
 						'ordersWarning'         => $orders_warning,
-						'orderErrorTemplate'    => $apg_order_error_template,
 						'productWarningTemplate' => $apg_product_warn_template,
 						'noticePlaceholder'     => $apg_notice_placeholder,
 						'i18n'                  => array(
-							'noResults'        => __( 'No results found', 'apg-withdrawal-for-woocommerce' ),
-							/* translators: %s: email address entered by the user. */
-							'noOrdersForEmail' => __( 'No orders were found in the store for the email address %s.', 'apg-withdrawal-for-woocommerce' ),
-							'units'            => __( 'Units', 'apg-withdrawal-for-woocommerce' ),
+							'noResults' => __( 'No results found', 'apg-withdrawal-for-woocommerce' ),
+							'units'     => __( 'Units', 'apg-withdrawal-for-woocommerce' ),
 						),
 						'warningMessages'  => array(
 							'excluded'     => __( "According to this product's configuration, the right of withdrawal may not apply under the legally provided exceptions. Your request will be reviewed by the store.", 'apg-withdrawal-for-woocommerce' ),
@@ -688,9 +731,80 @@ function apg_withdrawal_render_form( $atts = array() ) {
 		<?php endif; ?>
 	</div>
 	<?php
-
-	return ob_get_clean();
 }
+
+/**
+ * Returns the withdrawal form markup as a string, for the shortcode and any
+ * other caller that needs a value instead of direct output.
+ *
+ * @param array $atts Optional shortcode/function attributes ('order_id', 'email').
+ * @return string HTML markup for the complete withdrawal form.
+ */
+function apg_withdrawal_render_form( $atts = array() ) {
+	ob_start();
+	apg_withdrawal_print_form( $atts );
+
+	return (string) ob_get_clean();
+}
+
+/**
+ * AJAX handler: returns the line items of a single order, and only to a caller
+ * that supplies the e-mail address recorded on it.
+ *
+ * A guest has no dropdown to pick from — the plugin will not list somebody's
+ * orders from an e-mail address alone — so the item rows of a partial
+ * withdrawal are fetched here, once the visitor has typed both halves of the
+ * pair. That pair is exactly the proof of ownership the submission itself
+ * demands, so this endpoint gives away nothing that completing the form would
+ * not, and it is throttled so it cannot be worked as a free oracle.
+ *
+ * @return void
+ */
+function apg_withdrawal_ajax_get_order_items() {
+	if ( ! check_ajax_referer( 'apg_withdrawal_order_items', 'nonce', false ) ) {
+		wp_send_json_error( null, 403 );
+	}
+
+	$email    = isset( $_POST['email'] ) ? sanitize_email( wp_unslash( $_POST['email'] ) ) : '';
+	$order_id = isset( $_POST['order_id'] ) ? sanitize_text_field( wp_unslash( $_POST['order_id'] ) ) : '';
+
+	if ( ! is_email( $email ) || '' === $order_id ) {
+		wp_send_json_error( null, 400 );
+	}
+
+	if ( apg_withdrawal_is_rate_limited( $email, 'lookup' ) ) {
+		wp_send_json_error( null, 429 );
+	}
+
+	$settings   = apg_withdrawal_get_settings();
+	$validation = apg_withdrawal_validate_order( $order_id, $email, $settings );
+
+	// A pair that does not match answers exactly like an order with no lines,
+	// so the response cannot be used to tell "wrong e-mail" from "no such order".
+	if ( empty( $validation['valid'] ) ) {
+		wp_send_json_success(
+			array(
+				'items'   => (object) array(),
+				'warning' => '',
+			)
+		);
+	}
+
+	$order       = $validation['order'];
+	$order_key   = (string) $order->get_id();
+	$warning_map = function_exists( 'apg_withdrawal_get_orders_warning_map' )
+		? apg_withdrawal_get_orders_warning_map( array( $order ), $settings )
+		: array();
+
+	wp_send_json_success(
+		array(
+			'items'   => (object) apg_withdrawal_get_order_items_data( $order ),
+			'warning' => isset( $warning_map[ $order_key ] ) ? (string) $warning_map[ $order_key ] : '',
+		)
+	);
+}
+add_action( 'wp_ajax_apg_withdrawal_get_order_items', 'apg_withdrawal_ajax_get_order_items' );
+add_action( 'wp_ajax_nopriv_apg_withdrawal_get_order_items', 'apg_withdrawal_ajax_get_order_items' );
 
 /**
  * Returns the translated notice message string for a given message key.
@@ -716,72 +830,3 @@ function apg_withdrawal_get_notice_message( $message ) {
 	return isset( $messages[ $message ] ) ? $messages[ $message ] : $messages['general'];
 }
 
-/**
- * AJAX handler: returns orders matching a guest email address.
- *
- * Called on email blur when the order field is a plain text input (guest with no pre-filled
- * orders). If orders are found, the JS upgrades the input to a <select> dynamically.
- *
- * @return void
- */
-function apg_withdrawal_ajax_get_guest_orders() {
-	if ( ! check_ajax_referer( 'apg_withdrawal_guest_orders', 'nonce', false ) ) {
-		wp_send_json_error( null, 403 );
-	}
-
-	$email = isset( $_POST['email'] ) ? sanitize_email( wp_unslash( $_POST['email'] ) ) : '';
-
-	if ( ! is_email( $email ) ) {
-		wp_send_json_success( array( 'orders' => array() ) );
-		return;
-	}
-
-	$settings         = apg_withdrawal_get_settings();
-	$lookup_user      = get_user_by( 'email', $email );
-	$lookup_user_id   = $lookup_user instanceof WP_User ? $lookup_user->ID : 0;
-	$all_orders       = apg_withdrawal_get_customer_orders( $email, $lookup_user_id );
-	$active_order_ids = function_exists( 'apg_withdrawal_get_order_ids_with_active_requests' )
-		? apg_withdrawal_get_order_ids_with_active_requests()
-		: array();
-
-	$orders = array_filter(
-		$all_orders,
-		function ( $order ) use ( $active_order_ids ) {
-			if ( ! is_callable( array( $order, 'get_id' ) ) ) {
-				return false;
-			}
-			return ! in_array( $order->get_id(), $active_order_ids, true );
-		}
-	);
-
-	$warning_map  = function_exists( 'apg_withdrawal_get_orders_warning_map' )
-		? apg_withdrawal_get_orders_warning_map( $orders, $settings )
-		: array();
-	$orders_data  = array();
-	$products_map = array();
-
-	foreach ( $orders as $order ) {
-		$order_id = $order->get_id();
-		$label    = apg_withdrawal_get_order_option_label( $order );
-		if ( isset( $warning_map[ (string) $order_id ] ) && 'expired' === $warning_map[ (string) $order_id ] ) {
-			$label .= ' *';
-		}
-		$orders_data[] = array(
-			'id'    => $order_id,
-			'label' => $label,
-		);
-
-		$products_map[ $order_id ] = apg_withdrawal_get_order_items_data( $order );
-	}
-
-	wp_send_json_success(
-		array(
-			'orders'      => $orders_data,
-			'productsMap' => $products_map,
-			'warningMap'  => $warning_map,
-			'placeholder' => __( 'Select an order', 'apg-withdrawal-for-woocommerce' ),
-		)
-	);
-}
-add_action( 'wp_ajax_apg_withdrawal_get_guest_orders', 'apg_withdrawal_ajax_get_guest_orders' );
-add_action( 'wp_ajax_nopriv_apg_withdrawal_get_guest_orders', 'apg_withdrawal_ajax_get_guest_orders' );

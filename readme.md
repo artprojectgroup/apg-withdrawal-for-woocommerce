@@ -9,13 +9,13 @@ Requires at least: 6.0
 
 Tested up to: 7.1
 
-Stable tag: 0.7.1
+Stable tag: 0.7.2
 
 Requires PHP: 7.4
 
 WC requires at least: 7.0
 
-WC tested up to: 11.0.0
+WC tested up to: 11.1.0
 
 License: GNU General Public License v3 or later
 
@@ -47,6 +47,7 @@ Añade a WooCommerce un flujo de trabajo de desistimiento online con formulario 
 * Integración en Mi cuenta: los clientes pueden consultar el historial de sus solicitudes de desistimiento.
 * Exportación CSV de las solicitudes de desistimiento, respetando el estado seleccionado en el listado, con protección frente a la inyección de fórmulas en hojas de cálculo.
 * 100% compatible con HPOS (High-Performance Order Storage).
+* Aviso cuando la función de desistimiento propia de WooCommerce 11.1 está activada a la vez, para que la tienda no acabe ofreciendo a los clientes dos formularios que no se hablan entre sí.
 * Formulario público construido conforme a WCAG 2.1 AA —el nivel que exige hoy la EN 301 549— y cumpliendo ya el criterio de tamaño de objetivo de WCAG 2.2: controles agrupados y etiquetados, regiones activas para los avisos dinámicos y foco desplazado a cada paso nuevo.
 * Reembolso de WooCommerce en un clic a partir de la solicitud: las líneas y cantidades declaradas, limitadas por lo que quede por reembolsar en el pedido. Siempre se inicia a mano, nunca automáticamente. Funciona con Redsys y Bizum sin configuración adicional.
 * Preparado para WPML y Polylang, tanto mediante `wpml-config.xml` como mediante el registro de cadenas en tiempo de ejecución.
@@ -74,8 +75,13 @@ En los ajustes del plugin puedes configurar el correo electrónico de notificaci
 ### ¿Es compatible con HPOS?
 Sí. El plugin es totalmente compatible con WooCommerce High-Performance Order Storage.
 
+### WooCommerce 11.1 trae su propia función de desistimiento. ¿Puedo usar las dos?
+Poder, puedes, pero no deberías. WooCommerce 11.1 añadió *Desistimiento de pedido* en WooCommerce → Ajustes → Avanzado → Características, desactivada de serie. Con las dos en marcha, tus clientes llegan a dos formularios distintos en dos direcciones distintas, cada uno con su propio registro y su propio acuse de recibo, y ninguno sabe del otro: la misma declaración puede quedar registrada dos veces y contestada dos veces. El plugin detecta la característica de WooCommerce y te avisa, con un enlace a la pantalla donde se desactiva.
+
+La función del núcleo cubre lo básico: un formulario, un paso de revisión, los correos de acuse, la correspondencia con el pedido y una nota en él. Este plugin añade lo que una tienda necesita alrededor: el tipo de desistimiento por producto y por categoría con herencia y el aviso de exclusión en la ficha, el consentimiento del artículo 16(m) para contenido digital al finalizar la compra con su registro estructurado, el modelo del anexo I.B imprimible, el hash SHA-256 del acuse para la carga de la prueba del artículo 16 bis(8), el panel de reembolso de WooCommerce guiado por las líneas declaradas, el exportador, el borrador y la anonimización del RGPD, y la API REST. Elige una de las dos y desactiva la otra.
+
 ### ¿Pueden los clientes invitados enviar una solicitud de desistimiento?
-Sí. El formulario admite tanto clientes registrados (con datos rellenados previamente y selector de pedidos) como invitados (con búsqueda de pedidos por correo electrónico).
+Sí. Quien tiene la sesión iniciada encuentra sus datos rellenados y elige en un desplegable entre sus propios pedidos. Quien entra como invitada escribe el número de pedido y la dirección de correo que consta en él, que es el par que el plugin valida antes de aceptar cualquier declaración, la misma prueba que pide el seguimiento de pedidos de WooCommerce. El plugin nunca enumera los pedidos de un cliente a quien solo ha facilitado una dirección de correo.
 
 ### ¿Dónde debo colocar el enlace al formulario de desistimiento?
 La página del formulario se crea automáticamente al activar el plugin y contiene el shortcode `[apg_withdrawal_form]`. Para cumplir el Artículo 11 bis de la Directiva 2011/83/UE (introducido por la Directiva 2023/2673), el enlace a esa página debe estar destacado y ser fácil de localizar en la tienda. El plugin pone a tu disposición varias herramientas para colocarlo; decidir *dónde* colocarlo es responsabilidad del comerciante (o de su diseñador web):
@@ -126,6 +132,17 @@ El plugin no elimina automáticamente las solicitudes de desistimiento registrad
 **APG Desistimiento para WooCommerce** es un plugin gratuito. **Art Project Group** no proporciona soporte técnico gratuito, pero ofrece un servicio de [soporte técnico](https://artprojectgroup.es/tienda/ticket-de-soporte) de pago para instalación y configuración.
 
 ## Changelog
+### 0.7.2
+* El formulario público ya no deja a la vista pedidos ajenos: una dirección de correo en la URL de la página listaba el historial de compras de esa persona, y un número de pedido por sí solo mostraba su contenido y su importe.
+* Las solicitudes pasan a los permisos de pedidos de WooCommerce, así que el perfil Editor ya no puede leer ni modificar los datos del consumidor que contienen.
+* El límite de intentos ya no se esquiva falseando una cabecera de proxy, y la pantalla de revisión pasa a tener su propio techo.
+* La pantalla de revisión vuelve a funcionar sin JavaScript: se imprimía con un filtro que elimina los formularios y dejaba al cliente sin nada que enviar.
+* La Edición rápida de una categoría de producto ya no restablece su tipo de desistimiento a "permitido".
+* Los avisos de resultado de las acciones en lote y del reembolso los firma la redirección que los emite y se comprueban antes de mostrarse.
+* Rehecho el escapado de salida y la verificación de nonces: el plugin ya no lleva ninguna excepción de seguridad marcada sobre su salida.
+* Aviso cuando la función de desistimiento propia de WooCommerce 11.1 está activada a la vez, con enlace a la pantalla donde se desactiva, y nueva entrada del FAQ sobre qué cubre cada una.
+* Compatibilidad con WooCommerce 11.1 verificada.
+
 ### 0.7.1
 * Traducción al español revisada frente a la redacción aprobada en translate.wordpress.org: 27 cadenas corregidas de terminología y ortografía —"artículo" en minúscula, como pide el español; "al finalizar la compra" en lugar del anglicismo "checkout"; "servicio de envío" en lugar de "mailer"; "solo" sin la tilde que suprimió la RAE—. Como desde la 0.6.1 la traducción empaquetada tiene preferencia sobre el paquete de idioma centralizado, estas correcciones solo llegan a la tienda mediante una actualización del plugin, que es para lo que sirve esta versión. El modelo de formulario de desistimiento del Anexo I.B se ha dejado deliberadamente sin tocar, a la espera de contrastar su redacción con el Anexo B del TRLGDCU. Sin cambios en el código.
 

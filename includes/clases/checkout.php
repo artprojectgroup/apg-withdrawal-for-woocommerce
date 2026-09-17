@@ -220,7 +220,13 @@ function apg_withdrawal_save_classic_digital_waiver( $order ) {
 		return;
 	}
 
-	// phpcs:ignore WordPress.Security.NonceVerification.Missing -- Submission protected by WooCommerce's own checkout nonce
+	// WooCommerce validates its checkout nonce before creating the order; the
+	// check is repeated here so it sits in the same scope as the read.
+	if ( ! isset( $_POST['woocommerce-process-checkout-nonce'] )
+		|| ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['woocommerce-process-checkout-nonce'] ) ), 'woocommerce-process_checkout' ) ) {
+		return;
+	}
+
 	$checked = ! empty( $_POST['apg_withdrawal_digital_waiver'] );
 
 	$log = apg_withdrawal_build_digital_waiver_log( $checked, 'classic' );

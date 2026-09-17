@@ -226,10 +226,14 @@ function apg_withdrawal_handle_bulk_actions( $redirect_to, $action, $post_ids ) 
 		}
 	}
 
+	// The notice that reads these arguments back verifies this nonce before
+	// trusting them, so the count and the label cannot be dictated by a crafted
+	// link handed to a logged-in merchant.
 	return add_query_arg(
 		array(
 			'apg_withdrawal_bulk_changed' => $changed,
 			'apg_withdrawal_bulk_status'  => $status,
+			'apg_withdrawal_bulk_nonce'   => wp_create_nonce( 'apg_withdrawal_bulk_notice' ),
 		),
 		$redirect_to
 	);
@@ -244,12 +248,18 @@ add_filter( 'handle_bulk_actions-edit-apg_withdrawal', 'apg_withdrawal_handle_bu
 function apg_withdrawal_bulk_action_notice() {
 	$screen = function_exists( 'get_current_screen' ) ? get_current_screen() : null;
 
-	if ( ! $screen || 'edit-apg_withdrawal' !== $screen->id || ! isset( $_GET['apg_withdrawal_bulk_changed'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only feedback flag set by the bulk-action redirect.
+	if ( ! $screen || 'edit-apg_withdrawal' !== $screen->id ) {
 		return;
 	}
 
-	$changed  = absint( wp_unslash( $_GET['apg_withdrawal_bulk_changed'] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- See above.
-	$status   = isset( $_GET['apg_withdrawal_bulk_status'] ) ? sanitize_key( wp_unslash( $_GET['apg_withdrawal_bulk_status'] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- See above.
+	$nonce = isset( $_GET['apg_withdrawal_bulk_nonce'] ) ? sanitize_text_field( wp_unslash( $_GET['apg_withdrawal_bulk_nonce'] ) ) : '';
+
+	if ( ! wp_verify_nonce( $nonce, 'apg_withdrawal_bulk_notice' ) || ! isset( $_GET['apg_withdrawal_bulk_changed'] ) ) {
+		return;
+	}
+
+	$changed  = absint( wp_unslash( $_GET['apg_withdrawal_bulk_changed'] ) );
+	$status   = isset( $_GET['apg_withdrawal_bulk_status'] ) ? sanitize_key( wp_unslash( $_GET['apg_withdrawal_bulk_status'] ) ) : '';
 	$statuses = apg_withdrawal_get_statuses();
 
 	if ( ! isset( $statuses[ $status ] ) ) {

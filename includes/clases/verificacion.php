@@ -191,6 +191,7 @@ function apg_withdrawal_handle_verification_link() {
 
 	if ( ! $payload ) {
 		apg_withdrawal_redirect_with_notice( 'verify_invalid' );
+		exit;
 	}
 
 	$payload['verified'] = true;

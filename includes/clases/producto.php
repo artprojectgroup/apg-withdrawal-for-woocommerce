@@ -83,19 +83,25 @@ add_action( 'woocommerce_product_data_panels', 'apg_withdrawal_product_tab_conte
  * @return void
  */
 function apg_withdrawal_save_product_type( $post_id ) {
+	// WooCommerce verifies this nonce before firing the hook, but the check is
+	// repeated here so the security boundary lives in the same function as the
+	// reads it protects, and does not depend on a caller staying as it is.
+	if ( ! isset( $_POST['woocommerce_meta_nonce'] )
+		|| ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['woocommerce_meta_nonce'] ) ), 'woocommerce_save_data' ) ) {
+		return;
+	}
+
 	if ( ! current_user_can( 'edit_product', $post_id ) ) {
 		return;
 	}
 
-	// Nonce is verified upstream by WooCommerce before firing woocommerce_process_product_meta.
-	$type = isset( $_POST['_apg_withdrawal_type'] ) ? sanitize_key( wp_unslash( $_POST['_apg_withdrawal_type'] ) ) : 'allowed'; // phpcs:ignore WordPress.Security.NonceVerification.Missing -- Nonce verified by WooCommerce upstream.
+	$type = isset( $_POST['_apg_withdrawal_type'] ) ? sanitize_key( wp_unslash( $_POST['_apg_withdrawal_type'] ) ) : 'allowed';
 
 	$allowed = array( 'allowed', 'excluded', 'digital', 'personalized', 'manual' );
 
 	update_post_meta( $post_id, '_apg_withdrawal_type', in_array( $type, $allowed, true ) ? $type : 'allowed' );
 
 	// Optional per-product override for the exclusion notice text.
-	// phpcs:ignore WordPress.Security.NonceVerification.Missing -- Nonce verified by WooCommerce upstream.
 	$reason = isset( $_POST['_apg_withdrawal_custom_reason'] ) ? sanitize_textarea_field( wp_unslash( $_POST['_apg_withdrawal_custom_reason'] ) ) : '';
 	update_post_meta( $post_id, '_apg_withdrawal_custom_reason', $reason );
 }

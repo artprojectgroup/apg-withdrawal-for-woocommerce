@@ -83,17 +83,35 @@ add_action( 'product_cat_edit_form_fields', 'apg_withdrawal_category_edit_form_f
  * @return void
  */
 function apg_withdrawal_save_category_type( $term_id ) {
+	$term_id = absint( $term_id );
+
+	// WordPress checks these nonces before firing the hook; verifying them here
+	// too keeps the security boundary in the same scope as the read it guards.
+	// The add-new-category form and the edit-category form post different ones.
+	$edit_nonce = isset( $_POST['_wpnonce'] ) ? sanitize_text_field( wp_unslash( $_POST['_wpnonce'] ) ) : '';
+	$add_nonce  = isset( $_POST['_wpnonce_add-tag'] ) ? sanitize_text_field( wp_unslash( $_POST['_wpnonce_add-tag'] ) ) : '';
+
+	if ( ! wp_verify_nonce( $edit_nonce, 'update-tag_' . $term_id ) && ! wp_verify_nonce( $add_nonce, 'add-tag' ) ) {
+		return;
+	}
+
 	if ( ! current_user_can( 'manage_product_terms' ) ) {
 		return;
 	}
 
+	// Only act when the form that carries the field was the one submitted.
+	// Quick Edit fires this same hook without it, and defaulting to 'allowed'
+	// there silently reset the withdrawal type of any category whose name was
+	// edited inline.
+	if ( ! isset( $_POST['apg_withdrawal_type'] ) ) {
+		return;
+	}
+
 	$allowed = array_keys( apg_withdrawal_get_type_labels() );
+	$raw     = sanitize_key( wp_unslash( $_POST['apg_withdrawal_type'] ) );
+	$raw     = in_array( $raw, $allowed, true ) ? $raw : 'allowed';
 
-	// Nonce is verified upstream by WordPress before firing edited/created_product_cat.
-	$raw = isset( $_POST['apg_withdrawal_type'] ) ? sanitize_key( wp_unslash( $_POST['apg_withdrawal_type'] ) ) : 'allowed'; // phpcs:ignore WordPress.Security.NonceVerification.Missing -- Nonce verified by WP upstream.
-	$raw = in_array( $raw, $allowed, true ) ? $raw : 'allowed';
-
-	update_term_meta( absint( $term_id ), '_apg_withdrawal_type', $raw );
+	update_term_meta( $term_id, '_apg_withdrawal_type', $raw );
 }
 add_action( 'edited_product_cat', 'apg_withdrawal_save_category_type' );
 add_action( 'created_product_cat', 'apg_withdrawal_save_category_type' );

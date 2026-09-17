@@ -8,29 +8,55 @@
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Returns the client IP address, inspecting common reverse-proxy headers and
- * falling back to `REMOTE_ADDR`. The first hop is trusted; merchants behind
- * multiple proxies can normalise via the `apg_withdrawal_client_ip` filter.
+ * Returns the client IP address used to key the rate limiter.
+ *
+ * Only `REMOTE_ADDR` is read by default, because it is the one value the caller
+ * cannot choose: `X-Forwarded-For` and friends are claims the client sends, and
+ * a limiter keyed on them is no limiter at all — a fresh header per request
+ * lands in a fresh bucket every time. A site that genuinely sits behind a proxy
+ * opts its own header in through `apg_withdrawal_trusted_proxy_headers`, which
+ * is a statement about that site's infrastructure and cannot be made by the
+ * visitor.
  *
  * @return string Client IP, or empty string when none could be determined.
  */
 function apg_withdrawal_get_client_ip() {
-	$candidates = array( 'HTTP_CF_CONNECTING_IP', 'HTTP_X_FORWARDED_FOR', 'HTTP_X_REAL_IP', 'REMOTE_ADDR' );
+	$ip = '';
 
-	foreach ( $candidates as $header ) {
+	if ( ! empty( $_SERVER['REMOTE_ADDR'] ) ) {
+		$candidate = sanitize_text_field( wp_unslash( $_SERVER['REMOTE_ADDR'] ) );
+		$ip        = filter_var( $candidate, FILTER_VALIDATE_IP ) ? $candidate : '';
+	}
+
+	/**
+	 * Filters the proxy headers the site trusts to carry the real client IP.
+	 *
+	 * Empty by default. Add e.g. `HTTP_CF_CONNECTING_IP` only when every request
+	 * reaching PHP is known to pass through that proxy, otherwise the header can
+	 * be forged and the rate limiter bypassed.
+	 *
+	 * @param array $headers `$_SERVER` keys to inspect, in order of preference.
+	 */
+	$trusted = (array) apply_filters( 'apg_withdrawal_trusted_proxy_headers', array() );
+
+	foreach ( $trusted as $header ) {
 		if ( empty( $_SERVER[ $header ] ) ) {
 			continue;
 		}
+
 		$value = sanitize_text_field( wp_unslash( $_SERVER[ $header ] ) );
+
 		if ( false !== strpos( $value, ',' ) ) {
 			$value = trim( strtok( $value, ',' ) );
 		}
+
 		if ( filter_var( $value, FILTER_VALIDATE_IP ) ) {
-			return (string) apply_filters( 'apg_withdrawal_client_ip', $value );
+			$ip = $value;
+			break;
 		}
 	}
 
-	return '';
+	return (string) apply_filters( 'apg_withdrawal_client_ip', $ip );
 }
 
 /**
@@ -40,23 +66,28 @@ function apg_withdrawal_get_client_ip() {
  * the check is bypassed entirely when either is set to a non-positive value
  * (useful for testing).
  *
- * @param string $email Customer email address used for keying.
+ * Each entry point counts in its own bucket, so the two steps of one ordinary
+ * submission do not eat each other's allowance while every step still has a
+ * ceiling of its own.
+ *
+ * @param string $email  Customer email address used for keying.
+ * @param string $bucket Counter to charge: 'submit', 'preview' or 'lookup'.
  * @return bool True when the visitor has exceeded the limit.
  */
-function apg_withdrawal_is_rate_limited( $email ) {
+function apg_withdrawal_is_rate_limited( $email, $bucket = 'submit' ) {
 	$ip = apg_withdrawal_get_client_ip();
 	if ( '' === $ip ) {
 		return false;
 	}
 
-	$limit  = (int) apply_filters( 'apg_withdrawal_rate_limit_max', 5 );
-	$window = (int) apply_filters( 'apg_withdrawal_rate_limit_window', 10 * MINUTE_IN_SECONDS );
+	$limit  = (int) apply_filters( 'apg_withdrawal_rate_limit_max', 5, $bucket );
+	$window = (int) apply_filters( 'apg_withdrawal_rate_limit_window', 10 * MINUTE_IN_SECONDS, $bucket );
 
 	if ( $limit < 1 || $window < 1 ) {
 		return false;
 	}
 
-	$key   = 'apg_wfw_rl_' . md5( $ip . '|' . strtolower( (string) $email ) );
+	$key   = 'apg_wfw_rl_' . md5( sanitize_key( $bucket ) . '|' . $ip . '|' . strtolower( (string) $email ) );
 	$count = (int) get_transient( $key );
 
 	if ( $count >= $limit ) {
@@ -76,7 +107,7 @@ function apg_withdrawal_is_rate_limited( $email ) {
  * @return bool True when the honeypot was filled.
  */
 function apg_withdrawal_honeypot_was_filled() {
-	// phpcs:ignore WordPress.Security.NonceVerification.Missing -- Inspection only; submission nonce verified by caller.
+	// phpcs:ignore WordPress.Security.NonceVerification.Missing -- Inspection only, no state change; the submission nonce is verified by every caller: procesador.php:412, procesador.php:555 and formulario.php:509.
 	return ! empty( $_POST['apg_withdrawal_website'] );
 }
 
@@ -357,7 +388,7 @@ function apg_withdrawal_process_submission_data( $data ) {
  * @return array Submission payload.
  */
 function apg_withdrawal_read_confirmation_post() {
-	// phpcs:disable WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Nonce verified by every caller; each field is sanitised inside apg_withdrawal_process_submission_data().
+	// phpcs:disable WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Nonce verified by every caller before this runs: procesador.php:412, procesador.php:555 and formulario.php:509. Each field is sanitised by the matching callback inside apg_withdrawal_process_submission_data().
 	return array(
 		'order'       => isset( $_POST['apg_withdrawal_order'] ) ? wp_unslash( $_POST['apg_withdrawal_order'] ) : '',
 		'name'        => isset( $_POST['apg_withdrawal_name'] ) ? wp_unslash( $_POST['apg_withdrawal_name'] ) : '',
@@ -378,8 +409,14 @@ function apg_withdrawal_read_confirmation_post() {
  * @return void
  */
 function apg_withdrawal_confirm_submission() {
-	if ( ! isset( $_POST['apg_withdrawal_confirm_nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['apg_withdrawal_confirm_nonce'] ) ), 'apg_withdrawal_confirm_action' ) ) {
+	if ( ! isset( $_POST['apg_withdrawal_confirm_nonce'] ) ) {
 		apg_withdrawal_redirect_with_notice( 'nonce' );
+		exit;
+	}
+
+	if ( ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['apg_withdrawal_confirm_nonce'] ) ), 'apg_withdrawal_confirm_action' ) ) {
+		apg_withdrawal_redirect_with_notice( 'nonce' );
+		exit;
 	}
 
 	apg_withdrawal_redirect_with_notice( apg_withdrawal_process_submission_data( apg_withdrawal_read_confirmation_post() ) );
@@ -420,6 +457,16 @@ function apg_withdrawal_ajax_preview() {
 	$amounts  = isset( $_POST['quantities'] ) && is_array( $_POST['quantities'] ) ? wp_unslash( $_POST['quantities'] ) : array(); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Cast to bounded integers by apg_withdrawal_sanitize_item_quantities().
 	$iban     = isset( $_POST['iban'] ) ? apg_withdrawal_normalize_iban( wp_unslash( $_POST['iban'] ) ) : ''; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Normaliser strips every character outside [A-Z0-9].
 	$settings = apg_withdrawal_get_settings();
+
+	// The preview answers whether an order number and an e-mail address belong
+	// together, so it gets the same ceiling as the submission it precedes.
+	if ( apg_withdrawal_is_rate_limited( $email, 'preview' ) ) {
+		wp_send_json_error(
+			array(
+				'message' => apg_withdrawal_render_notice_html( 'throttle' ),
+			)
+		);
+	}
 
 	if ( empty( $name ) || empty( $email ) || empty( $order_id ) || empty( $acceptance ) ) {
 		wp_send_json_error(

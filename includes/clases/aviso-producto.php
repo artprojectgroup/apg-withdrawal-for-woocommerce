@@ -61,7 +61,7 @@ function apg_withdrawal_inject_product_notice() {
 		return;
 	}
 
-	echo $html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Already escaped inside the renderer.
+	echo wp_kses_post( $html );
 }
 add_action( 'woocommerce_single_product_summary', 'apg_withdrawal_inject_product_notice', 20 );
 

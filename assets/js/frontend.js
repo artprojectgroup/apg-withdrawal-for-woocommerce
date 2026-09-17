@@ -25,33 +25,42 @@
 		}
 		var emailField        = document.getElementById( 'email' );
 		var isGuestOrderInput = orderField && orderField.tagName === 'INPUT';
-		var ordersNonce       = config.ordersNonce || '';
 		var productsMap       = config.productsMap || {};
+		var orderItemsNonce   = config.orderItemsNonce || '';
 		var selectedProducts  = config.selectedProducts || [];
 		var selectedQuantities = config.selectedQuantities || {};
 		var lastRenderedOrderId = null;
 		var ajaxUrl           = config.ajaxUrl || '';
 		var ordersWarning     = config.ordersWarning || {};
 		var noResultsText     = config.i18n && config.i18n.noResults ? config.i18n.noResults : '';
-		var noOrdersForEmailText = config.i18n && config.i18n.noOrdersForEmail ? config.i18n.noOrdersForEmail : '';
 		var unitsText         = config.i18n && config.i18n.units ? config.i18n.units : '';
 		var warningMessages   = config.warningMessages || {};
-		var orderErrorTemplate    = config.orderErrorTemplate || '';
 		var productWarningTemplate = config.productWarningTemplate || '';
 		var noticePlaceholder     = config.noticePlaceholder || '__APG_NOTICE_MESSAGE__';
 
 		/**
-		 * HTML-escapes arbitrary text so it can be safely substituted into a server-rendered
-		 * notice template via innerHTML without enabling XSS via user-provided values
-		 * (e.g. the email address typed by the user).
+		 * HTML-escapes arbitrary text before it is substituted into a server-rendered
+		 * template via innerHTML.
+		 *
+		 * Quotes are encoded as well, which a helper built on textContent/innerHTML
+		 * does not do: that kind of helper is only correct in text position, and
+		 * silently stops being correct the day a value lands inside an attribute.
+		 * This one is safe in both, so the escape never depends on remembering
+		 * where the template happens to put the placeholder today.
 		 *
 		 * @param {string} text Untrusted plain text.
 		 * @returns {string} HTML-escaped string.
 		 */
-		function escapeHtml( text ) {
-			var div = document.createElement( 'div' );
-			div.textContent = text == null ? '' : String( text );
-			return div.innerHTML;
+		function escHtml( text ) {
+			if ( text === null || typeof text === 'undefined' ) {
+				return '';
+			}
+			return String( text )
+				.replace( /&/g, '&amp;' )
+				.replace( /</g, '&lt;' )
+				.replace( />/g, '&gt;' )
+				.replace( /"/g, '&quot;' )
+				.replace( /'/g, '&#039;' );
 		}
 
 		/**
@@ -70,73 +79,7 @@
 				wrapperEl.textContent = message;
 				return;
 			}
-			wrapperEl.innerHTML = template.split( noticePlaceholder ).join( escapeHtml( message ) );
-		}
-
-		/** @param {boolean} invalid Whether to mark the email field as invalid. */
-		function setEmailFieldInvalid( invalid ) {
-			var emailRow = document.getElementById( 'email_field' );
-			if ( ! emailRow ) { return; }
-			if ( invalid ) {
-				emailRow.classList.add( 'woocommerce-invalid', 'woocommerce-invalid-email' );
-				emailRow.classList.remove( 'woocommerce-validated' );
-			} else {
-				emailRow.classList.remove( 'woocommerce-invalid', 'woocommerce-invalid-email' );
-			}
-		}
-
-		/** @param {string} emailVal Email that returned no orders. */
-		function showOrderError( emailVal ) {
-			var formWrapper = wrapper || document.querySelector( '.apg-withdrawal-form-wrapper' );
-			var el = formWrapper ? formWrapper.querySelector( '.apg-withdrawal-order-error' ) : null;
-			if ( ! el ) { return; }
-			renderNotice( el, orderErrorTemplate, noOrdersForEmailText.replace( '%s', emailVal ) );
-			el.hidden = false;
-			setEmailFieldInvalid( true );
-		}
-
-		/** Hides and clears the order-not-found error. */
-		function hideOrderError() {
-			var formWrapper = wrapper || document.querySelector( '.apg-withdrawal-form-wrapper' );
-			var el = formWrapper ? formWrapper.querySelector( '.apg-withdrawal-order-error' ) : null;
-			if ( el ) {
-				el.hidden = true;
-				el.innerHTML = '';
-			}
-			setEmailFieldInvalid( false );
-		}
-
-		/** @param {string} emailVal Email that returned no orders. */
-		function downgradeOrderFieldToInput( emailVal ) {
-			var currentOrderField = document.getElementById( 'order_id' );
-			if ( currentOrderField && currentOrderField.tagName === 'SELECT' ) {
-				var inputWrapper = currentOrderField.closest
-					? currentOrderField.closest( '.woocommerce-input-wrapper' )
-					: currentOrderField.parentNode;
-				if ( window.jQuery ) {
-					try {
-						var $sel = window.jQuery( currentOrderField );
-						if ( $sel.hasClass( 'select2-hidden-accessible' ) ) {
-							$sel.selectWoo( 'destroy' );
-						}
-					} catch ( e ) { /* ignore SelectWoo errors during downgrade */ }
-				}
-				var input = document.createElement( 'input' );
-				input.type = 'text';
-				input.id = 'order_id';
-				input.name = 'order_id';
-				input.className = 'input-text';
-				input.setAttribute( 'aria-required', 'true' );
-				input.required = true;
-				if ( inputWrapper ) {
-					inputWrapper.innerHTML = '';
-					inputWrapper.appendChild( input );
-				}
-			} else if ( currentOrderField ) {
-				currentOrderField.disabled = false;
-				currentOrderField.value = '';
-			}
-			showOrderError( emailVal );
+			wrapperEl.innerHTML = template.split( noticePlaceholder ).join( escHtml( message ) );
 		}
 
 		function initSelectWoo( element, placeholder, allowClear, minimumResultsForSearch ) {
@@ -250,7 +193,7 @@
 						config.selectedQuantities = snap.quantities;
 						wrapper.innerHTML = wrapper._apgFormHtml;
 						// For guest forms the order INPUT must carry the value before init so
-						// fetchOrdersByEmail fires and upgradeOrderFieldToSelect pre-selects it.
+						// the field is not left disabled and the line items are fetched again.
 						var preOrdEl     = document.getElementById( 'order_id' );
 						var isGuestInput = preOrdEl && preOrdEl.tagName === 'INPUT';
 						var preEmailEl   = document.getElementById( 'email' );
@@ -447,108 +390,6 @@
 			}
 		}
 
-		function upgradeOrderFieldToSelect( data ) {
-			var currentOrderField = document.getElementById( 'order_id' );
-			if ( ! currentOrderField ) {
-				return;
-			}
-			if ( ! data.orders || ! data.orders.length ) {
-				return;
-			}
-
-			hideOrderError();
-			productsMap = data.productsMap || {};
-			ordersWarning = data.warningMap || {};
-
-			var prefilledValue = currentOrderField.value;
-
-			var inputWrapper = currentOrderField.closest
-				? currentOrderField.closest( '.woocommerce-input-wrapper' )
-				: currentOrderField.parentNode;
-
-			if ( currentOrderField.tagName === 'SELECT' && window.jQuery ) {
-				try {
-					var $sel = window.jQuery( currentOrderField );
-					if ( $sel.hasClass( 'select2-hidden-accessible' ) ) {
-						$sel.selectWoo( 'destroy' );
-					}
-				} catch ( e ) { /* ignore SelectWoo errors */ }
-			}
-
-			var select = document.createElement( 'select' );
-			select.id = 'order_id';
-			select.name = 'order_id';
-			select.className = 'apg-withdrawal-selectwoo wc-enhanced-select';
-			select.setAttribute( 'aria-required', 'true' );
-			select.required = true;
-
-			var placeholder = document.createElement( 'option' );
-			placeholder.value = '';
-			placeholder.textContent = data.placeholder || '';
-			select.appendChild( placeholder );
-
-			data.orders.forEach( function ( order ) {
-				var option = document.createElement( 'option' );
-				option.value = order.id;
-				option.textContent = order.label;
-				if ( prefilledValue && String( order.id ) === String( prefilledValue ) ) {
-					option.selected = true;
-				}
-				select.appendChild( option );
-			} );
-
-			if ( inputWrapper ) {
-				inputWrapper.innerHTML = '';
-				inputWrapper.appendChild( select );
-			}
-
-			initSelectWoo( select, data.placeholder || '', true, 0 );
-
-			if ( window.jQuery ) {
-				window.jQuery( select ).on( 'change select2:select select2:clear', syncProducts );
-			} else {
-				select.addEventListener( 'change', syncProducts );
-			}
-
-			syncProducts();
-		}
-
-		function fetchOrdersByEmail() {
-			if ( ! isGuestOrderInput || ! emailField ) {
-				return;
-			}
-			var emailVal = emailField.value.trim();
-			if ( ! emailVal ) {
-				return;
-			}
-
-			var orderInput = document.getElementById( 'order_id' );
-			if ( orderInput && orderInput.tagName === 'INPUT' ) {
-				orderInput.disabled = true;
-			}
-
-			var formData = new window.FormData();
-			formData.append( 'action', 'apg_withdrawal_get_guest_orders' );
-			formData.append( 'nonce', ordersNonce );
-			formData.append( 'email', emailVal );
-
-			window.fetch( ajaxUrl, {
-				method: 'POST',
-				body: formData,
-				credentials: 'same-origin'
-			} ).then( function ( response ) {
-				return response.json();
-			} ).then( function ( payload ) {
-				if ( payload && payload.success && payload.data && payload.data.orders && payload.data.orders.length ) {
-					upgradeOrderFieldToSelect( payload.data );
-				} else {
-					downgradeOrderFieldToInput( emailVal );
-				}
-			} ).catch( function () {
-				downgradeOrderFieldToInput( emailVal );
-			} );
-		}
-
 		allSelects.forEach( function ( select ) {
 			initSelectWoo( select, '', select.id === 'order_id', 0 );
 		} );
@@ -566,17 +407,61 @@
 			window.jQuery( scopeField ).on( 'change select2:select select2:clear', syncProducts );
 		}
 
+		/**
+		 * Loads the line items of the order the guest identified. The server only
+		 * answers when the order number and the e-mail address belong together,
+		 * which is the same proof the submission itself requires, so nothing is
+		 * fetched on the strength of an order number alone.
+		 */
+		function fetchOrderItems() {
+			if ( ! isGuestOrderInput || ! emailField ) { return; }
+
+			var orderInput = document.getElementById( 'order_id' );
+			var emailVal   = emailField.value.trim();
+			var orderVal   = orderInput ? orderInput.value.trim() : '';
+
+			if ( ! emailVal || ! orderVal ) { return; }
+
+			var formData = new window.FormData();
+			formData.append( 'action', 'apg_withdrawal_get_order_items' );
+			formData.append( 'nonce', orderItemsNonce );
+			formData.append( 'email', emailVal );
+			formData.append( 'order_id', orderVal );
+
+			window.fetch( ajaxUrl, {
+				method: 'POST',
+				body: formData,
+				credentials: 'same-origin'
+			} ).then( function ( response ) {
+				return response.json();
+			} ).then( function ( payload ) {
+				if ( ! payload || ! payload.success || ! payload.data ) { return; }
+				productsMap[ orderVal ] = payload.data.items || {};
+				if ( payload.data.warning ) {
+					ordersWarning[ orderVal ] = payload.data.warning;
+				} else {
+					delete ordersWarning[ orderVal ];
+				}
+				// Force a redraw: syncProducts() short-circuits when the order has
+				// not changed, and here it is the item data that just arrived.
+				lastRenderedOrderId = null;
+				syncProducts();
+			} ).catch( function () { /* leave the form as it is */ } );
+		}
+
 		if ( isGuestOrderInput && emailField ) {
-			emailField.addEventListener( 'blur', fetchOrdersByEmail );
 			emailField.addEventListener( 'input', function () {
-				hideOrderError();
 				var inp = document.getElementById( 'order_id' );
 				if ( inp && inp.tagName === 'INPUT' ) {
 					inp.disabled = ! emailField.value.trim();
 				}
 			} );
+			emailField.addEventListener( 'blur', fetchOrderItems );
+			if ( orderField ) {
+				orderField.addEventListener( 'blur', fetchOrderItems );
+			}
 			if ( emailField.value.trim() ) {
-				fetchOrdersByEmail();
+				fetchOrderItems();
 			}
 		}
 

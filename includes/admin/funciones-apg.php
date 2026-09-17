@@ -120,6 +120,91 @@ function apg_withdrawal_translate_plugin_name() {
 add_action( 'init', 'apg_withdrawal_translate_plugin_name' );
 
 /**
+ * Reports whether WooCommerce's own order-withdrawal feature is switched on.
+ *
+ * WooCommerce 11.1 added a native withdrawal flow of its own, off by default,
+ * under WooCommerce → Settings → Advanced → Features. Both can run at the same
+ * time, and then the shop offers customers two different forms at two different
+ * addresses, each keeping its own record and sending its own acknowledgement,
+ * with nothing reconciling the two.
+ *
+ * @return bool True when the core feature is active.
+ */
+function apg_withdrawal_core_feature_is_enabled() {
+	if ( ! class_exists( '\Automattic\WooCommerce\Utilities\FeaturesUtil' )
+		|| ! method_exists( '\Automattic\WooCommerce\Utilities\FeaturesUtil', 'feature_is_enabled' ) ) {
+		return false;
+	}
+
+	try {
+		return (bool) \Automattic\WooCommerce\Utilities\FeaturesUtil::feature_is_enabled( 'order_withdrawal' );
+	} catch ( \Throwable $error ) {
+		// Older WooCommerce versions do not know the feature and throw; that is
+		// simply an installation where nothing can overlap.
+		return false;
+	}
+}
+
+/**
+ * Returns the URL of the WooCommerce screen where the native feature is turned
+ * off, so the warning can send the merchant straight to it.
+ *
+ * @return string
+ */
+function apg_withdrawal_core_feature_settings_url() {
+	return admin_url( 'admin.php?page=wc-settings&tab=advanced&section=features' );
+}
+
+/**
+ * Prints the warning shown when both withdrawal flows are active at once.
+ *
+ * @return void
+ */
+function apg_withdrawal_print_core_feature_warning() {
+	if ( ! apg_withdrawal_core_feature_is_enabled() ) {
+		return;
+	}
+	?>
+	<div class="notice notice-warning">
+		<p><strong><?php esc_html_e( "WooCommerce's own order withdrawal feature is switched on.", 'apg-withdrawal-for-woocommerce' ); ?></strong></p>
+		<p><?php esc_html_e( 'Your customers can reach two different withdrawal forms, at two different addresses. Each one keeps its own record and sends its own acknowledgement, and neither knows about the other, so the same declaration can be registered twice and answered twice.', 'apg-withdrawal-for-woocommerce' ); ?></p>
+		<p>
+			<a href="<?php echo esc_url( apg_withdrawal_core_feature_settings_url() ); ?>" class="button">
+				<?php esc_html_e( 'Turn off the WooCommerce feature', 'apg-withdrawal-for-woocommerce' ); ?>
+			</a>
+		</p>
+	</div>
+	<?php
+}
+
+/**
+ * Shows the same warning on the WooCommerce screens outside the plugin's own
+ * settings page, so a merchant who switches the core feature on finds out
+ * without having to open this plugin.
+ *
+ * @return void
+ */
+function apg_withdrawal_core_feature_admin_notice() {
+	$screen = function_exists( 'get_current_screen' ) ? get_current_screen() : null;
+
+	if ( ! $screen || ! current_user_can( 'manage_woocommerce' ) ) {
+		return;
+	}
+
+	// The settings page prints it inline, above the form.
+	if ( false !== strpos( (string) $screen->id, 'apg-withdrawal-for-woocommerce' ) ) {
+		return;
+	}
+
+	if ( 'edit-apg_withdrawal' !== $screen->id && 'apg_withdrawal' !== $screen->id && 'woocommerce_page_wc-settings' !== $screen->id ) {
+		return;
+	}
+
+	apg_withdrawal_print_core_feature_warning();
+}
+add_action( 'admin_notices', 'apg_withdrawal_core_feature_admin_notice' );
+
+/**
  * Renders an admin notice indicating WooCommerce is required.
  *
  * @return void

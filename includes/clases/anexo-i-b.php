@@ -101,14 +101,15 @@ function apg_withdrawal_get_merchant_data_for_model_form() {
  * @param int    $lines Number of ruled lines to draw underneath.
  * @return string Escaped HTML for the field.
  */
-function apg_withdrawal_render_model_form_field( $label, $lines = 1 ) {
-	$html = '<div class="field"><span class="field-label">' . esc_html( $label ) . '</span>';
-
-	for ( $line = 0; $line < max( 1, (int) $lines ); $line++ ) {
-		$html .= '<span class="field-line"></span>';
-	}
-
-	return $html . '</div>';
+function apg_withdrawal_print_model_form_field( $label, $lines = 1 ) {
+	?>
+	<div class="field">
+		<span class="field-label"><?php echo esc_html( $label ); ?></span>
+		<?php for ( $line = 0; $line < max( 1, (int) $lines ); $line++ ) : ?>
+			<span class="field-line"></span>
+		<?php endfor; ?>
+	</div>
+	<?php
 }
 
 /**
@@ -123,7 +124,6 @@ function apg_withdrawal_render_model_form() {
 	$merchant = apg_withdrawal_get_merchant_data_for_model_form();
 	$lang     = function_exists( 'get_bloginfo' ) ? get_bloginfo( 'language' ) : 'en';
 
-	// phpcs:disable WordPress.Security.EscapeOutput.OutputNotEscaped -- Output composed of esc_html'd parts.
 	?><!DOCTYPE html>
 <html lang="<?php echo esc_attr( $lang ); ?>">
 <head>
@@ -194,12 +194,12 @@ function apg_withdrawal_render_model_form() {
 	<p><?php echo esc_html__( 'I/We (*) hereby give notice that I/We (*) withdraw from my/our (*) contract of sale of the following goods (*) / for the provision of the following service (*):', 'apg-withdrawal-for-woocommerce' ); ?></p>
 
 	<?php
-	echo apg_withdrawal_render_model_form_field( __( 'Description of goods / service', 'apg-withdrawal-for-woocommerce' ), 3 );
-	echo apg_withdrawal_render_model_form_field( __( 'Ordered on (*) / received on (*)', 'apg-withdrawal-for-woocommerce' ), 1 );
-	echo apg_withdrawal_render_model_form_field( __( 'Name of consumer(s)', 'apg-withdrawal-for-woocommerce' ), 1 );
-	echo apg_withdrawal_render_model_form_field( __( 'Address of consumer(s)', 'apg-withdrawal-for-woocommerce' ), 3 );
-	echo apg_withdrawal_render_model_form_field( __( 'Signature of consumer(s) (only if this form is notified on paper)', 'apg-withdrawal-for-woocommerce' ), 2 );
-	echo apg_withdrawal_render_model_form_field( __( 'Date', 'apg-withdrawal-for-woocommerce' ), 1 );
+	apg_withdrawal_print_model_form_field( __( 'Description of goods / service', 'apg-withdrawal-for-woocommerce' ), 3 );
+	apg_withdrawal_print_model_form_field( __( 'Ordered on (*) / received on (*)', 'apg-withdrawal-for-woocommerce' ), 1 );
+	apg_withdrawal_print_model_form_field( __( 'Name of consumer(s)', 'apg-withdrawal-for-woocommerce' ), 1 );
+	apg_withdrawal_print_model_form_field( __( 'Address of consumer(s)', 'apg-withdrawal-for-woocommerce' ), 3 );
+	apg_withdrawal_print_model_form_field( __( 'Signature of consumer(s) (only if this form is notified on paper)', 'apg-withdrawal-for-woocommerce' ), 2 );
+	apg_withdrawal_print_model_form_field( __( 'Date', 'apg-withdrawal-for-woocommerce' ), 1 );
 	?>
 
 	<footer>
@@ -286,7 +286,6 @@ function apg_withdrawal_render_model_form() {
 </body>
 </html>
 	<?php
-	// phpcs:enable WordPress.Security.EscapeOutput.OutputNotEscaped
 	exit;
 }
 

@@ -469,13 +469,14 @@ function apg_withdrawal_render_refund_form() {
 	printf(
 		'<form id="apg-withdrawal-refund-form" method="post" action="%1$s">
 			<input type="hidden" name="action" value="apg_withdrawal_create_refund">
-			<input type="hidden" name="request_id" value="%2$d">
-			%3$s
-		</form>',
+			<input type="hidden" name="request_id" value="%2$d">',
 		esc_url( admin_url( 'admin-post.php' ) ),
-		absint( $post_id ),
-		wp_nonce_field( 'apg_withdrawal_create_refund_' . $post_id, 'apg_withdrawal_refund_nonce', true, false ) // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- wp_nonce_field() returns escaped markup.
+		absint( $post_id )
 	);
+
+	wp_nonce_field( 'apg_withdrawal_create_refund_' . $post_id, 'apg_withdrawal_refund_nonce' );
+
+	echo '</form>';
 }
 add_action( 'admin_footer', 'apg_withdrawal_render_refund_form' );
 
@@ -605,7 +606,17 @@ function apg_withdrawal_redirect_after_refund( $post_id, $result ) {
 		$target = admin_url( 'post.php?post=' . absint( $post_id ) . '&action=edit' );
 	}
 
-	wp_safe_redirect( add_query_arg( 'apg_withdrawal_refund_result', sanitize_key( $result ), $target ) );
+	// Signed so the notice can tell its own redirect apart from a link somebody
+	// else built; the reader drops the flag when the nonce does not verify.
+	wp_safe_redirect(
+		add_query_arg(
+			array(
+				'apg_withdrawal_refund_result' => sanitize_key( $result ),
+				'apg_withdrawal_refund_notice' => wp_create_nonce( 'apg_withdrawal_refund_notice_' . absint( $post_id ) ),
+			),
+			$target
+		)
+	);
 	exit;
 }
 
@@ -621,13 +632,14 @@ function apg_withdrawal_refund_notice() {
 		return;
 	}
 
-	if ( empty( $_GET['apg_withdrawal_refund_result'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only feedback flag set by the redirect above.
+	$post_id = isset( $_GET['post'] ) ? absint( wp_unslash( $_GET['post'] ) ) : 0; // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Screen's own post ID, needed to build the nonce action verified on the next line.
+	$nonce   = isset( $_GET['apg_withdrawal_refund_notice'] ) ? sanitize_text_field( wp_unslash( $_GET['apg_withdrawal_refund_notice'] ) ) : '';
+
+	if ( ! wp_verify_nonce( $nonce, 'apg_withdrawal_refund_notice_' . $post_id ) || empty( $_GET['apg_withdrawal_refund_result'] ) ) {
 		return;
 	}
 
-	$result = sanitize_key( wp_unslash( $_GET['apg_withdrawal_refund_result'] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- See above.
-
-	$post_id = isset( $_GET['post'] ) ? absint( wp_unslash( $_GET['post'] ) ) : 0; // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Reading the screen's own post ID.
+	$result = sanitize_key( wp_unslash( $_GET['apg_withdrawal_refund_result'] ) );
 
 	if ( 'created' === $result ) {
 		printf(
