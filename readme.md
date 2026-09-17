@@ -7,7 +7,7 @@ Tags: withdrawal, right of withdrawal, woocommerce, refund, consumer rights
 
 Requires at least: 6.0
 
-Tested up to: 7.1
+Tested up to: 7.2
 
 Stable tag: 0.7.2
 
