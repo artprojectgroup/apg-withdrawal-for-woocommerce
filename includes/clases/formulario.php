@@ -118,7 +118,12 @@ function apg_withdrawal_get_request_array( $key, $sanitize_callback = 'sanitize_
  * @return void
  */
 function apg_withdrawal_enqueue_form_assets() {
-	wp_enqueue_style( 'apg-withdrawal-admin' );
+	// 'apg-withdrawal-admin' used to be asked for here, a handle that only
+	// exists inside wp-admin, so the form went out with no stylesheet of its own
+	// whenever it was rendered somewhere the wp_enqueue_scripts detection had
+	// not already covered, such as a shortcode inside a widget or an FSE
+	// template part.
+	wp_enqueue_style( 'apg-withdrawal' );
 
 	if ( function_exists( 'WC' ) || class_exists( 'WooCommerce' ) ) {
 		wp_enqueue_style( 'select2' );
@@ -133,16 +138,31 @@ function apg_withdrawal_enqueue_form_assets() {
  * @return string HTML notice markup, or empty string if message is empty.
  */
 function apg_withdrawal_render_notice_html( $message ) {
+	ob_start();
+	apg_withdrawal_print_notice( $message );
+
+	return (string) ob_get_clean();
+}
+
+/**
+ * Prints a withdrawal form notice through WooCommerce, so the theme paints it
+ * like every other notice in the shop.
+ *
+ * Printing rather than returning keeps the markup out of `wp_kses_post()`,
+ * whose allowlist would quietly drop anything structural WooCommerce decides to
+ * put in a notice template.
+ *
+ * @param string $message Notice key (e.g. 'success', 'error', 'nonce').
+ * @return void
+ */
+function apg_withdrawal_print_notice( $message ) {
 	if ( ! $message || ! function_exists( 'wc_print_notice' ) ) {
-		return '';
+		return;
 	}
 
 	$type = in_array( $message, array( 'success', 'verify_sent' ), true ) ? 'success' : 'error';
 
-	ob_start();
 	wc_print_notice( apg_withdrawal_get_notice_message( $message ), $type );
-
-	return ob_get_clean();
 }
 
 /**
@@ -406,6 +426,9 @@ function apg_withdrawal_print_form( $atts = array() ) {
 		array(
 			'order_id' => '',
 			'email'    => '',
+			// The My Account endpoint prints the tab heading itself, so it asks
+			// the form not to repeat it. Anywhere else the form keeps its own.
+			'heading'  => true,
 		)
 	);
 
@@ -489,7 +512,7 @@ function apg_withdrawal_print_form( $atts = array() ) {
 
 	?>
 	<div class="woocommerce apg-withdrawal-form-wrapper">
-		<?php echo wp_kses_post( apg_withdrawal_render_notice_html( $message ) ); ?>
+		<?php apg_withdrawal_print_notice( $message ); ?>
 
 		<?php if ( 'confirm' === $step ) : ?>
 			<?php apg_withdrawal_print_confirmation_form( $name, $email, $order_id, $scope, $details, $selected_products, $current_order, $settings, $form_action, $phone, $expired_warning, apg_withdrawal_sanitize_item_quantities( $current_order, $selected_products, $selected_quantities ), $iban ); ?>
@@ -527,7 +550,9 @@ function apg_withdrawal_print_form( $atts = array() ) {
 						<input type="text" name="apg_withdrawal_website" value="" autocomplete="off" tabindex="-1">
 					</label>
 				</p>
-				<h2><?php esc_html_e( 'Withdrawal request', 'apg-withdrawal-for-woocommerce' ); ?></h2>
+				<?php if ( ! empty( $atts['heading'] ) ) : ?>
+					<h2><?php esc_html_e( 'Withdrawal request', 'apg-withdrawal-for-woocommerce' ); ?></h2>
+				<?php endif; ?>
 				<div class="apg-withdrawal-product-warning" role="status" aria-live="polite" hidden></div>
 				<div class="woocommerce-address-fields">
 					<div class="woocommerce-address-fields__field-wrapper">

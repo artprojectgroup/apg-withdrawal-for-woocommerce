@@ -2,7 +2,7 @@
 /*
 Plugin Name: APG Withdrawal for WooCommerce
 Requires Plugins: woocommerce
-Version: 0.7.2
+Version: 0.7.3
 Plugin URI: https://wordpress.org/plugins/apg-withdrawal-for-woocommerce/
 Description: Add to WooCommerce an online withdrawal workflow compliant with EU requirements.
 Author URI: https://artprojectgroup.es/
@@ -13,7 +13,7 @@ Requires at least: 6.0
 Tested up to: 7.2
 Requires PHP: 7.4
 WC requires at least: 7.0
-WC tested up to: 11.1.0
+WC tested up to: 11.1.2
 
 Text Domain: apg-withdrawal-for-woocommerce
 Domain Path: /languages
@@ -26,7 +26,7 @@ Domain Path: /languages
 defined( 'ABSPATH' ) || exit;
 
 define( 'apg_withdrawal_DIRECCION', plugin_basename( __FILE__ ) );
-define( 'apg_withdrawal_VERSION', '0.7.2' );
+define( 'apg_withdrawal_VERSION', '0.7.3' );
 define( 'apg_withdrawal_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 
 add_filter(
@@ -326,15 +326,38 @@ if ( is_plugin_active( 'woocommerce/woocommerce.php' ) || is_network_only_plugin
 		/**
 		 * Renders the withdrawal form on the My Account withdrawal endpoint page.
 		 *
+		 * The heading comes first, before any notice, the way WooCommerce's own
+		 * endpoints open ("Downloads", "Addresses", "Payment methods"). Without
+		 * it the tab opened straight into a notice, which read as an error on
+		 * some themes and left the section with no title of its own.
+		 *
 		 * @return void
 		 */
 		public function apg_withdrawal_endpoint_contenido() {
 			$user  = wp_get_current_user();
 			$email = $user && ! empty( $user->user_email ) ? $user->user_email : '';
 
+			/**
+			 * Filters the heading of the Withdrawal tab in My Account.
+			 *
+			 * Defaults to the label of the account menu entry, so both always
+			 * read the same. Return an empty string to render no heading, which
+			 * is what a theme printing its own endpoint titles will want.
+			 *
+			 * @param string $title Heading text, already unescaped.
+			 */
+			$title = (string) apply_filters( 'apg_withdrawal_account_title', __( 'Withdrawal', 'apg-withdrawal-for-woocommerce' ) );
+
+			if ( '' !== trim( $title ) ) {
+				printf( '<h2 class="apg-withdrawal-account-title">%s</h2>', esc_html( $title ) );
+			}
+
 			apg_withdrawal_print_form(
 				array(
 					'email' => $email,
+					// The tab heading above already names the section, so the
+					// form does not repeat it. The shortcode keeps its own.
+					'heading' => false,
 				)
 			);
 		}
@@ -453,6 +476,17 @@ if ( is_plugin_active( 'woocommerce/woocommerce.php' ) || is_network_only_plugin
 		 * @return void
 		 */
 		public function apg_withdrawal_frontend_css() {
+			// Registered unconditionally so the handle exists for any later
+			// enqueue: the form can be rendered by a shortcode in a widget or an
+			// FSE template part, long after the checks below have run.
+			$deps = wp_style_is( 'woocommerce-general', 'registered' ) ? array( 'woocommerce-general' ) : array();
+			wp_register_style(
+				'apg-withdrawal',
+				plugins_url( 'assets/css/frontend.css', __FILE__ ),
+				$deps,
+				apg_withdrawal_VERSION
+			);
+
 			$page_id  = apg_withdrawal_get_page_id();
 			$is_withdrawal_view = function_exists( 'is_wc_endpoint_url' ) && is_wc_endpoint_url( 'withdrawal' );
 			$is_withdrawal_view = $is_withdrawal_view || get_query_var( 'withdrawal', false );
@@ -474,13 +508,7 @@ if ( is_plugin_active( 'woocommerce/woocommerce.php' ) || is_network_only_plugin
 				return;
 			}
 
-			$deps = wp_style_is( 'woocommerce-general', 'registered' ) ? array( 'woocommerce-general' ) : array();
-			wp_enqueue_style(
-				'apg-withdrawal',
-				plugins_url( 'assets/css/frontend.css', __FILE__ ),
-				$deps,
-				apg_withdrawal_VERSION
-			);
+			wp_enqueue_style( 'apg-withdrawal' );
 
 			if ( function_exists( 'WC' ) || class_exists( 'WooCommerce' ) ) {
 				wp_enqueue_style( 'selectWoo' );

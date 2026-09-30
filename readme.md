@@ -9,13 +9,13 @@ Requires at least: 6.0
 
 Tested up to: 7.2
 
-Stable tag: 0.7.2
+Stable tag: 0.7.3
 
 Requires PHP: 7.4
 
 WC requires at least: 7.0
 
-WC tested up to: 11.1.0
+WC tested up to: 11.1.2
 
 License: GNU General Public License v3 or later
 
@@ -132,6 +132,11 @@ El plugin no elimina automáticamente las solicitudes de desistimiento registrad
 **APG Desistimiento para WooCommerce** es un plugin gratuito. **Art Project Group** no proporciona soporte técnico gratuito, pero ofrece un servicio de [soporte técnico](https://artprojectgroup.es/tienda/ticket-de-soporte) de pago para instalación y configuración.
 
 ## Changelog
+### 0.7.3
+* La pestaña «Desistimiento» de Mi cuenta abre ahora con su propio título, como el resto de las secciones de la cuenta, en lugar de empezar directamente con un aviso. Nuevo filtro `apg_withdrawal_account_title` para cambiarlo o quitarlo.
+* El formulario carga ya su hoja de estilos cuando se inserta con el shortcode en un widget o en una plantilla de bloques, donde antes pedía un handle que solo existe en la administración y se quedaba sin estilos.
+* Compatibilidad con WooCommerce 11.1.2 verificada.
+
 ### 0.7.2
 * El formulario público ya no deja a la vista pedidos ajenos: una dirección de correo en la URL de la página listaba el historial de compras de esa persona, y un número de pedido por sí solo mostraba su contenido y su importe.
 * Las solicitudes pasan a los permisos de pedidos de WooCommerce, así que el perfil Editor ya no puede leer ni modificar los datos del consumidor que contienen.

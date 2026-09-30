@@ -4,10 +4,10 @@ Donate link: https://artprojectgroup.es/tienda/donacion
 Tags: withdrawal, right of withdrawal, woocommerce, refund, consumer rights
 Requires at least: 6.0
 Tested up to: 7.2
-Stable tag: 0.7.2
+Stable tag: 0.7.3
 Requires PHP: 7.4
 WC requires at least: 7.0
-WC tested up to: 11.1.0
+WC tested up to: 11.1.2
 License: GNU General Public License v3 or later
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -130,6 +130,11 @@ The plugin does not delete withdrawal request records automatically. As a genera
 6. Edit withdrawal screen with full request details and status history.
 
 == Changelog ==
+= 0.7.3 =
+* The Withdrawal tab of My Account now opens with its own heading, like every other account section, instead of starting straight into a notice. New `apg_withdrawal_account_title` filter to change it or remove it.
+* The form now loads its stylesheet when it is inserted with the shortcode in a widget or a block template, where it used to ask for a handle that only exists in the admin and came out unstyled.
+* Compatibility with WooCommerce 11.1.2 verified.
+
 = 0.7.2 =
 * The public form no longer exposes other people's orders: an email address in the page URL listed that customer's purchase history, and an order number on its own showed the contents and the total of any order.
 * Withdrawal requests move to WooCommerce's order capabilities, so the Editor role can no longer read or change the consumer data they hold.
@@ -217,8 +222,8 @@ The plugin does not delete withdrawal request records automatically. As a genera
 * Initial release.
 
 == Upgrade Notice ==
-= 0.7.2 =
-* Security release: the public form could be made to list the orders of any email address, and to show the contents and the total of any order from its number alone. Update as soon as you can.
+= 0.7.3 =
+* The Withdrawal tab of My Account was missing its heading, which left the section untitled and opening with a notice. Cosmetic release; nothing changes in how requests are registered.
 
 == Thanks ==
 Thanks to everyone who uses the plugin, helps improve it, makes a donation or encourages us with their comments.
