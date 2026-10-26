@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: APG Withdrawal for WooCommerce\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-26 16:37+0000\n"
+"POT-Creation-Date: 2026-10-26 17:11+0000\n"
 "PO-Revision-Date: 2026-08-08 09:00+0000\n"
 "Last-Translator: Art Project Group\n"
 "Language-Team: Spanish (Spain)\n"
@@ -1133,6 +1133,16 @@ msgstr ""
 "la primera."
 
 #: includes/clases/formulario.php:875
+msgid ""
+"There is already a withdrawal request for this entire order, so this one has "
+"not been registered. Reply to the acknowledgement you received if you need "
+"to add anything to it."
+msgstr ""
+"Ya hay una solicitud de desistimiento de este pedido completo, así que esta "
+"no se ha registrado. Si necesitas añadir algo, responde al acuse de recibo "
+"que recibiste."
+
+#: includes/clases/formulario.php:876
 msgid "An error occurred while processing the withdrawal request."
 msgstr "Se ha producido un error al procesar la solicitud de desistimiento."
 
@@ -1158,7 +1168,7 @@ msgstr "No hay solicitudes de desistimiento para este pedido."
 
 #. translators: 1: order number, 2: customer name.
 #. translators: 1: order number, 2: redacted marker.
-#: includes/clases/procesador.php:410 includes/clases/rgpd.php:226
+#: includes/clases/procesador.php:462 includes/clases/rgpd.php:226
 #, php-format
 msgid "Withdrawal request %1$s - %2$s"
 msgstr "Solicitud de desistimiento %1$s - %2$s"

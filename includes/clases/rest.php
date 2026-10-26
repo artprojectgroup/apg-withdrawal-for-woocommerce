@@ -287,9 +287,11 @@ function apg_withdrawal_rest_create_request( $request ) {
 	if ( 'success' !== $result ) {
 		$codes = array(
 			'throttle'  => 429,
-			// The declaration is already on file: nothing is wrong with the
-			// request, it just conflicts with the state of the resource.
-			'duplicate' => 409,
+			// The declaration is already on file, or the order has already been
+			// withdrawn from in full: nothing is wrong with the request, it
+			// just conflicts with the state of the resource.
+			'duplicate'         => 409,
+			'withdrawn_in_full' => 409,
 		);
 
 		return new WP_Error(

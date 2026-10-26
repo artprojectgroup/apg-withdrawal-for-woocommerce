@@ -7,7 +7,7 @@ Tested up to: 7.2
 Stable tag: 0.7.4
 Requires PHP: 7.4
 WC requires at least: 7.0
-WC tested up to: 11.1.2
+WC tested up to: 11.2.1
 License: GNU General Public License v3 or later
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -86,7 +86,7 @@ Typical recommended placements:
 * The site footer, so the link is reachable from any page.
 * The *My Account* menu (the per-order action is already added; you can also add a top-level menu item linking to the public form).
 * The Terms and Conditions / Privacy Policy pages, alongside the rest of the consumer information required by Article 6.1.h of Directive 2011/83/EU.
-* The order processing / completed emails (the plugin already injects the link there automatically via `woocommerce_email_after_order_table`).
+* The order processing / completed emails (the plugin already injects the link there automatically via `woocommerce_email_after_order_table`, except on orders whose products are all excluded from the right of withdrawal).
 
 = What happens if my store does not offer the withdrawal function? =
 Article 11a of Directive 2011/83/EU has applied throughout the EU since 19 June 2026, regardless of whether each Member State has transposed it. Spain had not done so at the time of this release — the European Commission issued a reasoned opinion against Spain in June 2026 — but the obligation applies by direct effect, and non-compliance is penalised through the general regime of the TRLGDCU, whose fines reach 100,000 € for minor infringements, 1,000,000 € for serious ones and 4,000,000 € (or 4% of the turnover in Spain, whichever is higher) for very serious ones. Check the regime applicable in your own country: this note is informative and is not legal advice.
@@ -132,6 +132,10 @@ The plugin does not delete withdrawal request records automatically. As a genera
 == Changelog ==
 = 0.7.4 =
 * A withdrawal request already on file is no longer registered a second time when the customer submits the form more than once.
+* An order already withdrawn from in full no longer accepts further requests, whether for the whole order again or for some of its products.
+* The anti-spam field no longer drags the page sideways on right-to-left sites (Arabic, Hebrew, Persian).
+* Orders whose products are all excluded from the right of withdrawal no longer carry the withdrawal link in their emails, with a new `apg_withdrawal_show_order_link` filter to override it.
+* Compatibility with WooCommerce 11.2.1 verified.
 
 = 0.7.3 =
 * The Withdrawal tab of My Account now opens with its own heading, like every other account section, instead of starting straight into a notice. New `apg_withdrawal_account_title` filter to change it or remove it.

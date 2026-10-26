@@ -223,19 +223,18 @@ function apg_withdrawal_request_fingerprint( $post_id ) {
 }
 
 /**
- * Finds the requests already on file that declare exactly the same thing.
+ * Returns the requests of one order that still stand.
  *
- * Only the requests of that one order are read, which is a handful at most, and
- * each is compared by fingerprint. Two of them do not count, because in both
- * cases the customer is entitled to send the declaration again: one the shop
- * rejected, and one somebody moved to the trash.
+ * Two kinds do not count, because in both cases the customer is entitled to
+ * send the declaration again: one the shop rejected, and one somebody moved to
+ * the trash. The list is a handful at most, so the callers below filter it in
+ * PHP rather than asking the database a different question each time.
  *
- * @param int    $wc_order_id WooCommerce order ID.
- * @param string $fingerprint Fingerprint to match.
- * @param int    $exclude_id  Request to leave out, normally the one just created.
- * @return array Matching request IDs, oldest first.
+ * @param int $wc_order_id WooCommerce order ID.
+ * @param int $exclude_id  Request to leave out, normally the one just created.
+ * @return array Request IDs, oldest first.
  */
-function apg_withdrawal_find_matching_requests( $wc_order_id, $fingerprint, $exclude_id = 0 ) {
+function apg_withdrawal_get_active_requests_for_order( $wc_order_id, $exclude_id = 0 ) {
 	if ( ! $wc_order_id ) {
 		return array();
 	}
@@ -264,7 +263,7 @@ function apg_withdrawal_find_matching_requests( $wc_order_id, $fingerprint, $exc
 	// candidate: `fields => ids` returns IDs with no meta attached.
 	update_meta_cache( 'post', $candidates );
 
-	$matches = array();
+	$active = array();
 
 	foreach ( $candidates as $candidate_id ) {
 		$candidate_id = (int) $candidate_id;
@@ -277,11 +276,53 @@ function apg_withdrawal_find_matching_requests( $wc_order_id, $fingerprint, $exc
 			continue;
 		}
 
-		if ( apg_withdrawal_request_fingerprint( $candidate_id ) !== $fingerprint ) {
-			continue;
-		}
+		$active[] = $candidate_id;
+	}
 
-		$matches[] = $candidate_id;
+	return $active;
+}
+
+/**
+ * Finds the requests already on file that declare exactly the same thing.
+ *
+ * @param int    $wc_order_id WooCommerce order ID.
+ * @param string $fingerprint Fingerprint to match.
+ * @param int    $exclude_id  Request to leave out, normally the one just created.
+ * @return array Matching request IDs, oldest first.
+ */
+function apg_withdrawal_find_matching_requests( $wc_order_id, $fingerprint, $exclude_id = 0 ) {
+	$matches = array();
+
+	foreach ( apg_withdrawal_get_active_requests_for_order( $wc_order_id, $exclude_id ) as $candidate_id ) {
+		if ( apg_withdrawal_request_fingerprint( $candidate_id ) === $fingerprint ) {
+			$matches[] = $candidate_id;
+		}
+	}
+
+	return $matches;
+}
+
+/**
+ * Finds the requests that already withdraw from the whole order.
+ *
+ * Once a consumer has withdrawn from the entire contract there is nothing left
+ * to withdraw from, so a later declaration about the same order — the whole of
+ * it again, or some of its line items — adds nothing and would only open a
+ * second file on the same matter. The reverse does not hold: withdrawing from
+ * one product today and another tomorrow is ordinary use, so a partial request
+ * never stands in the way of a later one.
+ *
+ * @param int $wc_order_id WooCommerce order ID.
+ * @param int $exclude_id  Request to leave out, normally the one just created.
+ * @return array Matching request IDs, oldest first.
+ */
+function apg_withdrawal_find_full_requests( $wc_order_id, $exclude_id = 0 ) {
+	$matches = array();
+
+	foreach ( apg_withdrawal_get_active_requests_for_order( $wc_order_id, $exclude_id ) as $candidate_id ) {
+		if ( 'full' === get_post_meta( $candidate_id, '_apg_withdrawal_scope', true ) ) {
+			$matches[] = $candidate_id;
+		}
 	}
 
 	return $matches;
@@ -367,6 +408,12 @@ function apg_withdrawal_process_submission_data( $data ) {
 
 	if ( apg_withdrawal_find_matching_requests( $validation['order_id'], $fingerprint ) ) {
 		return 'duplicate';
+	}
+
+	// And nothing is registered against an order the customer has already
+	// withdrawn from in full, whatever this new declaration claims.
+	if ( apg_withdrawal_find_full_requests( $validation['order_id'] ) ) {
+		return 'withdrawn_in_full';
 	}
 
 	// The declaration is dated when the consumer sent it. A submission that
@@ -460,19 +507,24 @@ function apg_withdrawal_process_submission_data( $data ) {
 			update_post_meta( $post_id, '_apg_withdrawal_expired_warning', '1' );
 		}
 
-		// Two clicks can both get past the check above before either has written
-		// anything, so the race is settled here, once the metadata the
-		// fingerprint is built from is on file: of the requests that say the
-		// same thing, the oldest ID stands and the rest withdraw. This runs
-		// before the order note and the notifications, so a losing copy leaves
-		// no trace behind it.
-		$earlier = apg_withdrawal_find_matching_requests( $validation['order_id'], $fingerprint, $post_id );
+		// Two clicks can both get past the checks above before either has
+		// written anything, so the race is settled here, once the metadata
+		// those checks read is on file: of the requests that cancel each other
+		// out, the oldest ID stands and the rest withdraw. This runs before the
+		// order note and the notifications, so a losing copy leaves no trace
+		// behind it.
+		$conflicts = array(
+			'duplicate'         => apg_withdrawal_find_matching_requests( $validation['order_id'], $fingerprint, $post_id ),
+			'withdrawn_in_full' => apg_withdrawal_find_full_requests( $validation['order_id'], $post_id ),
+		);
 
-		foreach ( $earlier as $earlier_id ) {
-			if ( $earlier_id < $post_id ) {
-				wp_delete_post( $post_id, true );
+		foreach ( $conflicts as $notice => $earlier ) {
+			foreach ( $earlier as $earlier_id ) {
+				if ( $earlier_id < $post_id ) {
+					wp_delete_post( $post_id, true );
 
-				return 'duplicate';
+					return $notice;
+				}
 			}
 		}
 

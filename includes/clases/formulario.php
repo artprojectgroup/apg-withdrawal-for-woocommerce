@@ -155,7 +155,7 @@ function apg_withdrawal_render_notice_html( $message ) {
  * @return bool
  */
 function apg_withdrawal_notice_is_final( $message ) {
-	return in_array( $message, array( 'success', 'verify_sent', 'duplicate' ), true );
+	return in_array( $message, array( 'success', 'verify_sent', 'duplicate', 'withdrawn_in_full' ), true );
 }
 
 /**
@@ -176,9 +176,9 @@ function apg_withdrawal_print_notice( $message ) {
 
 	if ( in_array( $message, array( 'success', 'verify_sent' ), true ) ) {
 		$type = 'success';
-	} elseif ( 'duplicate' === $message ) {
-		// Nothing went wrong: the request the customer is sending is already on
-		// file, so this tells them so instead of alarming them with an error.
+	} elseif ( in_array( $message, array( 'duplicate', 'withdrawn_in_full' ), true ) ) {
+		// Nothing went wrong: what the customer is sending is already on file,
+		// so this tells them so instead of alarming them with an error.
 		$type = 'notice';
 	} else {
 		$type = 'error';
@@ -872,6 +872,7 @@ function apg_withdrawal_get_notice_message( $message ) {
 		'verify_sent'    => __( 'We have sent a confirmation link to the email address on the order. Your request will be registered, with the date and time of this submission, as soon as you open it.', 'apg-withdrawal-for-woocommerce' ),
 		'verify_invalid' => __( 'This confirmation link is no longer valid: it may have already been used or it may have expired. Please submit the form again.', 'apg-withdrawal-for-woocommerce' ),
 		'duplicate' => __( 'We have already registered this withdrawal request, so we have not registered it again. Check your email for the acknowledgement of the first one.', 'apg-withdrawal-for-woocommerce' ),
+		'withdrawn_in_full' => __( 'There is already a withdrawal request for this entire order, so this one has not been registered. Reply to the acknowledgement you received if you need to add anything to it.', 'apg-withdrawal-for-woocommerce' ),
 		'general' => __( 'An error occurred while processing the withdrawal request.', 'apg-withdrawal-for-woocommerce' ),
 	);
 

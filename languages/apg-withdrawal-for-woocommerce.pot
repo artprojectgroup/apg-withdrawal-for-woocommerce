@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: APG Withdrawal for WooCommerce\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-26 16:37+0000\n"
+"POT-Creation-Date: 2026-10-26 17:11+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: \n"
@@ -1000,6 +1000,10 @@ msgid "We have already registered this withdrawal request, so we have not regist
 msgstr ""
 
 #: includes/clases/formulario.php:875
+msgid "There is already a withdrawal request for this entire order, so this one has not been registered. Reply to the acknowledgement you received if you need to add anything to it."
+msgstr ""
+
+#: includes/clases/formulario.php:876
 msgid "An error occurred while processing the withdrawal request."
 msgstr ""
 
@@ -1026,7 +1030,7 @@ msgstr ""
 
 #. translators: 1: order number, 2: customer name.
 #. translators: 1: order number, 2: redacted marker.
-#: includes/clases/procesador.php:410
+#: includes/clases/procesador.php:462
 #: includes/clases/rgpd.php:226
 #, php-format
 msgid "Withdrawal request %1$s - %2$s"

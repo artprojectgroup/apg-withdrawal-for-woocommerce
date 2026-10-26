@@ -522,6 +522,61 @@ function apg_withdrawal_get_order_warning_type( $order ) {
 }
 
 /**
+ * Reports whether every line of an order is excluded from the right of
+ * withdrawal, so there is no withdrawal left to offer on it.
+ *
+ * Only the `excluded` type counts by default, which is the unambiguous one. The
+ * others are deliberately left out: `personalized` and `digital` depend on
+ * circumstances the shop records elsewhere — a digital item is only excluded
+ * once the customer has waived the right — and `manual` exists precisely
+ * because somebody has to look at it. Showing the link where it may not be
+ * needed costs nothing; hiding it where it is needed denies a right, so the
+ * doubtful cases keep it.
+ *
+ * An order with no line items is never reported as excluded: there is nothing
+ * to read, and silence is not a reason to withdraw the offer.
+ *
+ * @param WC_Order|bool $order WooCommerce order object or false.
+ * @return bool True when every line item is excluded.
+ */
+function apg_withdrawal_order_is_fully_excluded( $order ) {
+	if ( ! $order || ! is_callable( array( $order, 'get_items' ) ) ) {
+		return false;
+	}
+
+	/**
+	 * Filters the withdrawal types that count as excluded for this purpose.
+	 *
+	 * Add 'personalized' here if your shop uses that type for goods made to the
+	 * customer's specifications under Art. 16(c) and you want their orders to
+	 * stop offering withdrawal too.
+	 *
+	 * @param array         $types Withdrawal type slugs.
+	 * @param WC_Order|bool $order Order being examined.
+	 */
+	$types = (array) apply_filters( 'apg_withdrawal_excluding_types', array( 'excluded' ), $order );
+	$items = $order->get_items();
+
+	if ( empty( $items ) ) {
+		return false;
+	}
+
+	foreach ( $items as $item ) {
+		$product_id = is_callable( array( $item, 'get_product_id' ) ) ? $item->get_product_id() : 0;
+
+		if ( ! $product_id ) {
+			return false;
+		}
+
+		if ( ! in_array( apg_withdrawal_get_effective_withdrawal_type( $product_id ), $types, true ) ) {
+			return false;
+		}
+	}
+
+	return true;
+}
+
+/**
  * Builds a map of order ID to warning type for orders that have non-default warning types.
  *
  * @param WC_Order[]|object[] $orders   Array of WooCommerce order objects.

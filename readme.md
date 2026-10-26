@@ -15,7 +15,7 @@ Requires PHP: 7.4
 
 WC requires at least: 7.0
 
-WC tested up to: 11.1.2
+WC tested up to: 11.2.1
 
 License: GNU General Public License v3 or later
 
@@ -96,7 +96,7 @@ Ubicaciones recomendadas habituales:
 * El pie de página del sitio, para que el enlace sea accesible desde cualquier página.
 * El menú de *Mi cuenta* (la acción por pedido ya está añadida; también puedes añadir un elemento de menú principal que enlace al formulario público).
 * Las páginas de Términos y Condiciones / Política de Privacidad, junto con el resto de información al consumidor exigida por el Artículo 6.1.h de la Directiva 2011/83/UE.
-* Los correos transaccionales de pedido en proceso / completado (el plugin ya inyecta el enlace ahí automáticamente vía `woocommerce_email_after_order_table`).
+* Los correos transaccionales de pedido en proceso / completado (el plugin ya inyecta el enlace ahí automáticamente vía `woocommerce_email_after_order_table`, salvo en los pedidos cuyos productos están todos excluidos del derecho de desistimiento).
 
 ### ¿Qué pasa si mi tienda no ofrece la función de desistimiento?
 El artículo 11 bis de la Directiva 2011/83/UE se aplica en toda la UE desde el 19 de junio de 2026, con independencia de que cada Estado miembro lo haya transpuesto. España no lo había hecho en la fecha de esta versión —la Comisión Europea emitió un dictamen motivado contra España en junio de 2026—, pero la obligación se aplica por efecto directo y el incumplimiento se sanciona por el régimen general del TRLGDCU, cuyas multas llegan a 100.000 € en infracciones leves, 1.000.000 € en las graves y 4.000.000 € (o el 4 % del volumen de negocio en España, si esta cifra es superior) en las muy graves. Consulta el régimen aplicable en tu país: esta nota es informativa y no constituye asesoramiento jurídico.
@@ -134,6 +134,10 @@ El plugin no elimina automáticamente las solicitudes de desistimiento registrad
 ## Changelog
 ### 0.7.4
 * Una solicitud de desistimiento ya registrada deja de registrarse por segunda vez cuando el cliente envía el formulario más de una vez.
+* Un pedido del que ya se ha desistido por completo deja de admitir nuevas solicitudes, ni del pedido entero otra vez ni de parte de sus productos.
+* El campo antispam ya no desplaza la página a lo ancho en sitios que se leen de derecha a izquierda (árabe, hebreo, persa).
+* Los pedidos cuyos productos están todos excluidos del derecho de desistimiento dejan de llevar el enlace de desistimiento en sus correos, con un nuevo filtro `apg_withdrawal_show_order_link` para forzarlo.
+* Compatibilidad con WooCommerce 11.2.1 verificada.
 
 ### 0.7.3
 * La pestaña "Desistimiento" de Mi cuenta abre ahora con su propio título, como el resto de las secciones de la cuenta, en lugar de empezar directamente con un aviso. Nuevo filtro `apg_withdrawal_account_title` para cambiarlo o quitarlo.

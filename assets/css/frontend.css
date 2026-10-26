@@ -48,7 +48,17 @@
 	align-items: center;
 }
 
+/*
+ * The honeypot is parked outside the writing flow, not outside the left edge.
+ * `left` is the wrong property here: on a right-to-left site the axis is
+ * mirrored, so -9999px lands on the scrollable side and drags the page
+ * sideways for ten thousand pixels. `inset-inline-start` is the same place in
+ * Spanish and the opposite one in Arabic, Hebrew or Persian, which is what we
+ * want. `max-width` keeps the field from widening the page on its own.
+ */
 .apg-withdrawal-honeypot {
 	position: absolute;
-	left: -9999px;
+	inset-inline-start: -9999px;
+	max-width: 1px;
+	overflow: hidden;
 }

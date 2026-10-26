@@ -206,6 +206,22 @@ function apg_withdrawal_email_order_withdrawal_link( $order, $sent_to_admin, $pl
 		return;
 	}
 
+	/**
+	 * Filters whether the withdrawal link goes into this order's email.
+	 *
+	 * False by default only when every line of the order is excluded from the
+	 * right of withdrawal, where the link would promise fourteen days that do
+	 * not exist. The form still accepts a request for such an order, so a
+	 * customer who disagrees with the classification is not shut out: it is
+	 * registered and flagged for the shop to review.
+	 *
+	 * @param bool     $show  Whether to print the link.
+	 * @param WC_Order $order Order the email is about.
+	 */
+	if ( ! apply_filters( 'apg_withdrawal_show_order_link', ! apg_withdrawal_order_is_fully_excluded( $order ), $order ) ) {
+		return;
+	}
+
 	$order_id = $order->get_id();
 	$user_id  = $order->get_user_id();
 
