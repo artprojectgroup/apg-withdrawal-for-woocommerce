@@ -145,6 +145,20 @@ function apg_withdrawal_render_notice_html( $message ) {
 }
 
 /**
+ * Reports whether a result key ends the submission, one way or another: the
+ * request was registered, it is waiting for the customer to open the
+ * confirmation link, or it was already on file. In all three cases there is
+ * nothing left for the customer to correct, so the form gives way to the notice
+ * instead of staying on the confirmation step.
+ *
+ * @param string $message Result key returned by the processor.
+ * @return bool
+ */
+function apg_withdrawal_notice_is_final( $message ) {
+	return in_array( $message, array( 'success', 'verify_sent', 'duplicate' ), true );
+}
+
+/**
  * Prints a withdrawal form notice through WooCommerce, so the theme paints it
  * like every other notice in the shop.
  *
@@ -160,7 +174,15 @@ function apg_withdrawal_print_notice( $message ) {
 		return;
 	}
 
-	$type = in_array( $message, array( 'success', 'verify_sent' ), true ) ? 'success' : 'error';
+	if ( in_array( $message, array( 'success', 'verify_sent' ), true ) ) {
+		$type = 'success';
+	} elseif ( 'duplicate' === $message ) {
+		// Nothing went wrong: the request the customer is sending is already on
+		// file, so this tells them so instead of alarming them with an error.
+		$type = 'notice';
+	} else {
+		$type = 'error';
+	}
 
 	wc_print_notice( apg_withdrawal_get_notice_message( $message ), $type );
 }
@@ -492,7 +514,7 @@ function apg_withdrawal_print_form( $atts = array() ) {
 			$step    = 'request';
 		} else {
 			$message = apg_withdrawal_process_submission_data( apg_withdrawal_read_confirmation_post() );
-			$step    = in_array( $message, array( 'success', 'verify_sent' ), true ) ? 'request' : 'confirm';
+			$step    = apg_withdrawal_notice_is_final( $message ) ? 'request' : 'confirm';
 		}
 	}
 
@@ -849,6 +871,7 @@ function apg_withdrawal_get_notice_message( $message ) {
 		'throttle' => __( 'Too many attempts. Please wait a few minutes before trying again.', 'apg-withdrawal-for-woocommerce' ),
 		'verify_sent'    => __( 'We have sent a confirmation link to the email address on the order. Your request will be registered, with the date and time of this submission, as soon as you open it.', 'apg-withdrawal-for-woocommerce' ),
 		'verify_invalid' => __( 'This confirmation link is no longer valid: it may have already been used or it may have expired. Please submit the form again.', 'apg-withdrawal-for-woocommerce' ),
+		'duplicate' => __( 'We have already registered this withdrawal request, so we have not registered it again. Check your email for the acknowledgement of the first one.', 'apg-withdrawal-for-woocommerce' ),
 		'general' => __( 'An error occurred while processing the withdrawal request.', 'apg-withdrawal-for-woocommerce' ),
 	);
 

@@ -285,10 +285,17 @@ function apg_withdrawal_rest_create_request( $request ) {
 	}
 
 	if ( 'success' !== $result ) {
+		$codes = array(
+			'throttle'  => 429,
+			// The declaration is already on file: nothing is wrong with the
+			// request, it just conflicts with the state of the resource.
+			'duplicate' => 409,
+		);
+
 		return new WP_Error(
 			'apg_withdrawal_' . $result,
 			apg_withdrawal_get_notice_message( $result ),
-			array( 'status' => 'throttle' === $result ? 429 : 400 )
+			array( 'status' => isset( $codes[ $result ] ) ? $codes[ $result ] : 400 )
 		);
 	}
 

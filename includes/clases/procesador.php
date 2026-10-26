@@ -155,6 +155,139 @@ function apg_withdrawal_redirect_with_notice( $notice ) {
 
 
 /**
+ * Builds the fingerprint that identifies a declaration by what it declares:
+ * the order, the address that declared it, the scope and, for a partial
+ * withdrawal, the line items with the units claimed for each.
+ *
+ * The moment of the declaration is deliberately left out. The receipt hash
+ * includes it, because it attests to one submission; this one answers whether
+ * two submissions say the same thing, and a timestamp would make every repeat
+ * look new — which is exactly how a double click ended up registering three
+ * requests.
+ *
+ * The line items are sorted before hashing, so a different order of the same
+ * selection yields the same fingerprint.
+ *
+ * @param int    $wc_order_id WooCommerce order ID the request belongs to.
+ * @param string $email       Customer email address.
+ * @param string $scope       'full' or 'partial'.
+ * @param array  $products    Line-item IDs in scope.
+ * @param array  $quantities  Units claimed, keyed by line-item ID.
+ * @return string SHA-256 fingerprint.
+ */
+function apg_withdrawal_submission_fingerprint( $wc_order_id, $email, $scope, $products, $quantities ) {
+	$lines = array();
+
+	foreach ( (array) $products as $item_id ) {
+		$key     = (string) $item_id;
+		$lines[] = $key . ':' . ( isset( $quantities[ $key ] ) ? (int) $quantities[ $key ] : 0 );
+	}
+
+	sort( $lines, SORT_STRING );
+
+	return hash(
+		'sha256',
+		implode(
+			'|',
+			array(
+				(int) $wc_order_id,
+				strtolower( trim( (string) $email ) ),
+				(string) $scope,
+				implode( ',', $lines ),
+			)
+		)
+	);
+}
+
+/**
+ * Rebuilds the fingerprint of a request already stored, from its own metadata.
+ *
+ * Deriving it instead of storing it is what makes the check work on requests
+ * registered before this existed: there is nothing to migrate and no request
+ * is left unprotected.
+ *
+ * @param int $post_id Withdrawal request post ID.
+ * @return string SHA-256 fingerprint.
+ */
+function apg_withdrawal_request_fingerprint( $post_id ) {
+	$products   = get_post_meta( $post_id, '_apg_withdrawal_products', true );
+	$quantities = get_post_meta( $post_id, '_apg_withdrawal_quantities', true );
+
+	return apg_withdrawal_submission_fingerprint(
+		(int) get_post_meta( $post_id, '_apg_withdrawal_wc_order_id', true ),
+		(string) get_post_meta( $post_id, '_apg_withdrawal_email', true ),
+		(string) get_post_meta( $post_id, '_apg_withdrawal_scope', true ),
+		is_array( $products ) ? $products : array(),
+		is_array( $quantities ) ? $quantities : array()
+	);
+}
+
+/**
+ * Finds the requests already on file that declare exactly the same thing.
+ *
+ * Only the requests of that one order are read, which is a handful at most, and
+ * each is compared by fingerprint. Two of them do not count, because in both
+ * cases the customer is entitled to send the declaration again: one the shop
+ * rejected, and one somebody moved to the trash.
+ *
+ * @param int    $wc_order_id WooCommerce order ID.
+ * @param string $fingerprint Fingerprint to match.
+ * @param int    $exclude_id  Request to leave out, normally the one just created.
+ * @return array Matching request IDs, oldest first.
+ */
+function apg_withdrawal_find_matching_requests( $wc_order_id, $fingerprint, $exclude_id = 0 ) {
+	if ( ! $wc_order_id ) {
+		return array();
+	}
+
+	$candidates = get_posts(
+		array(
+			'post_type'        => 'apg_withdrawal',
+			'post_status'      => 'publish',
+			'numberposts'      => 100,
+			'fields'           => 'ids',
+			'orderby'          => 'ID',
+			'order'            => 'ASC',
+			'no_found_rows'    => true,
+			'suppress_filters' => false,
+			// phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query -- Bounded to one order's requests, which is a handful; the meta is indexed by meta_key.
+			'meta_query'       => array(
+				array(
+					'key'   => '_apg_withdrawal_wc_order_id',
+					'value' => (int) $wc_order_id,
+				),
+			),
+		)
+	);
+
+	// One trip for the metadata of every candidate, instead of one per field per
+	// candidate: `fields => ids` returns IDs with no meta attached.
+	update_meta_cache( 'post', $candidates );
+
+	$matches = array();
+
+	foreach ( $candidates as $candidate_id ) {
+		$candidate_id = (int) $candidate_id;
+
+		if ( $exclude_id && $candidate_id === (int) $exclude_id ) {
+			continue;
+		}
+
+		if ( 'rejected' === get_post_meta( $candidate_id, '_apg_withdrawal_status', true ) ) {
+			continue;
+		}
+
+		if ( apg_withdrawal_request_fingerprint( $candidate_id ) !== $fingerprint ) {
+			continue;
+		}
+
+		$matches[] = $candidate_id;
+	}
+
+	return $matches;
+}
+
+/**
  * Validates and persists a withdrawal request from the submitted form data.
  *
  * When guest e-mail verification is enabled and the submission has not been
@@ -225,6 +358,15 @@ function apg_withdrawal_process_submission_data( $data ) {
 
 	if ( 'partial' === $scope && empty( $quantities ) ) {
 		return 'fields';
+	}
+
+	// A declaration that is already on file is not registered twice. The check
+	// runs before the verification branch as well, so a repeat does not even
+	// send a second confirmation link.
+	$fingerprint = apg_withdrawal_submission_fingerprint( $validation['order_id'], $email, $scope, $products, $quantities );
+
+	if ( apg_withdrawal_find_matching_requests( $validation['order_id'], $fingerprint ) ) {
+		return 'duplicate';
 	}
 
 	// The declaration is dated when the consumer sent it. A submission that
@@ -316,6 +458,22 @@ function apg_withdrawal_process_submission_data( $data ) {
 
 		if ( $validation['expired_warning'] ) {
 			update_post_meta( $post_id, '_apg_withdrawal_expired_warning', '1' );
+		}
+
+		// Two clicks can both get past the check above before either has written
+		// anything, so the race is settled here, once the metadata the
+		// fingerprint is built from is on file: of the requests that say the
+		// same thing, the oldest ID stands and the rest withdraw. This runs
+		// before the order note and the notifications, so a losing copy leaves
+		// no trace behind it.
+		$earlier = apg_withdrawal_find_matching_requests( $validation['order_id'], $fingerprint, $post_id );
+
+		foreach ( $earlier as $earlier_id ) {
+			if ( $earlier_id < $post_id ) {
+				wp_delete_post( $post_id, true );
+
+				return 'duplicate';
+			}
 		}
 
 		// SHA-256 receipt hash for legal traceability. The canonical form is a
@@ -562,7 +720,7 @@ function apg_withdrawal_ajax_confirm() {
 
 	$notice = apg_withdrawal_process_submission_data( apg_withdrawal_read_confirmation_post() );
 
-	if ( ! in_array( $notice, array( 'success', 'verify_sent' ), true ) ) {
+	if ( ! apg_withdrawal_notice_is_final( $notice ) ) {
 		wp_send_json_error(
 			array(
 				'message' => apg_withdrawal_render_notice_html( $notice ),

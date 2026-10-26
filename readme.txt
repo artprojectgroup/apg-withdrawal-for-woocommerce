@@ -4,7 +4,7 @@ Donate link: https://artprojectgroup.es/tienda/donacion
 Tags: withdrawal, right of withdrawal, woocommerce, refund, consumer rights
 Requires at least: 6.0
 Tested up to: 7.2
-Stable tag: 0.7.3
+Stable tag: 0.7.4
 Requires PHP: 7.4
 WC requires at least: 7.0
 WC tested up to: 11.1.2
@@ -22,7 +22,7 @@ Add to WooCommerce an online withdrawal workflow with customer form, My Account 
 * Configurable withdrawal window (days) and deadline source (completed or created date).
 * Optional extra grace days on top of the standard withdrawal window.
 * Active request detection: hides the withdrawal button if a request is already open for the order.
-* Optional digital-content waiver checkbox at checkout (both classic shortcode and block-based checkout): a configurable selector chooses when to display it — never, only on virtual products (or per-product `_apg_withdrawal_type = digital`), on every order, or on selected categories and/or selected products. The customer's choice is persisted to order meta as legal evidence.
+* Optional digital-content waiver checkbox at checkout (both classic shortcode and block-based checkout): a single excluding selector chooses when to display it — never, on products classified as digital content, or on every order. **Which products count is decided exclusively by the per-product / per-category "Withdrawal type", never by whether the product is virtual or downloadable**: the product's own type is read first and, when it keeps the default `allowed`, it is inherited from its categories with the most restrictive one winning. The customer's choice is persisted to order meta as a structured log — the exact label shown, UTC timestamp, IP, user agent and checkout type — as legal evidence.
 * Admin request log with full request details (custom post type), status views with counts, bulk status changes and sortable status column.
 * Own WooCommerce order status *Withdrawal requested*, optionally applied to the order as soon as a declaration is received, so affected orders can be filtered, sorted and bulk-edited with the native tools.
 * Optional refund account (IBAN) validated with the international control digits (ISO 7064 MOD-97-10).
@@ -130,6 +130,9 @@ The plugin does not delete withdrawal request records automatically. As a genera
 6. Edit withdrawal screen with full request details and status history.
 
 == Changelog ==
+= 0.7.4 =
+* A withdrawal request already on file is no longer registered a second time when the customer submits the form more than once.
+
 = 0.7.3 =
 * The Withdrawal tab of My Account now opens with its own heading, like every other account section, instead of starting straight into a notice. New `apg_withdrawal_account_title` filter to change it or remove it.
 * The form now loads its stylesheet when it is inserted with the shortcode in a widget or a block template, where it used to ask for a handle that only exists in the admin and came out unstyled.
@@ -222,8 +225,8 @@ The plugin does not delete withdrawal request records automatically. As a genera
 * Initial release.
 
 == Upgrade Notice ==
-= 0.7.3 =
-* The Withdrawal tab of My Account was missing its heading, which left the section untitled and opening with a notice. Cosmetic release; nothing changes in how requests are registered.
+= 0.7.4 =
+* Clicking the confirmation button more than once registered one request per click. A repeated submission is now recognised and answered with the request already on file.
 
 == Thanks ==
 Thanks to everyone who uses the plugin, helps improve it, makes a donation or encourages us with their comments.

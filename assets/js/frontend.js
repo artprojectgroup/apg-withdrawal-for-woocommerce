@@ -124,7 +124,57 @@
 			}
 		}
 
+		/**
+		 * Locks a form while its submission is in flight, and reports whether the
+		 * caller may proceed.
+		 *
+		 * A second click lands a whole round trip before the first answer comes
+		 * back, and each click used to be a request of its own. The server refuses
+		 * a repeat anyway, but it should never have to: the click that cannot
+		 * leave the browser is the one that costs nothing.
+		 *
+		 * @param {HTMLFormElement} form Form being submitted.
+		 * @return {boolean} True when this is the first submission in flight.
+		 */
+		function lockForm( form ) {
+			if ( form.getAttribute( 'data-apg-submitting' ) === '1' ) {
+				return false;
+			}
+
+			form.setAttribute( 'data-apg-submitting', '1' );
+			Array.prototype.forEach.call(
+				form.querySelectorAll( 'button[type="submit"], input[type="submit"]' ),
+				function ( button ) {
+					button.disabled = true;
+					button.setAttribute( 'aria-disabled', 'true' );
+				}
+			);
+
+			return true;
+		}
+
+		/**
+		 * Releases a form locked by lockForm(), so a submission the server turned
+		 * down can be corrected and sent again.
+		 *
+		 * @param {HTMLFormElement} form Form to unlock.
+		 */
+		function unlockForm( form ) {
+			form.removeAttribute( 'data-apg-submitting' );
+			Array.prototype.forEach.call(
+				form.querySelectorAll( 'button[type="submit"], input[type="submit"]' ),
+				function ( button ) {
+					button.disabled = false;
+					button.removeAttribute( 'aria-disabled' );
+				}
+			);
+		}
+
 		function submitAjax( form, actionName ) {
+			if ( ! lockForm( form ) ) {
+				return;
+			}
+
 			var formData = new window.FormData( form );
 			formData.append( 'action', actionName );
 
@@ -136,6 +186,10 @@
 				return response.json();
 			} ).then( function ( payload ) {
 				if ( ! wrapper || ! payload || ! payload.success || ! payload.data || ! payload.data.html ) {
+					// The submission was refused, so the form stays where it is and
+					// has to take another attempt.
+					unlockForm( form );
+
 					if ( payload && payload.data && payload.data.message ) {
 						wrapper.insertAdjacentHTML( 'afterbegin', payload.data.message );
 						moveFocusTo( wrapper.firstElementChild );

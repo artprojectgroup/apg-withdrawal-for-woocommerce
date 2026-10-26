@@ -9,7 +9,7 @@ Requires at least: 6.0
 
 Tested up to: 7.2
 
-Stable tag: 0.7.3
+Stable tag: 0.7.4
 
 Requires PHP: 7.4
 
@@ -32,7 +32,7 @@ Añade a WooCommerce un flujo de trabajo de desistimiento online con formulario 
 * Ventana de desistimiento configurable (en días) y fuente del plazo (fecha de completado o fecha de creación del pedido).
 * Días de cortesía adicionales sobre la ventana estándar.
 * Detección de solicitud activa: oculta el botón de desistimiento si ya existe una solicitud abierta para el pedido.
-* Casilla opcional de renuncia al desistimiento por contenido digital en el checkout (tanto en el shortcode clásico como en el de bloques): un selector configurable permite elegir cuándo mostrarla — nunca, solo en productos virtuales (o con `_apg_withdrawal_type = digital` por producto), en todos los pedidos, o en categorías y/o productos seleccionados. La elección del cliente se guarda en los metadatos del pedido como evidencia legal.
+* Casilla opcional de renuncia al desistimiento por contenido digital en el checkout (tanto en el shortcode clásico como en el de bloques): un único selector excluyente permite elegir cuándo mostrarla — nunca, en productos clasificados como contenido digital, o en todos los pedidos. **Qué productos cuentan lo decide exclusivamente el "Tipo de desistimiento" por producto y por categoría, nunca si el producto es virtual o descargable**: se lee primero el tipo del propio producto y, cuando mantiene el valor por omisión `allowed`, se hereda de sus categorías quedándose con el más restrictivo. La elección del cliente se guarda en los metadatos del pedido como log estructurado —el texto exacto mostrado, marca de tiempo UTC, IP, user agent y tipo de checkout— como evidencia legal.
 * Registro de solicitudes en el panel de administración con todos los detalles (CPT), vistas por estado con contadores, cambios de estado en lote y columna de estado ordenable.
 * Estado de pedido propio de WooCommerce *Desistimiento solicitado*, aplicable opcionalmente al pedido en cuanto se recibe una declaración, para poder filtrar, ordenar y editar en lote los pedidos afectados con las herramientas nativas.
 * Cuenta para el reembolso (IBAN) opcional, validada con los dígitos de control internacionales (ISO 7064 MOD-97-10).
@@ -132,8 +132,11 @@ El plugin no elimina automáticamente las solicitudes de desistimiento registrad
 **APG Desistimiento para WooCommerce** es un plugin gratuito. **Art Project Group** no proporciona soporte técnico gratuito, pero ofrece un servicio de [soporte técnico](https://artprojectgroup.es/tienda/ticket-de-soporte) de pago para instalación y configuración.
 
 ## Changelog
+### 0.7.4
+* Una solicitud de desistimiento ya registrada deja de registrarse por segunda vez cuando el cliente envía el formulario más de una vez.
+
 ### 0.7.3
-* La pestaña «Desistimiento» de Mi cuenta abre ahora con su propio título, como el resto de las secciones de la cuenta, en lugar de empezar directamente con un aviso. Nuevo filtro `apg_withdrawal_account_title` para cambiarlo o quitarlo.
+* La pestaña "Desistimiento" de Mi cuenta abre ahora con su propio título, como el resto de las secciones de la cuenta, en lugar de empezar directamente con un aviso. Nuevo filtro `apg_withdrawal_account_title` para cambiarlo o quitarlo.
 * El formulario carga ya su hoja de estilos cuando se inserta con el shortcode en un widget o en una plantilla de bloques, donde antes pedía un handle que solo existe en la administración y se quedaba sin estilos.
 * Compatibilidad con WooCommerce 11.1.2 verificada.
 
