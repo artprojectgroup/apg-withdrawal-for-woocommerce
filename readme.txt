@@ -4,7 +4,7 @@ Donate link: https://artprojectgroup.es/tienda/donacion
 Tags: withdrawal, right of withdrawal, woocommerce, refund, consumer rights
 Requires at least: 6.0
 Tested up to: 7.2
-Stable tag: 0.7.4
+Stable tag: 0.8.0
 Requires PHP: 7.4
 WC requires at least: 7.0
 WC tested up to: 11.2.1
@@ -48,6 +48,8 @@ Add to WooCommerce an online withdrawal workflow with customer form, My Account 
 
 = More information =
 You can learn more about **APG Withdrawal for WooCommerce** on our [official website](https://artprojectgroup.es/plugins-para-woocommerce/apg-withdrawal-for-woocommerce), and follow the development on [GitHub](https://github.com/artprojectgroup/apg-withdrawal-for-woocommerce).
+
+You can also read the [full documentation](https://artprojectgroup.es/documentacion/apg-desistimiento-para-woocommerce), with every setting explained one by one.
 
 == Installation ==
 1. Install the plugin in one of the following ways:
@@ -119,7 +121,7 @@ Yes, under the `apg-withdrawal/v1` namespace. `GET /requests` and `GET /requests
 The plugin does not delete withdrawal request records automatically. As a general recommendation, keep them for at least **5 years** after their creation — the typical statute of limitations for consumer and contractual actions in many EU jurisdictions. Always check the applicable retention period in your country before deleting old records or running the plugin's CSV export + uninstall flow.
 
 = Where can I get support? =
-**APG Withdrawal for WooCommerce** is a free plugin. **Art Project Group** does not provide free technical support, but offers a paid [technical support](https://artprojectgroup.es/tienda/ticket-de-soporte) service for installation and configuration.
+**APG Withdrawal for WooCommerce** is a free plugin. **Art Project Group** does not provide free technical support, but offers a paid [technical support](https://artprojectgroup.es/tienda/soporte-tecnico) service for installation and configuration.
 
 == Screenshots ==
 1. Plugin settings page with general options, automation rules and customer email notifications.
@@ -130,6 +132,8 @@ The plugin does not delete withdrawal request records automatically. As a genera
 6. Edit withdrawal screen with full request details and status history.
 
 == Changelog ==
+= 0.8.0 =
+* Contextual help on the settings screen and on the requests list, explaining every option without leaving them.
 = 0.7.4 =
 * A withdrawal request already on file is no longer registered a second time when the customer submits the form more than once.
 * An order already withdrawn from in full no longer accepts further requests, whether for the whole order again or for some of its products.

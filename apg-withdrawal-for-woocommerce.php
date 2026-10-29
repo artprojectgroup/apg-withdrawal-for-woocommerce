@@ -2,7 +2,7 @@
 /*
 Plugin Name: APG Withdrawal for WooCommerce
 Requires Plugins: woocommerce
-Version: 0.7.4
+Version: 0.8.0
 Plugin URI: https://wordpress.org/plugins/apg-withdrawal-for-woocommerce/
 Description: Add to WooCommerce an online withdrawal workflow compliant with EU requirements.
 Author URI: https://artprojectgroup.es/
@@ -26,7 +26,7 @@ Domain Path: /languages
 defined( 'ABSPATH' ) || exit;
 
 define( 'apg_withdrawal_DIRECCION', plugin_basename( __FILE__ ) );
-define( 'apg_withdrawal_VERSION', '0.7.4' );
+define( 'apg_withdrawal_VERSION', '0.8.0' );
 define( 'apg_withdrawal_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 
 add_filter(
@@ -163,7 +163,7 @@ if ( is_plugin_active( 'woocommerce/woocommerce.php' ) || is_network_only_plugin
 				'manage_woocommerce',
 				'edit.php?post_type=apg_withdrawal'
 			);
-			add_submenu_page(
+			$apg_withdrawal_pantalla = add_submenu_page(
 				'woocommerce',
 				esc_attr__( 'APG Withdrawal', 'apg-withdrawal-for-woocommerce' ),
 				esc_attr__( 'Withdrawal', 'apg-withdrawal-for-woocommerce' ),
@@ -171,6 +171,14 @@ if ( is_plugin_active( 'woocommerce/woocommerce.php' ) || is_network_only_plugin
 				'apg-withdrawal-for-woocommerce',
 				array( $this, 'apg_withdrawal_tab' )
 			);
+
+			/* Ayuda contextual de las dos pantallas: la de ajustes, por el hook que devuelve
+			add_submenu_page(), y la del listado de solicitudes, que es la de su tipo de contenido. */
+			if ( $apg_withdrawal_pantalla ) {
+				include_once apg_withdrawal_PLUGIN_DIR . 'includes/clases/class-apg-withdrawal-help.php';
+				add_action( 'load-' . $apg_withdrawal_pantalla, array( 'APG_Withdrawal_Help', 'add_tabs' ) );
+				add_action( 'load-edit.php', array( __CLASS__, 'apg_withdrawal_ayuda_listado' ) );
+			}
 			add_filter(
 				'parent_file',
 				function ( $parent_file ) {
@@ -185,6 +193,25 @@ if ( is_plugin_active( 'woocommerce/woocommerce.php' ) || is_network_only_plugin
 					return 'apg_withdrawal' === $post_type ? 'edit.php?post_type=apg_withdrawal' : $submenu_file;
 				}
 			);
+		}
+
+		/**
+		 * Añade el panel de ayuda al listado de solicitudes, y sólo a ése.
+		 *
+		 * load-edit.php se dispara en el listado de cualquier tipo de contenido, así que hay que
+		 * comprobar cuál es antes de tocar su ayuda.
+		 *
+		 * @return void
+		 */
+		public static function apg_withdrawal_ayuda_listado() {
+			$pantalla = get_current_screen();
+
+			if ( ! $pantalla || 'apg_withdrawal' !== $pantalla->post_type ) {
+				return;
+			}
+
+			include_once apg_withdrawal_PLUGIN_DIR . 'includes/clases/class-apg-withdrawal-help.php';
+			APG_Withdrawal_Help::add_list_tab();
 		}
 
 		/**

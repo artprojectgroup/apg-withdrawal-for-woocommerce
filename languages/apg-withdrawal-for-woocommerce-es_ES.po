@@ -1869,3 +1869,184 @@ msgstr "Nuevo estado"
 #: templates/emails/plain/apg-withdrawal-admin.php:48
 msgid "View withdrawal request"
 msgstr "Ver solicitud de desistimiento"
+
+
+#: includes/clases/class-apg-withdrawal-help.php
+msgid "More help"
+msgstr "Más ayuda"
+
+#: includes/clases/class-apg-withdrawal-help.php
+msgid "Full documentation"
+msgstr "Documentación completa"
+
+#: includes/clases/class-apg-withdrawal-help.php
+msgid "The store and the form"
+msgstr "La tienda y el formulario"
+
+#: includes/clases/class-apg-withdrawal-help.php
+msgid "Who receives the withdrawal declarations and where the customer writes them. These are the data that end up in the printable Annex I.B form, the model the law requires you to make available."
+msgstr "Quién recibe las declaraciones de desistimiento y dónde las escribe el cliente. Son los datos que acaban en el formulario imprimible del Anexo I.B, el modelo que la ley te obliga a poner a su disposición."
+
+#: includes/clases/class-apg-withdrawal-help.php
+msgid "the address that gets a copy of every request. Leave it empty and the one on the store goes."
+msgstr "la dirección que recibe una copia de cada solicitud. Déjala vacía y se usa la de la tienda."
+
+#: includes/clases/class-apg-withdrawal-help.php
+msgid "shown next to the name, the address and the email of the store in the Annex I.B form. Empty, the phone line is left out."
+msgstr "se muestra junto al nombre, la dirección y el correo de la tienda en el formulario del Anexo I.B. Vacío, la línea del teléfono no sale."
+
+#: includes/clases/class-apg-withdrawal-help.php
+msgid "the page where the form shortcode is published. The plugin creates it on activation, and this is where you point it somewhere else if you move it."
+msgstr "la página donde está publicado el shortcode del formulario. El plugin la crea al activarse, y aquí es donde se apunta a otra si la cambias de sitio."
+
+#: includes/clases/class-apg-withdrawal-help.php
+msgid "what the button says at the end of the form, the one that registers the declaration."
+msgstr "lo que dice el botón del final del formulario, el que registra la declaración."
+
+#: includes/clases/class-apg-withdrawal-help.php
+msgid "which law is cited to the customer on the confirmation screen. Spain has not transposed Directive (EU) 2023/2673 yet, so both options apply the same requirements today; the Spanish one also cites the TRLGDCU."
+msgstr "qué norma se le cita al cliente en la pantalla de confirmación. España todavía no ha traspuesto la Directiva (UE) 2023/2673, así que hoy las dos opciones aplican los mismos requisitos; la española cita además el TRLGDCU."
+
+#: includes/clases/class-apg-withdrawal-help.php
+msgid "The deadline and the record"
+msgstr "El plazo y el registro"
+
+#: includes/clases/class-apg-withdrawal-help.php
+msgid "How long the customer has, and what is kept of each declaration. Fourteen days is the legal minimum in the European Union: you can give more, never less."
+msgstr "Cuánto tiempo tiene el cliente y qué se guarda de cada declaración. Catorce días es el mínimo legal en la Unión Europea: puedes dar más, nunca menos."
+
+#: includes/clases/class-apg-withdrawal-help.php
+msgid "after these days the order no longer shows the withdrawal button. The form still accepts a late request, with a warning, because deciding whether it is out of time is yours to do, not the form's."
+msgstr "pasados esos días, el pedido ya no muestra el botón de desistimiento. El formulario sigue admitiendo una solicitud fuera de plazo, con un aviso, porque decidir si llega tarde te toca a ti y no al formulario."
+
+#: includes/clases/class-apg-withdrawal-help.php
+msgid "days on top of the window, for the time a delivery takes or simply to be generous with your customer."
+msgstr "días por encima del plazo, para lo que tarda una entrega o sencillamente para ser generoso con tu cliente."
+
+#: includes/clases/class-apg-withdrawal-help.php
+msgid "the date the count starts from: the completed date, which is the closest thing to the delivery date, or the order date. With an order that is not completed yet, the plugin falls back on its own."
+msgstr "la fecha desde la que se cuenta: la de completado, que es lo más parecido a la de entrega, o la del pedido. Con un pedido que todavía no está completado, el plugin cambia de una a otra solo."
+
+#: includes/clases/class-apg-withdrawal-help.php
+msgid "keeps the address the declaration was sent from, as evidence of who sent it and when."
+msgstr "guarda la dirección desde la que se envió la declaración, como prueba de quién la mandó y cuándo."
+
+#: includes/clases/class-apg-withdrawal-help.php
+msgid "keeps the browser identifier, for the same reason. Both are personal data: keep them only if you are going to use them, and say so in your privacy policy."
+msgstr "guarda el identificador del navegador, por lo mismo. Los dos son datos personales: guárdalos sólo si los vas a usar, y dilo en tu política de privacidad."
+
+#: includes/clases/class-apg-withdrawal-help.php
+msgid "unchecked, uninstalling the plugin leaves the requests and the settings in place. Checked, it takes everything with it, and there is no going back."
+msgstr "sin marcar, desinstalar el plugin deja las solicitudes y los ajustes donde están. Marcado, se lo lleva todo por delante, y no hay vuelta atrás."
+
+#: includes/clases/class-apg-withdrawal-help.php
+msgid "What happens the moment a declaration arrives."
+msgstr "Lo que pasa en el momento en que llega una declaración."
+
+#: includes/clases/class-apg-withdrawal-help.php
+msgid "the plugin registers its own Withdrawal requested status, so those orders can be filtered, sorted and bulk-edited with the usual WooCommerce tools. Leave it as it comes and the order is not touched."
+msgstr "el plugin registra su propio estado Desistimiento solicitado, así que esos pedidos se pueden filtrar, ordenar y editar en lote con las herramientas de siempre de WooCommerce. Déjalo como viene y el pedido no se toca."
+
+#: includes/clases/class-apg-withdrawal-help.php
+msgid "asks the customer for an account when the money cannot go back the way it came. The number is checked with its international control digits, travels with the request as banking data, is included in the privacy exporter and is deleted by the eraser. Only ask for it if you really need it."
+msgstr "le pide al cliente una cuenta cuando el dinero no puede volver por donde vino. El número se comprueba con sus dígitos de control internacionales, viaja con la solicitud como dato bancario, entra en el exportador de privacidad y lo borra el borrador. Pídelo sólo si de verdad lo necesitas."
+
+#: includes/clases/class-apg-withdrawal-help.php
+msgid "a visitor who is not logged in gets a single-use link at the address on the order, and the request only counts once that link is opened. It keeps the date and time of the original submission, so nobody loses days of their period."
+msgstr "a un visitante que no ha iniciado sesión le llega un enlace de un solo uso a la dirección del pedido, y la solicitud sólo cuenta cuando abre ese enlace. Conserva la fecha y la hora del envío original, así que nadie pierde días de su plazo."
+
+#: includes/clases/class-apg-withdrawal-help.php
+msgid "Automation and emails"
+msgstr "Automatización y correos"
+
+#: includes/clases/class-apg-withdrawal-help.php
+msgid "A withdrawal has two lives in parallel: the request, with its own status, and the WooCommerce order. Here the two are tied together so you do not have to update both by hand."
+msgstr "Un desistimiento tiene dos vidas en paralelo: la solicitud, con su propio estado, y el pedido de WooCommerce. Aquí se atan las dos para no tener que actualizar las dos a mano."
+
+#: includes/clases/class-apg-withdrawal-help.php
+msgid "Mark as ... when order becomes"
+msgstr "Marcar como ... cuando el pedido pase a"
+
+#: includes/clases/class-apg-withdrawal-help.php
+msgid "one line per request status. Choose which order status moves it, and the request follows the order on its own. A refunded order marking the request as completed is the usual one."
+msgstr "una línea por cada estado de la solicitud. Elige qué estado del pedido la mueve y la solicitud sigue al pedido sola. Lo habitual es que un pedido reembolsado deje la solicitud como completada."
+
+#: includes/clases/class-apg-withdrawal-help.php
+msgid "Email when changed to ..."
+msgstr "Correo al cambiar a ..."
+
+#: includes/clases/class-apg-withdrawal-help.php
+msgid "which status changes write to the customer. The content of those emails is edited where all the WooCommerce ones are, in WooCommerce > Settings > Emails."
+msgstr "qué cambios de estado le escriben al cliente. El contenido de esos correos se edita donde se editan todos los de WooCommerce, en WooCommerce > Ajustes > Correos electrónicos."
+
+#: includes/clases/class-apg-withdrawal-help.php
+msgid "What can be withdrawn"
+msgstr "De qué se puede desistir"
+
+#: includes/clases/class-apg-withdrawal-help.php
+msgid "The law leaves some things out of the right of withdrawal: something made to measure, something unsealed, digital content already downloaded. Each product carries its own type in the Withdrawal tab of its data, and a category can set it for everything inside it."
+msgstr "La ley deja algunas cosas fuera del derecho de desistimiento: lo hecho a medida, lo desprecintado, el contenido digital ya descargado. Cada producto lleva su tipo en la pestaña Desistimiento de sus datos, y una categoría puede fijarlo para todo lo que haya dentro."
+
+#: includes/clases/class-apg-withdrawal-help.php
+msgid "Withdrawal allowed"
+msgstr "Desistimiento permitido"
+
+#: includes/clases/class-apg-withdrawal-help.php
+msgid "the usual one, and what a product inherits when neither it nor its categories say otherwise."
+msgstr "lo normal, y lo que hereda un producto cuando ni él ni sus categorías dicen otra cosa."
+
+#: includes/clases/class-apg-withdrawal-help.php
+msgid "there is no right of withdrawal for this product, and the customer is told so before buying."
+msgstr "este producto no tiene derecho de desistimiento, y al cliente se le dice antes de comprarlo."
+
+#: includes/clases/class-apg-withdrawal-help.php
+msgid "the right is lost once the download starts, provided the customer accepted it beforehand. This is the type that triggers the waiver at checkout."
+msgstr "el derecho se pierde en cuanto empieza la descarga, siempre que el cliente lo haya aceptado antes. Es el tipo que hace aparecer la renuncia al pagar."
+
+#: includes/clases/class-apg-withdrawal-help.php
+msgid "made to the customer's measure, so it is excluded by law."
+msgstr "hecho a la medida del cliente, así que queda excluido por ley."
+
+#: includes/clases/class-apg-withdrawal-help.php
+msgid "neither yes nor no: the request comes in and you decide. For the cases the law leaves to the condition of the goods."
+msgstr "ni sí ni no: la solicitud entra y decides tú. Para los casos que la ley deja al estado del producto."
+
+#: includes/clases/class-apg-withdrawal-help.php
+msgid "what each type says to the customer, on the product page between the price and the Add to cart button, and again inside the form. Leave a field empty to keep the translated text that comes with the plugin."
+msgstr "lo que cada tipo le dice al cliente, en la página del producto entre el precio y el botón de añadir al carrito, y otra vez dentro del formulario. Deja un campo vacío para conservar el texto traducido que trae el plugin."
+
+#: includes/clases/class-apg-withdrawal-help.php
+msgid "Downloadable content loses the right of withdrawal only if the customer accepted it before the download started, and the shop can prove it. This checkbox at checkout is that proof."
+msgstr "El contenido descargable pierde el derecho de desistimiento sólo si el cliente lo aceptó antes de empezar la descarga y la tienda puede demostrarlo. Esta casilla al pagar es esa prueba."
+
+#: includes/clases/class-apg-withdrawal-help.php
+msgid "never, only on the products classified as digital content, or on every order. The middle one is the usual choice."
+msgstr "nunca, sólo en los productos clasificados como contenido digital, o en todos los pedidos. Lo normal es la opción de en medio."
+
+#: includes/clases/class-apg-withdrawal-help.php
+msgid "comes filled in with the acknowledgement text. Edit it to say it your way, or empty the field to go back to the one that comes with the plugin."
+msgstr "viene relleno con el texto de la renuncia. Edítalo para decirlo a tu manera, o vacía el campo para volver al que trae el plugin."
+
+#: includes/clases/class-apg-withdrawal-help.php
+msgid "The requests"
+msgstr "Las solicitudes"
+
+#: includes/clases/class-apg-withdrawal-help.php
+msgid "Every declaration your customers send is kept here, with its order, its date, the products it covers and what the customer wrote. It is the log you can show if you are ever asked to prove how you handled a withdrawal."
+msgstr "Aquí se guarda cada declaración que mandan tus clientes, con su pedido, su fecha, los productos a los que afecta y lo que el cliente escribió. Es el registro que puedes enseñar si alguna vez te piden demostrar cómo tramitaste un desistimiento."
+
+#: includes/clases/class-apg-withdrawal-help.php
+msgid "it has arrived and nobody has looked at it yet. It is the status every request is born in."
+msgstr "ha llegado y nadie la ha mirado todavía. Es el estado en el que nace toda solicitud."
+
+#: includes/clases/class-apg-withdrawal-help.php
+msgid "the withdrawal is valid. From here the refund follows, through WooCommerce."
+msgstr "el desistimiento es válido. De aquí sale el reembolso, por WooCommerce."
+
+#: includes/clases/class-apg-withdrawal-help.php
+msgid "out of time, excluded product or whatever the reason. Write the reason down, because the customer can ask for it."
+msgstr "fuera de plazo, producto excluido o el motivo que sea. Apunta el motivo, porque el cliente puede pedirlo."
+
+#: includes/clases/class-apg-withdrawal-help.php
+msgid "everything is done, refund included. If you set up the automation, a refunded order leaves its request like this on its own."
+msgstr "todo está hecho, reembolso incluido. Si configuras la automatización, un pedido reembolsado deja su solicitud así sin que tú hagas nada."

@@ -188,6 +188,7 @@ msgid "Settings"
 msgstr ""
 
 #: includes/clases/admin/solicitudes.php:19
+#: includes/clases/class-apg-withdrawal-help.php
 #: includes/clases/emails/class-apg-withdrawal-email-status.php:70
 #: includes/clases/pedidos.php:106
 #: includes/clases/pedidos.php:296
@@ -195,6 +196,7 @@ msgid "Pending"
 msgstr ""
 
 #: includes/clases/admin/solicitudes.php:20
+#: includes/clases/class-apg-withdrawal-help.php
 #: includes/clases/emails/class-apg-withdrawal-email-status.php:71
 #: includes/clases/pedidos.php:107
 #: includes/clases/pedidos.php:297
@@ -203,6 +205,7 @@ msgid "Accepted"
 msgstr ""
 
 #: includes/clases/admin/solicitudes.php:21
+#: includes/clases/class-apg-withdrawal-help.php
 #: includes/clases/emails/class-apg-withdrawal-email-status.php:72
 #: includes/clases/pedidos.php:108
 #: includes/clases/pedidos.php:298
@@ -211,6 +214,7 @@ msgid "Rejected"
 msgstr ""
 
 #: includes/clases/admin/solicitudes.php:22
+#: includes/clases/class-apg-withdrawal-help.php
 #: includes/clases/emails/class-apg-withdrawal-email-status.php:73
 #: includes/clases/pedidos.php:109
 #: includes/clases/pedidos.php:299
@@ -365,6 +369,7 @@ msgid "Account for the refund"
 msgstr ""
 
 #: includes/clases/admin/solicitudes.php:372
+#: includes/clases/class-apg-withdrawal-help.php
 #: includes/formulario.php:127
 msgid "Deadline source"
 msgstr ""
@@ -576,23 +581,27 @@ msgid "Withdrawal allowed (default)"
 msgstr ""
 
 #: includes/clases/categoria.php:24
+#: includes/clases/class-apg-withdrawal-help.php
 #: includes/clases/producto.php:41
 msgid "Withdrawal excluded"
 msgstr ""
 
 #: includes/clases/categoria.php:25
+#: includes/clases/class-apg-withdrawal-help.php
 #: includes/clases/producto.php:42
 #: includes/formulario.php:302
 msgid "Digital content"
 msgstr ""
 
 #: includes/clases/categoria.php:26
+#: includes/clases/class-apg-withdrawal-help.php
 #: includes/clases/producto.php:43
 #: includes/formulario.php:303
 msgid "Personalised product"
 msgstr ""
 
 #: includes/clases/categoria.php:27
+#: includes/clases/class-apg-withdrawal-help.php
 #: includes/clases/producto.php:44
 #: includes/formulario.php:304
 msgid "Manual review required"
@@ -915,6 +924,7 @@ msgid "Tick the products you are withdrawing from and, if you are keeping some o
 msgstr ""
 
 #: includes/clases/formulario.php:697
+#: includes/clases/class-apg-withdrawal-help.php
 #: includes/formulario.php:200
 msgid "Account for the refund (IBAN)"
 msgstr ""
@@ -1277,10 +1287,12 @@ msgid "Add to WooCommerce an online withdrawal workflow with customer form, My A
 msgstr ""
 
 #: includes/formulario.php:32
+#: includes/clases/class-apg-withdrawal-help.php
 msgid "Notification email"
 msgstr ""
 
 #: includes/formulario.php:40
+#: includes/clases/class-apg-withdrawal-help.php
 msgid "Merchant phone (optional)"
 msgstr ""
 
@@ -1289,6 +1301,7 @@ msgid "Phone number displayed alongside the store name, address and email in the
 msgstr ""
 
 #: includes/formulario.php:51
+#: includes/clases/class-apg-withdrawal-help.php
 msgid "Withdrawal page"
 msgstr ""
 
@@ -1303,10 +1316,12 @@ msgid "Page where the shortcode %s is published."
 msgstr ""
 
 #: includes/formulario.php:85
+#: includes/clases/class-apg-withdrawal-help.php
 msgid "Confirmation button text"
 msgstr ""
 
 #: includes/formulario.php:93
+#: includes/clases/class-apg-withdrawal-help.php
 msgid "Jurisdiction"
 msgstr ""
 
@@ -1315,6 +1330,7 @@ msgid "Decides which statutory reference is shown to the customer on the confirm
 msgstr ""
 
 #: includes/formulario.php:108
+#: includes/clases/class-apg-withdrawal-help.php
 msgid "Withdrawal window (days)"
 msgstr ""
 
@@ -1323,6 +1339,7 @@ msgid "Orders older than this number of days will not show the withdrawal button
 msgstr ""
 
 #: includes/formulario.php:119
+#: includes/clases/class-apg-withdrawal-help.php
 msgid "Extra grace days"
 msgstr ""
 
@@ -1339,14 +1356,17 @@ msgid "Use completed date as the default legal approximation. If the order is no
 msgstr ""
 
 #: includes/formulario.php:141
+#: includes/clases/class-apg-withdrawal-help.php
 msgid "Store IP address?"
 msgstr ""
 
 #: includes/formulario.php:149
+#: includes/clases/class-apg-withdrawal-help.php
 msgid "Store browser identifier?"
 msgstr ""
 
 #: includes/formulario.php:157
+#: includes/clases/class-apg-withdrawal-help.php
 msgid "Delete all data on uninstall?"
 msgstr ""
 
@@ -1355,6 +1375,7 @@ msgid "If checked, all withdrawal requests, their metadata and the plugin settin
 msgstr ""
 
 #: includes/formulario.php:178
+#: includes/clases/class-apg-withdrawal-help.php
 msgid "Request handling"
 msgstr ""
 
@@ -1363,6 +1384,7 @@ msgid "How a withdrawal declaration is captured and what it does to the linked o
 msgstr ""
 
 #: includes/formulario.php:184
+#: includes/clases/class-apg-withdrawal-help.php
 msgid "Order status when a request is received"
 msgstr ""
 
@@ -1391,6 +1413,7 @@ msgid "Useful when the amount cannot be returned through the original payment me
 msgstr ""
 
 #: includes/formulario.php:215
+#: includes/clases/class-apg-withdrawal-help.php
 msgid "Confirm guest requests by email?"
 msgstr ""
 
@@ -1447,6 +1470,7 @@ msgid "Withdrawal excluded (generic)"
 msgstr ""
 
 #: includes/formulario.php:308
+#: includes/clases/class-apg-withdrawal-help.php
 msgid "Exclusion notice texts"
 msgstr ""
 
@@ -1455,6 +1479,7 @@ msgid "Text shown on the product page (between the price and the Add to Cart but
 msgstr ""
 
 #: includes/formulario.php:334
+#: includes/clases/class-apg-withdrawal-help.php
 msgid "Digital content waiver"
 msgstr ""
 
@@ -1463,6 +1488,7 @@ msgid "Show an optional acknowledgement at checkout when the customer is buying 
 msgstr ""
 
 #: includes/formulario.php:339
+#: includes/clases/class-apg-withdrawal-help.php
 msgid "When to show the checkbox"
 msgstr ""
 
@@ -1479,6 +1505,7 @@ msgid "On every order"
 msgstr ""
 
 #: includes/formulario.php:356
+#: includes/clases/class-apg-withdrawal-help.php
 msgid "Custom checkbox text"
 msgstr ""
 
@@ -1529,4 +1556,184 @@ msgstr ""
 
 #: templates/emails/plain/apg-withdrawal-admin.php:48
 msgid "View withdrawal request"
+msgstr ""
+
+#: includes/clases/class-apg-withdrawal-help.php
+msgid "More help"
+msgstr ""
+
+#: includes/clases/class-apg-withdrawal-help.php
+msgid "Full documentation"
+msgstr ""
+
+#: includes/clases/class-apg-withdrawal-help.php
+msgid "The store and the form"
+msgstr ""
+
+#: includes/clases/class-apg-withdrawal-help.php
+msgid "Who receives the withdrawal declarations and where the customer writes them. These are the data that end up in the printable Annex I.B form, the model the law requires you to make available."
+msgstr ""
+
+#: includes/clases/class-apg-withdrawal-help.php
+msgid "the address that gets a copy of every request. Leave it empty and the one on the store goes."
+msgstr ""
+
+#: includes/clases/class-apg-withdrawal-help.php
+msgid "shown next to the name, the address and the email of the store in the Annex I.B form. Empty, the phone line is left out."
+msgstr ""
+
+#: includes/clases/class-apg-withdrawal-help.php
+msgid "the page where the form shortcode is published. The plugin creates it on activation, and this is where you point it somewhere else if you move it."
+msgstr ""
+
+#: includes/clases/class-apg-withdrawal-help.php
+msgid "what the button says at the end of the form, the one that registers the declaration."
+msgstr ""
+
+#: includes/clases/class-apg-withdrawal-help.php
+msgid "which law is cited to the customer on the confirmation screen. Spain has not transposed Directive (EU) 2023/2673 yet, so both options apply the same requirements today; the Spanish one also cites the TRLGDCU."
+msgstr ""
+
+#: includes/clases/class-apg-withdrawal-help.php
+msgid "The deadline and the record"
+msgstr ""
+
+#: includes/clases/class-apg-withdrawal-help.php
+msgid "How long the customer has, and what is kept of each declaration. Fourteen days is the legal minimum in the European Union: you can give more, never less."
+msgstr ""
+
+#: includes/clases/class-apg-withdrawal-help.php
+msgid "after these days the order no longer shows the withdrawal button. The form still accepts a late request, with a warning, because deciding whether it is out of time is yours to do, not the form's."
+msgstr ""
+
+#: includes/clases/class-apg-withdrawal-help.php
+msgid "days on top of the window, for the time a delivery takes or simply to be generous with your customer."
+msgstr ""
+
+#: includes/clases/class-apg-withdrawal-help.php
+msgid "the date the count starts from: the completed date, which is the closest thing to the delivery date, or the order date. With an order that is not completed yet, the plugin falls back on its own."
+msgstr ""
+
+#: includes/clases/class-apg-withdrawal-help.php
+msgid "keeps the address the declaration was sent from, as evidence of who sent it and when."
+msgstr ""
+
+#: includes/clases/class-apg-withdrawal-help.php
+msgid "keeps the browser identifier, for the same reason. Both are personal data: keep them only if you are going to use them, and say so in your privacy policy."
+msgstr ""
+
+#: includes/clases/class-apg-withdrawal-help.php
+msgid "unchecked, uninstalling the plugin leaves the requests and the settings in place. Checked, it takes everything with it, and there is no going back."
+msgstr ""
+
+#: includes/clases/class-apg-withdrawal-help.php
+msgid "What happens the moment a declaration arrives."
+msgstr ""
+
+#: includes/clases/class-apg-withdrawal-help.php
+msgid "the plugin registers its own Withdrawal requested status, so those orders can be filtered, sorted and bulk-edited with the usual WooCommerce tools. Leave it as it comes and the order is not touched."
+msgstr ""
+
+#: includes/clases/class-apg-withdrawal-help.php
+msgid "asks the customer for an account when the money cannot go back the way it came. The number is checked with its international control digits, travels with the request as banking data, is included in the privacy exporter and is deleted by the eraser. Only ask for it if you really need it."
+msgstr ""
+
+#: includes/clases/class-apg-withdrawal-help.php
+msgid "a visitor who is not logged in gets a single-use link at the address on the order, and the request only counts once that link is opened. It keeps the date and time of the original submission, so nobody loses days of their period."
+msgstr ""
+
+#: includes/clases/class-apg-withdrawal-help.php
+msgid "Automation and emails"
+msgstr ""
+
+#: includes/clases/class-apg-withdrawal-help.php
+msgid "A withdrawal has two lives in parallel: the request, with its own status, and the WooCommerce order. Here the two are tied together so you do not have to update both by hand."
+msgstr ""
+
+#: includes/clases/class-apg-withdrawal-help.php
+msgid "Mark as ... when order becomes"
+msgstr ""
+
+#: includes/clases/class-apg-withdrawal-help.php
+msgid "one line per request status. Choose which order status moves it, and the request follows the order on its own. A refunded order marking the request as completed is the usual one."
+msgstr ""
+
+#: includes/clases/class-apg-withdrawal-help.php
+msgid "Email when changed to ..."
+msgstr ""
+
+#: includes/clases/class-apg-withdrawal-help.php
+msgid "which status changes write to the customer. The content of those emails is edited where all the WooCommerce ones are, in WooCommerce > Settings > Emails."
+msgstr ""
+
+#: includes/clases/class-apg-withdrawal-help.php
+msgid "What can be withdrawn"
+msgstr ""
+
+#: includes/clases/class-apg-withdrawal-help.php
+msgid "The law leaves some things out of the right of withdrawal: something made to measure, something unsealed, digital content already downloaded. Each product carries its own type in the Withdrawal tab of its data, and a category can set it for everything inside it."
+msgstr ""
+
+#: includes/clases/class-apg-withdrawal-help.php
+msgid "Withdrawal allowed"
+msgstr ""
+
+#: includes/clases/class-apg-withdrawal-help.php
+msgid "the usual one, and what a product inherits when neither it nor its categories say otherwise."
+msgstr ""
+
+#: includes/clases/class-apg-withdrawal-help.php
+msgid "there is no right of withdrawal for this product, and the customer is told so before buying."
+msgstr ""
+
+#: includes/clases/class-apg-withdrawal-help.php
+msgid "the right is lost once the download starts, provided the customer accepted it beforehand. This is the type that triggers the waiver at checkout."
+msgstr ""
+
+#: includes/clases/class-apg-withdrawal-help.php
+msgid "made to the customer's measure, so it is excluded by law."
+msgstr ""
+
+#: includes/clases/class-apg-withdrawal-help.php
+msgid "neither yes nor no: the request comes in and you decide. For the cases the law leaves to the condition of the goods."
+msgstr ""
+
+#: includes/clases/class-apg-withdrawal-help.php
+msgid "what each type says to the customer, on the product page between the price and the Add to cart button, and again inside the form. Leave a field empty to keep the translated text that comes with the plugin."
+msgstr ""
+
+#: includes/clases/class-apg-withdrawal-help.php
+msgid "Downloadable content loses the right of withdrawal only if the customer accepted it before the download started, and the shop can prove it. This checkbox at checkout is that proof."
+msgstr ""
+
+#: includes/clases/class-apg-withdrawal-help.php
+msgid "never, only on the products classified as digital content, or on every order. The middle one is the usual choice."
+msgstr ""
+
+#: includes/clases/class-apg-withdrawal-help.php
+msgid "comes filled in with the acknowledgement text. Edit it to say it your way, or empty the field to go back to the one that comes with the plugin."
+msgstr ""
+
+#: includes/clases/class-apg-withdrawal-help.php
+msgid "The requests"
+msgstr ""
+
+#: includes/clases/class-apg-withdrawal-help.php
+msgid "Every declaration your customers send is kept here, with its order, its date, the products it covers and what the customer wrote. It is the log you can show if you are ever asked to prove how you handled a withdrawal."
+msgstr ""
+
+#: includes/clases/class-apg-withdrawal-help.php
+msgid "it has arrived and nobody has looked at it yet. It is the status every request is born in."
+msgstr ""
+
+#: includes/clases/class-apg-withdrawal-help.php
+msgid "the withdrawal is valid. From here the refund follows, through WooCommerce."
+msgstr ""
+
+#: includes/clases/class-apg-withdrawal-help.php
+msgid "out of time, excluded product or whatever the reason. Write the reason down, because the customer can ask for it."
+msgstr ""
+
+#: includes/clases/class-apg-withdrawal-help.php
+msgid "everything is done, refund included. If you set up the automation, a refunded order leaves its request like this on its own."
 msgstr ""

@@ -9,7 +9,7 @@ Requires at least: 6.0
 
 Tested up to: 7.2
 
-Stable tag: 0.7.4
+Stable tag: 0.8.0
 
 Requires PHP: 7.4
 
@@ -58,6 +58,8 @@ Añade a WooCommerce un flujo de trabajo de desistimiento online con formulario 
 
 ### Más información
 Puedes obtener más información sobre **APG Desistimiento para WooCommerce** en nuestro [sitio web oficial](https://artprojectgroup.es/plugins-para-woocommerce/apg-withdrawal-for-woocommerce) y seguir el desarrollo en [GitHub](https://github.com/artprojectgroup/apg-withdrawal-for-woocommerce).
+
+Tienes la [documentación completa](https://artprojectgroup.es/documentacion/apg-desistimiento-para-woocommerce), con cada ajuste explicado uno a uno.
 
 ## Instalación
 1. Instala el plugin de una de estas formas:
@@ -129,9 +131,12 @@ Sí, bajo el espacio de nombres `apg-withdrawal/v1`. `GET /requests` y `GET /req
 El plugin no elimina automáticamente las solicitudes de desistimiento registradas. Como recomendación general, consérvalas al menos **5 años** desde su creación — el plazo habitual de prescripción para acciones de consumo y contractuales en muchas jurisdicciones europeas. Comprueba siempre el plazo de conservación aplicable en tu país antes de eliminar registros antiguos o usar el flujo de exportación CSV y desinstalación del plugin.
 
 ### ¿Dónde puedo obtener soporte?
-**APG Desistimiento para WooCommerce** es un plugin gratuito. **Art Project Group** no proporciona soporte técnico gratuito, pero ofrece un servicio de [soporte técnico](https://artprojectgroup.es/tienda/ticket-de-soporte) de pago para instalación y configuración.
+**APG Desistimiento para WooCommerce** es un plugin gratuito. **Art Project Group** no proporciona soporte técnico gratuito, pero ofrece un servicio de [soporte técnico](https://artprojectgroup.es/tienda/soporte-tecnico) de pago para instalación y configuración.
 
 ## Changelog
+### 0.8.0
+* Ayuda contextual en la pantalla de ajustes y en el listado de solicitudes, que explica cada opción sin salir de ellas.
+
 ### 0.7.4
 * Una solicitud de desistimiento ya registrada deja de registrarse por segunda vez cuando el cliente envía el formulario más de una vez.
 * Un pedido del que ya se ha desistido por completo deja de admitir nuevas solicitudes, ni del pedido entero otra vez ni de parte de sus productos.
