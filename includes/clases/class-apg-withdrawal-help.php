@@ -15,16 +15,6 @@ defined( 'ABSPATH' ) || exit;
 class APG_Withdrawal_Help {
 
 	/**
-	 * Dirección de la documentación completa, en español.
-	 */
-	const DOCS_URL = 'https://artprojectgroup.es/documentacion/apg-desistimiento-para-woocommerce';
-
-	/**
-	 * Dirección de la documentación completa, en inglés.
-	 */
-	const DOCS_URL_EN = 'https://artprojectgroup.com/documentation/apg-desistimiento-para-woocommerce';
-
-	/**
 	 * Sustituye la ayuda de la pantalla de ajustes por los paneles del plugin.
 	 *
 	 * La pantalla cuelga del menú de WooCommerce, que añade sus propios paneles y su lateral: aquí
@@ -98,7 +88,8 @@ class APG_Withdrawal_Help {
 	 * @return string
 	 */
 	private static function documentacion() {
-		return ( 0 === strpos( get_user_locale(), 'es' ) ) ? self::DOCS_URL : self::DOCS_URL_EN;
+		//El idioma lo decide apg_withdrawal_enlace(), que es quien guarda las dos direcciones.
+		return apg_withdrawal_enlace( 'documentacion' );
 	}
 
 	/**

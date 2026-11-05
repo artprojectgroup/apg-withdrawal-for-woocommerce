@@ -1,10 +1,10 @@
 === APG Withdrawal for WooCommerce ===
 Contributors: artprojectgroup
-Donate link: https://artprojectgroup.es/tienda/donacion
+Donate link: https://artprojectgroup.com/shop/donation
 Tags: withdrawal, right of withdrawal, woocommerce, refund, consumer rights
 Requires at least: 6.0
 Tested up to: 7.2
-Stable tag: 0.8.0
+Stable tag: 0.8.1
 Requires PHP: 7.4
 WC requires at least: 7.0
 WC tested up to: 11.2.1
@@ -43,13 +43,13 @@ Add to WooCommerce an online withdrawal workflow with customer form, My Account 
 * WPML and Polylang ready, both through `wpml-config.xml` and through runtime string registration.
 
 = Translations =
-* English: by [Art Project Group](https://artprojectgroup.es/) (default language).
-* Spanish: by [Art Project Group](https://artprojectgroup.es/).
+* English: by [Art Project Group](https://artprojectgroup.com/) (default language).
+* Spanish: by [Art Project Group](https://artprojectgroup.com/).
 
 = More information =
-You can learn more about **APG Withdrawal for WooCommerce** on our [official website](https://artprojectgroup.es/plugins-para-woocommerce/apg-withdrawal-for-woocommerce), and follow the development on [GitHub](https://github.com/artprojectgroup/apg-withdrawal-for-woocommerce).
+You can learn more about **APG Withdrawal for WooCommerce** on our [official website](https://artprojectgroup.com/woocommerce-plugins/apg-withdrawal-for-woocommerce), and follow the development on [GitHub](https://github.com/artprojectgroup/apg-withdrawal-for-woocommerce).
 
-You can also read the [full documentation](https://artprojectgroup.es/documentacion/apg-desistimiento-para-woocommerce), with every setting explained one by one.
+You can also read the [full documentation](https://artprojectgroup.com/documentation/apg-withdrawal-for-woocommerce), with every setting explained one by one.
 
 == Installation ==
 1. Install the plugin in one of the following ways:
@@ -121,7 +121,7 @@ Yes, under the `apg-withdrawal/v1` namespace. `GET /requests` and `GET /requests
 The plugin does not delete withdrawal request records automatically. As a general recommendation, keep them for at least **5 years** after their creation — the typical statute of limitations for consumer and contractual actions in many EU jurisdictions. Always check the applicable retention period in your country before deleting old records or running the plugin's CSV export + uninstall flow.
 
 = Where can I get support? =
-**APG Withdrawal for WooCommerce** is a free plugin. **Art Project Group** does not provide free technical support, but offers a paid [technical support](https://artprojectgroup.es/tienda/soporte-tecnico) service for installation and configuration.
+**APG Withdrawal for WooCommerce** is a free plugin. **Art Project Group** does not provide free technical support, but offers a paid [technical support](https://artprojectgroup.com/shop/technical-support) service for installation and configuration.
 
 == Screenshots ==
 1. Plugin settings page with general options, automation rules and customer email notifications.
@@ -132,6 +132,8 @@ The plugin does not delete withdrawal request records automatically. As a genera
 6. Edit withdrawal screen with full request details and status history.
 
 == Changelog ==
+= 0.8.1 =
+* The links to the website, the documentation, the donation and the support now open in the language of whoever is looking at the screen.
 = 0.8.0 =
 * Contextual help on the settings screen and on the requests list, explaining every option without leaving them.
 = 0.7.4 =
@@ -239,7 +241,7 @@ The plugin does not delete withdrawal request records automatically. As a genera
 == Thanks ==
 Thanks to everyone who uses the plugin, helps improve it, makes a donation or encourages us with their comments.
 
-If you find this plugin useful, you can support its development with a [small donation](https://artprojectgroup.es/tienda/donacion).
+If you find this plugin useful, you can support its development with a [small donation](https://artprojectgroup.com/shop/donation).
 
 == External Services ==
 This plugin connects to the WordPress.org Plugins API to fetch information about the plugin (such as the rating). It sends the plugin slug when requesting data. More information: https://wordpress.org/about/privacy/

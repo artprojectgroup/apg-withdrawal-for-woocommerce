@@ -15,7 +15,7 @@ global $apg_withdrawal;
 	<div class="fila">
 		<div class="columna">
 			<p><?php esc_html_e( 'If you enjoy this plugin and find it helpful, please make a donation:', 'apg-withdrawal-for-woocommerce' ); ?></p>
-			<p><a href="<?php echo esc_url( $apg_withdrawal['donacion'] ); ?>" target="_blank" title="<?php esc_attr_e( 'Make a donation by ', 'apg-withdrawal-for-woocommerce' ); ?>APG"><span class="genericon genericon-cart"></span></a> </p>
+			<p><a href="<?php echo esc_url( apg_withdrawal_enlace( 'donacion' ) ); ?>" target="_blank" title="<?php esc_attr_e( 'Make a donation by ', 'apg-withdrawal-for-woocommerce' ); ?>APG"><span class="genericon genericon-cart"></span></a> </p>
 		</div>
 		<div class="columna">
 			<p>Art Project Group:</p>
@@ -43,7 +43,7 @@ global $apg_withdrawal;
 		</div>
 		<div class="columna">
 			<p><?php esc_html_e( 'Documentation and Support:', 'apg-withdrawal-for-woocommerce' ); ?></p>
-			<p><a href="<?php echo esc_url( $apg_withdrawal['plugin_url'] ); ?>" title="<?php echo esc_attr( $apg_withdrawal['plugin'] ); ?>"><span class="genericon genericon-book"></span></a> <a href="<?php echo esc_url( $apg_withdrawal['soporte'] ); ?>" title="<?php esc_attr_e( 'Support', 'apg-withdrawal-for-woocommerce' ); ?>"><span class="genericon genericon-cog"></span></a> </p>
+			<p><a href="<?php echo esc_url( apg_withdrawal_enlace( 'plugin_url' ) ); ?>" title="<?php echo esc_attr( $apg_withdrawal['plugin'] ); ?>"><span class="genericon genericon-book"></span></a> <a href="<?php echo esc_url( apg_withdrawal_enlace( 'soporte' ) ); ?>" title="<?php esc_attr_e( 'Support', 'apg-withdrawal-for-woocommerce' ); ?>"><span class="genericon genericon-cog"></span></a> </p>
 		</div>
 	</div>
 

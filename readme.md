@@ -8,15 +8,13 @@ Tags: withdrawal, right of withdrawal, woocommerce, refund, consumer rights
 Requires at least: 6.0
 
 Tested up to: 7.2
-
-Stable tag: 0.8.0
+Stable tag: 0.8.1
 
 Requires PHP: 7.4
 
 WC requires at least: 7.0
 
 WC tested up to: 11.2.1
-
 License: GNU General Public License v3 or later
 
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
@@ -57,7 +55,7 @@ Añade a WooCommerce un flujo de trabajo de desistimiento online con formulario 
 * *Español*: por [**Art Project Group**](https://artprojectgroup.es/).
 
 ### Más información
-Puedes obtener más información sobre **APG Desistimiento para WooCommerce** en nuestro [sitio web oficial](https://artprojectgroup.es/plugins-para-woocommerce/apg-withdrawal-for-woocommerce) y seguir el desarrollo en [GitHub](https://github.com/artprojectgroup/apg-withdrawal-for-woocommerce).
+Puedes obtener más información sobre **APG Desistimiento para WooCommerce** en nuestro [sitio web oficial](https://artprojectgroup.es/plugins-para-woocommerce/apg-desistimiento-para-woocommerce) y seguir el desarrollo en [GitHub](https://github.com/artprojectgroup/apg-withdrawal-for-woocommerce).
 
 Tienes la [documentación completa](https://artprojectgroup.es/documentacion/apg-desistimiento-para-woocommerce), con cada ajuste explicado uno a uno.
 
@@ -134,6 +132,8 @@ El plugin no elimina automáticamente las solicitudes de desistimiento registrad
 **APG Desistimiento para WooCommerce** es un plugin gratuito. **Art Project Group** no proporciona soporte técnico gratuito, pero ofrece un servicio de [soporte técnico](https://artprojectgroup.es/tienda/soporte-tecnico) de pago para instalación y configuración.
 
 ## Changelog
+### 0.8.1
+* Los enlaces a la web, a la documentación, a la donación y al soporte se abren en el idioma de quien mira la pantalla.
 ### 0.8.0
 * Ayuda contextual en la pantalla de ajustes y en el listado de solicitudes, que explica cada opción sin salir de ellas.
 

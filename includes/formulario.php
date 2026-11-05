@@ -17,14 +17,14 @@ $tab = 1;
 ?>
 <div class="wrap woocommerce">
 	<h2><?php esc_html_e( 'APG Withdrawal Options.', 'apg-withdrawal-for-woocommerce' ); ?></h2>
-	<h3><a href="<?php echo esc_url( $apg_withdrawal['plugin_url'] ); ?>" title="Art Project Group"><?php echo esc_html( $apg_withdrawal['plugin'] ); ?></a></h3>
+	<h3><a href="<?php echo esc_url( apg_withdrawal_enlace( 'plugin_url' ) ); ?>" title="Art Project Group"><?php echo esc_html( $apg_withdrawal['plugin'] ); ?></a></h3>
 	<p><?php esc_html_e( 'Add to WooCommerce an online withdrawal workflow with customer form, My Account integration and admin request log.', 'apg-withdrawal-for-woocommerce' ); ?></p>
 	<?php apg_withdrawal_print_core_feature_warning(); ?>
 	<?php include 'cuadro-informacion.php'; ?>
 	<form id="formulario" method="post" action="options.php">
 		<?php settings_fields( 'apg_withdrawal_settings_group' ); ?>
 		<?php // phpcs:ignore PluginCheck.CodeAnalysis.ImageFunctions.NonEnqueuedImage -- Static plugin image does not require attachment ID ?>
-		<div class="cabecera"> <a href="<?php echo esc_url( $apg_withdrawal['plugin_url'] ); ?>" title="<?php echo esc_attr( $apg_withdrawal['plugin'] ); ?>" target="_blank"><img src="<?php echo esc_url( plugins_url( 'assets/images/cabecera.jpg', apg_withdrawal_DIRECCION ) ); ?>" class="imagen" alt="<?php echo esc_attr( $apg_withdrawal['plugin'] ); ?>" /></a> </div>
+		<div class="cabecera"> <a href="<?php echo esc_url( apg_withdrawal_enlace( 'plugin_url' ) ); ?>" title="<?php echo esc_attr( $apg_withdrawal['plugin'] ); ?>" target="_blank"><img src="<?php echo esc_url( plugins_url( 'assets/images/cabecera.jpg', apg_withdrawal_DIRECCION ) ); ?>" class="imagen" alt="<?php echo esc_attr( $apg_withdrawal['plugin'] ); ?>" /></a> </div>
 		<table class="form-table apg-table">
 			<tr valign="top">
 				<th scope="row" class="titledesc">

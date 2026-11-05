@@ -22,12 +22,31 @@ global $apg_withdrawal;
  *   puntuacion:string
  * }
  */
+/* Devuelve la direccion de la web en el idioma de quien mira la pantalla. Se resuelve al usarla y
+nunca al cargar el plugin, porque hasta que WordPress no identifica al usuario no se sabe su idioma. */
+function apg_withdrawal_enlace( $clave ) {
+	global $apg_withdrawal;
+
+	if ( ! isset( $apg_withdrawal['enlaces'][ $clave ] ) ) {
+		return '';
+	}
+
+	$par = $apg_withdrawal['enlaces'][ $clave ];
+
+	return ( 0 === strpos( get_user_locale(), 'es' ) ) ? $par[0] : $par[1];
+}
+
 $apg_withdrawal = array(
 	'plugin'     => 'APG Withdrawal for WooCommerce',
 	'plugin_uri' => 'apg-withdrawal-for-woocommerce',
-	'donacion'   => 'https://artprojectgroup.es/tienda/donacion',
-	'soporte'    => 'https://artprojectgroup.es/tienda/soporte-tecnico',
-	'plugin_url' => 'https://artprojectgroup.es/plugins-para-woocommerce/apg-withdrawal-for-woocommerce',
+	//Cada direccion de la web, en espanol y en ingles.
+	'enlaces' => array(
+		'web' => array( 'https://artprojectgroup.es/', 'https://artprojectgroup.com/' ),
+		'plugin_url' => array( 'https://artprojectgroup.es/plugins-para-woocommerce/apg-desistimiento-para-woocommerce', 'https://artprojectgroup.com/woocommerce-plugins/apg-withdrawal-for-woocommerce' ),
+		'donacion' => array( 'https://artprojectgroup.es/tienda/donacion', 'https://artprojectgroup.com/shop/donation' ),
+		'soporte' => array( 'https://artprojectgroup.es/tienda/soporte-tecnico', 'https://artprojectgroup.com/shop/technical-support' ),
+		'documentacion' => array( 'https://artprojectgroup.es/documentacion/apg-desistimiento-para-woocommerce', 'https://artprojectgroup.com/documentation/apg-withdrawal-for-woocommerce' ),
+		),
 	'ajustes'    => 'admin.php?page=apg-withdrawal-for-woocommerce',
 	'puntuacion' => 'https://www.wordpress.org/support/view/plugin-reviews/apg-withdrawal-for-woocommerce',
 );
@@ -651,8 +670,8 @@ function apg_withdrawal_enlaces( $enlaces, $archivo ) {
 
 	if ( $archivo === apg_withdrawal_DIRECCION ) {
 		$plugin    = apg_withdrawal_plugin( $apg_withdrawal['plugin_uri'] );
-		$enlaces[] = '<a href="' . $apg_withdrawal['donacion'] . '" target="_blank" title="' . esc_attr__( 'Make a donation by ', 'apg-withdrawal-for-woocommerce' ) . 'APG"><span class="genericon genericon-cart"></span></a>';
-		$enlaces[] = '<a href="' . esc_url( $apg_withdrawal['plugin_url'] ) . '" target="_blank" title="' . esc_attr( $apg_withdrawal['plugin'] ) . '"><strong class="artprojectgroup">APG</strong></a>';
+		$enlaces[] = '<a href="' . apg_withdrawal_enlace( 'donacion' ) . '" target="_blank" title="' . esc_attr__( 'Make a donation by ', 'apg-withdrawal-for-woocommerce' ) . 'APG"><span class="genericon genericon-cart"></span></a>';
+		$enlaces[] = '<a href="' . esc_url( apg_withdrawal_enlace( 'plugin_url' ) ) . '" target="_blank" title="' . esc_attr( $apg_withdrawal['plugin'] ) . '"><strong class="artprojectgroup">APG</strong></a>';
 		$enlaces[] = '<a href="https://www.facebook.com/artprojectgroup" title="' . esc_attr__( 'Follow us on ', 'apg-withdrawal-for-woocommerce' ) . 'Facebook" target="_blank"><span class="genericon genericon-facebook-alt"></span></a> <a href="https://x.com/artprojectgroup" title="' . esc_attr__( 'Follow us on ', 'apg-withdrawal-for-woocommerce' ) . 'X" target="_blank"><span class="genericon genericon-x-alt"></span></a> <a href="https://es.linkedin.com/in/artprojectgroup" title="' . esc_attr__( 'Follow us on ', 'apg-withdrawal-for-woocommerce' ) . 'LinkedIn" target="_blank"><span class="genericon genericon-linkedin"></span></a>';
 		$enlaces[] = '<a href="https://profiles.wordpress.org/artprojectgroup/" title="' . esc_attr__( 'More plugins on ', 'apg-withdrawal-for-woocommerce' ) . 'WordPress" target="_blank"><span class="genericon genericon-wordpress"></span></a>';
 		$enlaces[] = '<a href="mailto:info@artprojectgroup.es" title="' . esc_attr__( 'Contact us by ', 'apg-withdrawal-for-woocommerce' ) . 'e-mail"><span class="genericon genericon-mail"></span></a>';
@@ -677,7 +696,7 @@ function apg_withdrawal_enlace_de_ajustes( $enlaces ) {
 	global $apg_withdrawal;
 
 	$nuevos = array(
-		'<a href="' . esc_url( $apg_withdrawal['soporte'] ) . '" title="' . esc_attr__( 'Support of ', 'apg-withdrawal-for-woocommerce' ) . esc_attr( $apg_withdrawal['plugin'] ) . '">' . esc_html__( 'Support', 'apg-withdrawal-for-woocommerce' ) . '</a>',
+		'<a href="' . esc_url( apg_withdrawal_enlace( 'soporte' ) ) . '" title="' . esc_attr__( 'Support of ', 'apg-withdrawal-for-woocommerce' ) . esc_attr( $apg_withdrawal['plugin'] ) . '">' . esc_html__( 'Support', 'apg-withdrawal-for-woocommerce' ) . '</a>',
 		'<a href="' . esc_url( admin_url( $apg_withdrawal['ajustes'] ) ) . '" title="' . esc_attr__( 'Settings of ', 'apg-withdrawal-for-woocommerce' ) . esc_attr( $apg_withdrawal['plugin'] ) . '">' . esc_html__( 'Settings', 'apg-withdrawal-for-woocommerce' ) . '</a>',
 		'<a href="' . esc_url( admin_url( 'edit.php?post_type=apg_withdrawal' ) ) . '" title="' . esc_attr__( 'Withdrawals', 'apg-withdrawal-for-woocommerce' ) . '">' . esc_html__( 'Withdrawals', 'apg-withdrawal-for-woocommerce' ) . '</a>',
 	);
