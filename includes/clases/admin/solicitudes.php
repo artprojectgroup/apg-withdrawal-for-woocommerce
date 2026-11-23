@@ -333,6 +333,11 @@ function apg_withdrawal_admin_column_content( $column, $post_id ) {
 			}
 			break;
 		case 'apg_withdrawal_scope':
+			if ( 'termination' === get_post_meta( $post_id, '_apg_withdrawal_kind', true ) ) {
+				echo esc_html__( 'Contract termination', 'apg-withdrawal-for-woocommerce' );
+				break;
+			}
+
 			echo esc_html( 'partial' === get_post_meta( $post_id, '_apg_withdrawal_scope', true ) ? __( 'Specific products only', 'apg-withdrawal-for-woocommerce' ) : __( 'Full order', 'apg-withdrawal-for-woocommerce' ) );
 			break;
 		case 'apg_withdrawal_status':
@@ -368,6 +373,7 @@ function apg_withdrawal_render_details_metabox( $post ) {
 		'_apg_withdrawal_phone'           => __( 'Phone', 'apg-withdrawal-for-woocommerce' ),
 		'_apg_withdrawal_order'           => __( 'Order', 'apg-withdrawal-for-woocommerce' ),
 		'_apg_withdrawal_scope'           => __( 'Scope', 'apg-withdrawal-for-woocommerce' ),
+		'_apg_withdrawal_termination_effective' => __( 'Termination takes effect (UTC)', 'apg-withdrawal-for-woocommerce' ),
 		'_apg_withdrawal_iban'            => __( 'Account for the refund', 'apg-withdrawal-for-woocommerce' ),
 		'_apg_withdrawal_deadline_source' => __( 'Deadline source', 'apg-withdrawal-for-woocommerce' ),
 		'_apg_withdrawal_deadline_date'   => __( 'Base date', 'apg-withdrawal-for-woocommerce' ),

@@ -170,7 +170,7 @@ function apg_withdrawal_send_admin_email( $post_id, $name, $email, $order_ref, $
 			$details ? $details : __( '(empty)', 'apg-withdrawal-for-woocommerce' ),
 			'',
 			__( 'Admin edit link:', 'apg-withdrawal-for-woocommerce' ),
-			get_edit_post_link( $post_id, '' ),
+			apg_withdrawal_get_request_edit_url( $post_id ),
 		)
 	);
 

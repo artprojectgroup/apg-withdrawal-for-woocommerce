@@ -102,11 +102,50 @@ function apg_withdrawal_render_classic_digital_waiver() {
 	?>
 	<p class="form-row apg-withdrawal-digital-waiver-row" id="apg_withdrawal_digital_waiver_field">
 		<label class="woocommerce-form__label woocommerce-form__label-for-checkbox checkbox">
-			<input type="checkbox" class="woocommerce-form__input woocommerce-form__input-checkbox input-checkbox" name="apg_withdrawal_digital_waiver" id="apg_withdrawal_digital_waiver" value="1" />
+			<input type="checkbox" class="woocommerce-form__input woocommerce-form__input-checkbox input-checkbox" name="apg_withdrawal_digital_waiver" id="apg_withdrawal_digital_waiver" value="1"<?php checked( apg_withdrawal_classic_digital_waiver_was_ticked() ); ?> />
 			<span class="woocommerce-terms-and-conditions-checkbox-text"><?php echo esc_html( apg_withdrawal_get_digital_waiver_label() ); ?></span>
 		</label>
 	</p>
 	<?php
+}
+
+/**
+ * Reports whether the customer had already ticked the waiver, so a redrawn
+ * checkbox comes back ticked.
+ *
+ * This checkbox lives inside `.woocommerce-checkout-payment`, which is one of
+ * the two fragments WooCommerce replaces whenever the order review is
+ * refreshed — a change of address, of shipping method or of payment method.
+ * Rendered with no state of its own it came back empty every time, so a
+ * customer who had waived the right under Art. 16(m) silently stopped having
+ * waived it, and the shop lost the very evidence this plugin exists to keep.
+ *
+ * The state is read back from the request that redraws the field, never from a
+ * store of our own: WooCommerce sends the whole checkout form serialised in
+ * `post_data` on the refresh, and sends the fields themselves when the form is
+ * re-rendered after a validation error. Each path is accepted only once its own
+ * nonce checks out, so nothing here trusts an unauthenticated POST.
+ *
+ * @return bool True when the waiver should be rendered as ticked.
+ */
+function apg_withdrawal_classic_digital_waiver_was_ticked() {
+	// The order-review refresh: everything the customer had filled in travels
+	// in `post_data`, under the nonce WooCommerce checks before answering.
+	if ( isset( $_POST['post_data'], $_POST['security'] )
+		&& wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['security'] ) ), 'update-order-review' ) ) {
+		$enviado = array();
+		parse_str( sanitize_text_field( wp_unslash( $_POST['post_data'] ) ), $enviado );
+
+		return ! empty( $enviado['apg_withdrawal_digital_waiver'] );
+	}
+
+	// The checkout form printed again after a validation error.
+	if ( isset( $_POST['woocommerce-process-checkout-nonce'] )
+		&& wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['woocommerce-process-checkout-nonce'] ) ), 'woocommerce-process_checkout' ) ) {
+		return ! empty( $_POST['apg_withdrawal_digital_waiver'] );
+	}
+
+	return false;
 }
 add_action( 'woocommerce_checkout_before_terms_and_conditions', 'apg_withdrawal_render_classic_digital_waiver', 999 );
 

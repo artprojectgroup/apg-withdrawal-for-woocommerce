@@ -222,6 +222,89 @@ $tab = 1;
 			</tr>
 		</table>
 
+		<h3><?php esc_html_e( 'Contract termination', 'apg-withdrawal-for-woocommerce' ); ?></h3>
+		<p>
+			<?php
+			printf(
+				wp_kses(
+					/* translators: %s: shortcode tag. */
+					__( 'Article 23 of the proposed Digital Fairness Act will require shops that let customers sign up online to let them terminate the contract online too, for as long as it lasts. It is a proposal, so nothing is required of you yet: switch it on only if you want to be ready early. Publish %s on the page you select.', 'apg-withdrawal-for-woocommerce' ),
+					array( 'code' => array() )
+				),
+				'<code>[apg_withdrawal_termination_form]</code>'
+			);
+			?>
+		</p>
+		<table class="form-table apg-table">
+			<tr valign="top">
+				<th scope="row" class="titledesc">
+					<label for="apg_withdrawal_settings[termination_enabled]">
+						<?php esc_html_e( 'Offer online contract termination?', 'apg-withdrawal-for-woocommerce' ); ?>
+					</label>
+				</th>
+				<td class="forminp">
+					<input id="apg_withdrawal_settings[termination_enabled]" name="apg_withdrawal_settings[termination_enabled]" type="checkbox" value="1" <?php checked( isset( $apg_withdrawal_settings['termination_enabled'] ) ? $apg_withdrawal_settings['termination_enabled'] : '0', '1' ); ?> tabindex="<?php echo esc_attr( $tab ); $tab++; ?>" />
+					<p class="description"><?php esc_html_e( 'Off by default. Terminating is not withdrawing: it carries no deadline and stays available for as long as the contract does, so it suits shops with subscriptions or continuing services.', 'apg-withdrawal-for-woocommerce' ); ?></p>
+				</td>
+			</tr>
+			<tr valign="top">
+				<th scope="row" class="titledesc">
+					<label for="apg_withdrawal_settings[termination_page_id]">
+						<?php esc_html_e( 'Contract termination page', 'apg-withdrawal-for-woocommerce' ); ?>
+					</label>
+				</th>
+				<td class="forminp">
+					<?php
+					echo wp_kses(
+						wp_dropdown_pages(
+							array(
+								'name'              => 'apg_withdrawal_settings[termination_page_id]',
+								'selected'          => absint( isset( $apg_withdrawal_settings['termination_page_id'] ) ? $apg_withdrawal_settings['termination_page_id'] : 0 ),
+								'echo'              => 0,
+								'show_option_none'  => __( 'Select a page', 'apg-withdrawal-for-woocommerce' ),
+								'option_none_value' => '0',
+							)
+						),
+						array(
+							'select' => array(
+								'name'  => true,
+								'id'    => true,
+								'class' => true,
+							),
+							'option' => array(
+								'value'    => true,
+								'selected' => true,
+							),
+						)
+					);
+					?>
+					<p class="description">
+						<?php
+						printf(
+							wp_kses(
+								/* translators: %s: shortcode tag. */
+								__( 'Page where the shortcode %s is published. Link to it from your footer or your account area with the link shortcode.', 'apg-withdrawal-for-woocommerce' ),
+								array( 'code' => array() )
+							),
+							'<code>[apg_withdrawal_termination_form]</code>'
+						);
+						?>
+					</p>
+				</td>
+			</tr>
+			<tr valign="top">
+				<th scope="row" class="titledesc">
+					<label for="apg_withdrawal_settings[termination_label]">
+						<?php esc_html_e( 'Termination link text', 'apg-withdrawal-for-woocommerce' ); ?>
+					</label>
+				</th>
+				<td class="forminp">
+					<input id="apg_withdrawal_settings[termination_label]" name="apg_withdrawal_settings[termination_label]" type="text" value="<?php echo esc_attr( isset( $apg_withdrawal_settings['termination_label'] ) ? $apg_withdrawal_settings['termination_label'] : '' ); ?>" placeholder="<?php echo esc_attr( apg_withdrawal_get_termination_label() ); ?>" tabindex="<?php echo esc_attr( $tab ); $tab++; ?>" />
+					<p class="description"><?php esc_html_e( 'Leave it empty for the prescribed wording. Article 23 asks for "terminate the contract here" or an unambiguous equivalent, so anything you write here has to be just as plain.', 'apg-withdrawal-for-woocommerce' ); ?></p>
+				</td>
+			</tr>
+		</table>
+
 		<h3><?php esc_html_e( 'Automation', 'apg-withdrawal-for-woocommerce' ); ?></h3>
 		<p><?php esc_html_e( 'Automatically update withdrawal request status when the linked WooCommerce order changes status.', 'apg-withdrawal-for-woocommerce' ); ?></p>
 		<table class="form-table apg-table">

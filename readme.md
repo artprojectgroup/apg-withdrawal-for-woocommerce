@@ -8,13 +8,13 @@ Tags: withdrawal, right of withdrawal, woocommerce, refund, consumer rights
 Requires at least: 6.0
 
 Tested up to: 7.2
-Stable tag: 0.8.1
+Stable tag: 0.9.0
 
 Requires PHP: 7.4
 
 WC requires at least: 7.0
 
-WC tested up to: 11.2.1
+WC tested up to: 11.3.1
 License: GNU General Public License v3 or later
 
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
@@ -34,6 +34,7 @@ Añade a WooCommerce un flujo de trabajo de desistimiento online con formulario 
 * Registro de solicitudes en el panel de administración con todos los detalles (CPT), vistas por estado con contadores, cambios de estado en lote y columna de estado ordenable.
 * Estado de pedido propio de WooCommerce *Desistimiento solicitado*, aplicable opcionalmente al pedido en cuanto se recibe una declaración, para poder filtrar, ordenar y editar en lote los pedidos afectados con las herramientas nativas.
 * Cuenta para el reembolso (IBAN) opcional, validada con los dígitos de control internacionales (ISO 7064 MOD-97-10).
+* Función de rescisión de contrato en línea (artículo 23 de la propuesta de Digital Fairness Act): formulario propio con los textos que fija el artículo, disponible mientras dure el contrato y sin plazo que lo limite, y acuse de recibo que indica la fecha en que la rescisión surte efecto. Viene desactivada, y el filtro `apg_withdrawal_termination_effective_date` sirve para las tiendas cuyos contratos terminan con preaviso o al cerrar el ciclo de facturación.
 * Doble confirmación opcional para invitados: la solicitud queda retenida hasta que el cliente abre un enlace de un solo uso enviado a la dirección del pedido, conservando la fecha y la hora del envío original.
 * Ajuste de jurisdicción (base UE / España) que determina la referencia normativa que se muestra al cliente.
 * API REST bajo `apg-withdrawal/v1` para listar, consultar, crear y tramitar solicitudes desde tiendas headless e integraciones de back-office.
@@ -132,6 +133,13 @@ El plugin no elimina automáticamente las solicitudes de desistimiento registrad
 **APG Desistimiento para WooCommerce** es un plugin gratuito. **Art Project Group** no proporciona soporte técnico gratuito, pero ofrece un servicio de [soporte técnico](https://artprojectgroup.es/tienda/soporte-tecnico) de pago para instalación y configuración.
 
 ## Changelog
+### 0.9.0
+* Nueva función de rescisión de contrato en línea, la que exigirá el artículo 23 de la propuesta de Digital Fairness Act: formulario propio de dos pasos, los textos que fija la norma y un acuse que indica la fecha en que surte efecto. Viene desactivada.
+* La renuncia por contenido digital ya no pierde la marca en el checkout clásico cuando WooCommerce refresca el pedido al cambiar la dirección, el envío o la forma de pago.
+* La confirmación por correo de los invitados rige también para las rescisiones de contrato, así que la tienda que la exige la exige en todo.
+* El aviso de nueva solicitud al comercio vuelve a llevar el enlace para abrirla, que se perdía siempre que quien enviaba el formulario era el cliente.
+* Compatibilidad con WooCommerce 11.3.1 verificada.
+
 ### 0.8.1
 * Los enlaces a la web, a la documentación, a la donación y al soporte se abren en el idioma de quien mira la pantalla.
 ### 0.8.0

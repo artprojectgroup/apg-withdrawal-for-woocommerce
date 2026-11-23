@@ -196,6 +196,16 @@ function apg_withdrawal_handle_verification_link() {
 
 	$payload['verified'] = true;
 
+	// The parked payload says which declaration it is. Both travel through the
+	// same single-use link, and each goes back to its own processor: a
+	// termination registered as a withdrawal would be the wrong document under
+	// the wrong article.
+	if ( isset( $payload['kind'] ) && 'termination' === $payload['kind'] ) {
+		apg_withdrawal_redirect_with_notice( apg_withdrawal_process_termination_data( $payload ) );
+
+		exit;
+	}
+
 	apg_withdrawal_redirect_with_notice( apg_withdrawal_process_submission_data( $payload ) );
 }
 add_action( 'template_redirect', 'apg_withdrawal_handle_verification_link' );

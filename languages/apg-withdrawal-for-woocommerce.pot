@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: APG Withdrawal for WooCommerce\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-26 17:11+0000\n"
+"POT-Creation-Date: 2026-11-23 20:24+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: \n"
@@ -18,7 +18,7 @@ msgstr ""
 
 #. Plugin Name of the plugin
 #: apg-withdrawal-for-woocommerce.php
-#: includes/admin/funciones-apg.php:118
+#: includes/admin/funciones-apg.php:137
 msgid "APG Withdrawal for WooCommerce"
 msgstr ""
 
@@ -42,153 +42,153 @@ msgstr ""
 msgid "https://artprojectgroup.es/"
 msgstr ""
 
+#: apg-withdrawal-for-woocommerce.php:160
 #: apg-withdrawal-for-woocommerce.php:161
-#: apg-withdrawal-for-woocommerce.php:162
-#: apg-withdrawal-for-woocommerce.php:244
-#: apg-withdrawal-for-woocommerce.php:246
-#: apg-withdrawal-for-woocommerce.php:247
-#: includes/admin/funciones-apg.php:682
+#: apg-withdrawal-for-woocommerce.php:270
+#: apg-withdrawal-for-woocommerce.php:272
+#: apg-withdrawal-for-woocommerce.php:273
+#: includes/admin/funciones-apg.php:729
 msgid "Withdrawals"
 msgstr ""
 
-#: apg-withdrawal-for-woocommerce.php:168
+#: apg-withdrawal-for-woocommerce.php:167
 msgid "APG Withdrawal"
 msgstr ""
 
-#: apg-withdrawal-for-woocommerce.php:169
-#: apg-withdrawal-for-woocommerce.php:245
-#: apg-withdrawal-for-woocommerce.php:321
-#: apg-withdrawal-for-woocommerce.php:349
+#: apg-withdrawal-for-woocommerce.php:168
+#: apg-withdrawal-for-woocommerce.php:271
+#: apg-withdrawal-for-woocommerce.php:347
+#: apg-withdrawal-for-woocommerce.php:375
 #: includes/clases/pedidos.php:69
 #: includes/clases/pedidos.php:74
 #: includes/clases/producto.php:18
 msgid "Withdrawal"
 msgstr ""
 
-#: apg-withdrawal-for-woocommerce.php:248
+#: apg-withdrawal-for-woocommerce.php:274
 msgid "Add withdrawal"
 msgstr ""
 
-#: apg-withdrawal-for-woocommerce.php:249
+#: apg-withdrawal-for-woocommerce.php:275
 msgid "Edit withdrawal"
 msgstr ""
 
-#: apg-withdrawal-for-woocommerce.php:250
+#: apg-withdrawal-for-woocommerce.php:276
 msgid "View withdrawal"
 msgstr ""
 
-#: apg-withdrawal-for-woocommerce.php:251
+#: apg-withdrawal-for-woocommerce.php:277
 msgid "Search withdrawals"
 msgstr ""
 
-#: apg-withdrawal-for-woocommerce.php:395
+#: apg-withdrawal-for-woocommerce.php:421
 msgid "Withdraw from the contract here *"
 msgstr ""
 
-#: apg-withdrawal-for-woocommerce.php:400
+#: apg-withdrawal-for-woocommerce.php:426
 #: includes/clases/enlace.php:56
 msgid "Withdraw from the contract here"
 msgstr ""
 
-#: apg-withdrawal-for-woocommerce.php:419
+#: apg-withdrawal-for-woocommerce.php:445
 msgid "* The standard withdrawal period for this order may have expired. You may still submit a request and it will be reviewed by the store."
 msgstr ""
 
-#: apg-withdrawal-for-woocommerce.php:537
-#: includes/admin/funciones-apg.php:236
+#: apg-withdrawal-for-woocommerce.php:563
+#: includes/admin/funciones-apg.php:255
 msgid "Confirm withdrawal"
 msgstr ""
 
-#: includes/admin/funciones-apg.php:169
+#: includes/admin/funciones-apg.php:188
 msgid "WooCommerce's own order withdrawal feature is switched on."
 msgstr ""
 
-#: includes/admin/funciones-apg.php:170
+#: includes/admin/funciones-apg.php:189
 msgid "Your customers can reach two different withdrawal forms, at two different addresses. Each one keeps its own record and sends its own acknowledgement, and neither knows about the other, so the same declaration can be registered twice and answered twice."
 msgstr ""
 
-#: includes/admin/funciones-apg.php:173
+#: includes/admin/funciones-apg.php:192
 msgid "Turn off the WooCommerce feature"
 msgstr ""
 
-#: includes/admin/funciones-apg.php:215
+#: includes/admin/funciones-apg.php:234
 msgid "APG Withdrawal for WooCommerce requires WooCommerce to be installed and active."
 msgstr ""
 
 #. translators: %s saved button label.
-#: includes/admin/funciones-apg.php:422
+#: includes/admin/funciones-apg.php:469
 #, php-format
 msgid "The confirmation button label \"%s\" looks ambiguous. Article 11a of Directive 2011/83/EU (added by Directive (EU) 2023/2673) requires the wording to make it clear to the consumer that they are exercising their right of withdrawal. Consider using \"Confirm withdrawal\" or an equivalent unambiguous wording in your language."
 msgstr ""
 
-#: includes/admin/funciones-apg.php:472
+#: includes/admin/funciones-apg.php:519
 msgid "European Union (baseline)"
 msgstr ""
 
-#: includes/admin/funciones-apg.php:473
+#: includes/admin/funciones-apg.php:520
 msgid "Spain"
 msgstr ""
 
-#: includes/admin/funciones-apg.php:523
+#: includes/admin/funciones-apg.php:570
 msgid "This request is governed by Articles 102 to 108 of Royal Legislative Decree 1/2007 (TRLGDCU) and by Article 11a of Directive 2011/83/EU, added by Directive (EU) 2023/2673, which applies directly from 19 June 2026."
 msgstr ""
 
-#: includes/admin/funciones-apg.php:526
+#: includes/admin/funciones-apg.php:573
 msgid "This request is governed by Directive 2011/83/EU on consumer rights, as amended by Directive (EU) 2023/2673, whose Article 11a has applied since 19 June 2026."
 msgstr ""
 
 #. translators: %s plugin name
-#: includes/admin/funciones-apg.php:620
-#: includes/admin/funciones-apg.php:634
+#: includes/admin/funciones-apg.php:667
+#: includes/admin/funciones-apg.php:681
 #: includes/cuadro-informacion.php:56
 #, php-format
 msgid "Please, rate %s:"
 msgstr ""
 
 #. translators: %s plugin name
-#: includes/admin/funciones-apg.php:620
+#: includes/admin/funciones-apg.php:667
 msgid "Unknown rating"
 msgstr ""
 
-#: includes/admin/funciones-apg.php:654
+#: includes/admin/funciones-apg.php:701
 #: includes/cuadro-informacion.php:18
 msgid "Make a donation by "
 msgstr ""
 
-#: includes/admin/funciones-apg.php:656
+#: includes/admin/funciones-apg.php:703
 #: includes/cuadro-informacion.php:30
 msgid "Follow us on "
 msgstr ""
 
-#: includes/admin/funciones-apg.php:657
+#: includes/admin/funciones-apg.php:704
 #: includes/cuadro-informacion.php:34
 msgid "More plugins on "
 msgstr ""
 
-#: includes/admin/funciones-apg.php:658
+#: includes/admin/funciones-apg.php:705
 #: includes/cuadro-informacion.php:42
 msgid "Contact us by "
 msgstr ""
 
-#: includes/admin/funciones-apg.php:680
+#: includes/admin/funciones-apg.php:727
 msgid "Support of "
 msgstr ""
 
-#: includes/admin/funciones-apg.php:680
+#: includes/admin/funciones-apg.php:727
 #: includes/cuadro-informacion.php:46
 msgid "Support"
 msgstr ""
 
-#: includes/admin/funciones-apg.php:681
+#: includes/admin/funciones-apg.php:728
 msgid "Settings of "
 msgstr ""
 
-#: includes/admin/funciones-apg.php:681
+#: includes/admin/funciones-apg.php:728
 msgid "Settings"
 msgstr ""
 
 #: includes/clases/admin/solicitudes.php:19
-#: includes/clases/class-apg-withdrawal-help.php
+#: includes/clases/class-apg-withdrawal-help.php:203
 #: includes/clases/emails/class-apg-withdrawal-email-status.php:70
 #: includes/clases/pedidos.php:106
 #: includes/clases/pedidos.php:296
@@ -196,7 +196,7 @@ msgid "Pending"
 msgstr ""
 
 #: includes/clases/admin/solicitudes.php:20
-#: includes/clases/class-apg-withdrawal-help.php
+#: includes/clases/class-apg-withdrawal-help.php:204
 #: includes/clases/emails/class-apg-withdrawal-email-status.php:71
 #: includes/clases/pedidos.php:107
 #: includes/clases/pedidos.php:297
@@ -205,7 +205,7 @@ msgid "Accepted"
 msgstr ""
 
 #: includes/clases/admin/solicitudes.php:21
-#: includes/clases/class-apg-withdrawal-help.php
+#: includes/clases/class-apg-withdrawal-help.php:205
 #: includes/clases/emails/class-apg-withdrawal-email-status.php:72
 #: includes/clases/pedidos.php:108
 #: includes/clases/pedidos.php:298
@@ -214,7 +214,7 @@ msgid "Rejected"
 msgstr ""
 
 #: includes/clases/admin/solicitudes.php:22
-#: includes/clases/class-apg-withdrawal-help.php
+#: includes/clases/class-apg-withdrawal-help.php:206
 #: includes/clases/emails/class-apg-withdrawal-email-status.php:73
 #: includes/clases/pedidos.php:109
 #: includes/clases/pedidos.php:299
@@ -245,8 +245,8 @@ msgid "Reference"
 msgstr ""
 
 #: includes/clases/admin/solicitudes.php:293
-#: includes/clases/admin/solicitudes.php:366
-#: includes/clases/admin/solicitudes.php:661
+#: includes/clases/admin/solicitudes.php:371
+#: includes/clases/admin/solicitudes.php:667
 #: includes/clases/emails.php:155
 #: includes/clases/rgpd.php:97
 #: templates/emails/apg-withdrawal-admin.php:34
@@ -257,8 +257,8 @@ msgid "Customer"
 msgstr ""
 
 #: includes/clases/admin/solicitudes.php:294
-#: includes/clases/admin/solicitudes.php:367
-#: includes/clases/admin/solicitudes.php:662
+#: includes/clases/admin/solicitudes.php:372
+#: includes/clases/admin/solicitudes.php:668
 #: includes/clases/anexo-i-b.php:190
 #: includes/clases/emails.php:156
 #: includes/clases/formulario.php:600
@@ -271,8 +271,8 @@ msgid "Email"
 msgstr ""
 
 #: includes/clases/admin/solicitudes.php:295
-#: includes/clases/admin/solicitudes.php:369
-#: includes/clases/admin/solicitudes.php:664
+#: includes/clases/admin/solicitudes.php:374
+#: includes/clases/admin/solicitudes.php:670
 #: includes/clases/emails.php:112
 #: includes/clases/emails.php:166
 #: includes/clases/rgpd.php:109
@@ -286,8 +286,8 @@ msgid "Order"
 msgstr ""
 
 #: includes/clases/admin/solicitudes.php:296
-#: includes/clases/admin/solicitudes.php:370
-#: includes/clases/admin/solicitudes.php:665
+#: includes/clases/admin/solicitudes.php:375
+#: includes/clases/admin/solicitudes.php:671
 #: includes/clases/emails.php:113
 #: includes/clases/emails.php:167
 #: includes/clases/rgpd.php:113
@@ -299,28 +299,34 @@ msgid "Scope"
 msgstr ""
 
 #: includes/clases/admin/solicitudes.php:297
-#: includes/clases/admin/solicitudes.php:354
-#: includes/clases/admin/solicitudes.php:666
+#: includes/clases/admin/solicitudes.php:359
+#: includes/clases/admin/solicitudes.php:672
 #: includes/clases/rgpd.php:117
 msgid "Status"
 msgstr ""
 
 #: includes/clases/admin/solicitudes.php:298
-#: includes/clases/admin/solicitudes.php:438
-#: includes/clases/admin/solicitudes.php:660
+#: includes/clases/admin/solicitudes.php:444
+#: includes/clases/admin/solicitudes.php:666
 #: includes/clases/anexo-i-b.php:202
 #: includes/clases/rgpd.php:93
 msgid "Date"
 msgstr ""
 
-#: includes/clases/admin/solicitudes.php:336
-#: includes/clases/admin/solicitudes.php:391
-#: includes/clases/admin/solicitudes.php:723
+#: includes/clases/admin/solicitudes.php:337
+#: includes/clases/class-apg-withdrawal-help.php:159
+#: includes/formulario.php:225
+msgid "Contract termination"
+msgstr ""
+
+#: includes/clases/admin/solicitudes.php:341
+#: includes/clases/admin/solicitudes.php:397
+#: includes/clases/admin/solicitudes.php:729
 #: includes/clases/emails.php:90
 #: includes/clases/emails.php:145
 #: includes/clases/formulario.php:259
 #: includes/clases/formulario.php:675
-#: includes/clases/woocommerce.php:570
+#: includes/clases/woocommerce.php:625
 #: templates/emails/apg-withdrawal-admin.php:19
 #: templates/emails/apg-withdrawal-customer.php:19
 #: templates/emails/plain/apg-withdrawal-admin.php:19
@@ -328,14 +334,14 @@ msgstr ""
 msgid "Specific products only"
 msgstr ""
 
-#: includes/clases/admin/solicitudes.php:336
-#: includes/clases/admin/solicitudes.php:391
-#: includes/clases/admin/solicitudes.php:723
+#: includes/clases/admin/solicitudes.php:341
+#: includes/clases/admin/solicitudes.php:397
+#: includes/clases/admin/solicitudes.php:729
 #: includes/clases/emails.php:90
 #: includes/clases/emails.php:145
 #: includes/clases/formulario.php:259
 #: includes/clases/formulario.php:674
-#: includes/clases/woocommerce.php:570
+#: includes/clases/woocommerce.php:625
 #: templates/emails/apg-withdrawal-admin.php:20
 #: templates/emails/apg-withdrawal-customer.php:20
 #: templates/emails/plain/apg-withdrawal-admin.php:20
@@ -343,16 +349,17 @@ msgstr ""
 msgid "Full order"
 msgstr ""
 
-#: includes/clases/admin/solicitudes.php:353
+#: includes/clases/admin/solicitudes.php:358
 msgid "Withdrawal details"
 msgstr ""
 
-#: includes/clases/admin/solicitudes.php:368
-#: includes/clases/admin/solicitudes.php:663
+#: includes/clases/admin/solicitudes.php:373
+#: includes/clases/admin/solicitudes.php:669
 #: includes/clases/anexo-i-b.php:187
 #: includes/clases/emails.php:160
 #: includes/clases/formulario.php:614
 #: includes/clases/rgpd.php:105
+#: includes/clases/terminacion.php:660
 #: templates/emails/apg-withdrawal-admin.php:43
 #: templates/emails/apg-withdrawal-customer.php:53
 #: templates/emails/plain/apg-withdrawal-admin.php:33
@@ -360,162 +367,167 @@ msgstr ""
 msgid "Phone"
 msgstr ""
 
-#: includes/clases/admin/solicitudes.php:371
-#: includes/clases/admin/solicitudes.php:672
+#: includes/clases/admin/solicitudes.php:376
+msgid "Termination takes effect (UTC)"
+msgstr ""
+
+#: includes/clases/admin/solicitudes.php:377
+#: includes/clases/admin/solicitudes.php:678
 #: includes/clases/rgpd.php:121
 #: templates/emails/apg-withdrawal-customer.php:79
 #: templates/emails/plain/apg-withdrawal-customer.php:60
 msgid "Account for the refund"
 msgstr ""
 
-#: includes/clases/admin/solicitudes.php:372
-#: includes/clases/class-apg-withdrawal-help.php
+#: includes/clases/admin/solicitudes.php:378
+#: includes/clases/class-apg-withdrawal-help.php:141
 #: includes/formulario.php:127
 msgid "Deadline source"
 msgstr ""
 
-#: includes/clases/admin/solicitudes.php:373
+#: includes/clases/admin/solicitudes.php:379
 msgid "Base date"
 msgstr ""
 
-#: includes/clases/admin/solicitudes.php:374
-#: includes/clases/admin/solicitudes.php:673
+#: includes/clases/admin/solicitudes.php:380
+#: includes/clases/admin/solicitudes.php:679
 #: includes/clases/rgpd.php:125
 msgid "Email confirmed at (UTC)"
 msgstr ""
 
-#: includes/clases/admin/solicitudes.php:375
-#: includes/clases/admin/solicitudes.php:668
+#: includes/clases/admin/solicitudes.php:381
+#: includes/clases/admin/solicitudes.php:674
 #: includes/clases/rgpd.php:129
 msgid "IP"
 msgstr ""
 
-#: includes/clases/admin/solicitudes.php:376
-#: includes/clases/admin/solicitudes.php:669
+#: includes/clases/admin/solicitudes.php:382
+#: includes/clases/admin/solicitudes.php:675
 #: includes/clases/rgpd.php:133
 msgid "User agent"
 msgstr ""
 
-#: includes/clases/admin/solicitudes.php:382
+#: includes/clases/admin/solicitudes.php:388
 msgid "This request was submitted after the ordinary withdrawal period had expired."
 msgstr ""
 
-#: includes/clases/admin/solicitudes.php:411
+#: includes/clases/admin/solicitudes.php:417
 #: includes/clases/formulario.php:717
 #: includes/clases/rgpd.php:137
+#: includes/clases/terminacion.php:669
 #: templates/emails/apg-withdrawal-customer.php:85
 #: templates/emails/plain/apg-withdrawal-customer.php:64
 msgid "Additional details"
 msgstr ""
 
-#: includes/clases/admin/solicitudes.php:421
+#: includes/clases/admin/solicitudes.php:427
 msgid "Selected products"
 msgstr ""
 
-#: includes/clases/admin/solicitudes.php:427
+#: includes/clases/admin/solicitudes.php:433
 msgid "Acknowledgement email"
 msgstr ""
 
-#: includes/clases/admin/solicitudes.php:436
+#: includes/clases/admin/solicitudes.php:442
 msgid "Status history"
 msgstr ""
 
-#: includes/clases/admin/solicitudes.php:438
+#: includes/clases/admin/solicitudes.php:444
 msgid "User"
 msgstr ""
 
-#: includes/clases/admin/solicitudes.php:438
+#: includes/clases/admin/solicitudes.php:444
 msgid "From"
 msgstr ""
 
-#: includes/clases/admin/solicitudes.php:438
+#: includes/clases/admin/solicitudes.php:444
 #: includes/clases/anexo-i-b.php:175
 msgid "To"
 msgstr ""
 
-#: includes/clases/admin/solicitudes.php:438
+#: includes/clases/admin/solicitudes.php:444
 msgid "Email delivery"
 msgstr ""
 
-#: includes/clases/admin/solicitudes.php:445
+#: includes/clases/admin/solicitudes.php:451
 msgid "System"
 msgstr ""
 
-#: includes/clases/admin/solicitudes.php:477
+#: includes/clases/admin/solicitudes.php:483
 msgid "— (not sent)"
 msgstr ""
 
-#: includes/clases/admin/solicitudes.php:483
+#: includes/clases/admin/solicitudes.php:489
 msgid "Accepted by the mailer at"
 msgstr ""
 
-#: includes/clases/admin/solicitudes.php:490
+#: includes/clases/admin/solicitudes.php:496
 msgid "Failed"
 msgstr ""
 
-#: includes/clases/admin/solicitudes.php:507
+#: includes/clases/admin/solicitudes.php:513
 msgid "Set status"
 msgstr ""
 
-#: includes/clases/admin/solicitudes.php:599
+#: includes/clases/admin/solicitudes.php:605
 msgid "You do not have permission to export withdrawal requests."
 msgstr ""
 
-#: includes/clases/admin/solicitudes.php:603
+#: includes/clases/admin/solicitudes.php:609
 #: includes/clases/reembolso.php:493
 msgid "Security check failed."
 msgstr ""
 
-#: includes/clases/admin/solicitudes.php:659
+#: includes/clases/admin/solicitudes.php:665
 msgid "ID"
 msgstr ""
 
-#: includes/clases/admin/solicitudes.php:667
+#: includes/clases/admin/solicitudes.php:673
 msgid "Expired warning"
 msgstr ""
 
-#: includes/clases/admin/solicitudes.php:670
+#: includes/clases/admin/solicitudes.php:676
 #: templates/emails/apg-withdrawal-admin.php:57
 #: templates/emails/plain/apg-withdrawal-admin.php:40
 msgid "Details"
 msgstr ""
 
-#: includes/clases/admin/solicitudes.php:671
+#: includes/clases/admin/solicitudes.php:677
 #: templates/emails/apg-withdrawal-customer.php:73
 #: templates/emails/plain/apg-withdrawal-customer.php:56
 msgid "Products"
 msgstr ""
 
-#: includes/clases/admin/solicitudes.php:674
+#: includes/clases/admin/solicitudes.php:680
 #: includes/clases/rgpd.php:141
 msgid "Receipt SHA-256"
 msgstr ""
 
-#: includes/clases/admin/solicitudes.php:675
+#: includes/clases/admin/solicitudes.php:681
 msgid "Acknowledgement email accepted"
 msgstr ""
 
-#: includes/clases/admin/solicitudes.php:676
+#: includes/clases/admin/solicitudes.php:682
 msgid "Acknowledgement email accepted at (UTC)"
 msgstr ""
 
-#: includes/clases/admin/solicitudes.php:709
-#: includes/clases/admin/solicitudes.php:725
+#: includes/clases/admin/solicitudes.php:715
+#: includes/clases/admin/solicitudes.php:731
 msgid "Yes"
 msgstr ""
 
-#: includes/clases/admin/solicitudes.php:710
-#: includes/clases/admin/solicitudes.php:725
+#: includes/clases/admin/solicitudes.php:716
+#: includes/clases/admin/solicitudes.php:731
 msgid "No"
 msgstr ""
 
 #. translators: %s: withdrawal status label.
-#: includes/clases/admin/solicitudes.php:772
+#: includes/clases/admin/solicitudes.php:778
 #, php-format
 msgid "Export CSV (%s)"
 msgstr ""
 
-#: includes/clases/admin/solicitudes.php:776
+#: includes/clases/admin/solicitudes.php:782
 msgid "Export CSV"
 msgstr ""
 
@@ -581,29 +593,29 @@ msgid "Withdrawal allowed (default)"
 msgstr ""
 
 #: includes/clases/categoria.php:24
-#: includes/clases/class-apg-withdrawal-help.php
+#: includes/clases/class-apg-withdrawal-help.php:182
 #: includes/clases/producto.php:41
 msgid "Withdrawal excluded"
 msgstr ""
 
 #: includes/clases/categoria.php:25
-#: includes/clases/class-apg-withdrawal-help.php
+#: includes/clases/class-apg-withdrawal-help.php:183
 #: includes/clases/producto.php:42
-#: includes/formulario.php:302
+#: includes/formulario.php:385
 msgid "Digital content"
 msgstr ""
 
 #: includes/clases/categoria.php:26
-#: includes/clases/class-apg-withdrawal-help.php
+#: includes/clases/class-apg-withdrawal-help.php:184
 #: includes/clases/producto.php:43
-#: includes/formulario.php:303
+#: includes/formulario.php:386
 msgid "Personalised product"
 msgstr ""
 
 #: includes/clases/categoria.php:27
-#: includes/clases/class-apg-withdrawal-help.php
+#: includes/clases/class-apg-withdrawal-help.php:185
 #: includes/clases/producto.php:44
-#: includes/formulario.php:304
+#: includes/formulario.php:387
 msgid "Manual review required"
 msgstr ""
 
@@ -622,6 +634,308 @@ msgstr ""
 msgid "I request the immediate supply of the digital content and acknowledge that, once execution has begun, I will lose my right of withdrawal."
 msgstr ""
 
+#: includes/clases/class-apg-withdrawal-help.php:81
+msgid "More help"
+msgstr ""
+
+#: includes/clases/class-apg-withdrawal-help.php:82
+msgid "Full documentation"
+msgstr ""
+
+#: includes/clases/class-apg-withdrawal-help.php:124
+msgid "The store and the form"
+msgstr ""
+
+#: includes/clases/class-apg-withdrawal-help.php:126
+msgid "Who receives the withdrawal declarations and where the customer writes them. These are the data that end up in the printable Annex I.B form, the model the law requires you to make available."
+msgstr ""
+
+#: includes/clases/class-apg-withdrawal-help.php:127
+#: includes/formulario.php:32
+msgid "Notification email"
+msgstr ""
+
+#: includes/clases/class-apg-withdrawal-help.php:127
+msgid "the address that gets a copy of every request. Leave it empty and the one on the store goes."
+msgstr ""
+
+#: includes/clases/class-apg-withdrawal-help.php:128
+#: includes/formulario.php:40
+msgid "Merchant phone (optional)"
+msgstr ""
+
+#: includes/clases/class-apg-withdrawal-help.php:128
+msgid "shown next to the name, the address and the email of the store in the Annex I.B form. Empty, the phone line is left out."
+msgstr ""
+
+#: includes/clases/class-apg-withdrawal-help.php:129
+#: includes/formulario.php:51
+msgid "Withdrawal page"
+msgstr ""
+
+#: includes/clases/class-apg-withdrawal-help.php:129
+msgid "the page where the form shortcode is published. The plugin creates it on activation, and this is where you point it somewhere else if you move it."
+msgstr ""
+
+#: includes/clases/class-apg-withdrawal-help.php:130
+#: includes/formulario.php:85
+msgid "Confirmation button text"
+msgstr ""
+
+#: includes/clases/class-apg-withdrawal-help.php:130
+msgid "what the button says at the end of the form, the one that registers the declaration."
+msgstr ""
+
+#: includes/clases/class-apg-withdrawal-help.php:131
+#: includes/formulario.php:93
+msgid "Jurisdiction"
+msgstr ""
+
+#: includes/clases/class-apg-withdrawal-help.php:131
+msgid "which law is cited to the customer on the confirmation screen. Spain has not transposed Directive (EU) 2023/2673 yet, so both options apply the same requirements today; the Spanish one also cites the TRLGDCU."
+msgstr ""
+
+#: includes/clases/class-apg-withdrawal-help.php:136
+msgid "The deadline and the record"
+msgstr ""
+
+#: includes/clases/class-apg-withdrawal-help.php:138
+msgid "How long the customer has, and what is kept of each declaration. Fourteen days is the legal minimum in the European Union: you can give more, never less."
+msgstr ""
+
+#: includes/clases/class-apg-withdrawal-help.php:139
+#: includes/formulario.php:108
+msgid "Withdrawal window (days)"
+msgstr ""
+
+#: includes/clases/class-apg-withdrawal-help.php:139
+msgid "after these days the order no longer shows the withdrawal button. The form still accepts a late request, with a warning, because deciding whether it is out of time is yours to do, not the form's."
+msgstr ""
+
+#: includes/clases/class-apg-withdrawal-help.php:140
+#: includes/formulario.php:119
+msgid "Extra grace days"
+msgstr ""
+
+#: includes/clases/class-apg-withdrawal-help.php:140
+msgid "days on top of the window, for the time a delivery takes or simply to be generous with your customer."
+msgstr ""
+
+#: includes/clases/class-apg-withdrawal-help.php:141
+msgid "the date the count starts from: the completed date, which is the closest thing to the delivery date, or the order date. With an order that is not completed yet, the plugin falls back on its own."
+msgstr ""
+
+#: includes/clases/class-apg-withdrawal-help.php:142
+#: includes/formulario.php:141
+msgid "Store IP address?"
+msgstr ""
+
+#: includes/clases/class-apg-withdrawal-help.php:142
+msgid "keeps the address the declaration was sent from, as evidence of who sent it and when."
+msgstr ""
+
+#: includes/clases/class-apg-withdrawal-help.php:143
+#: includes/formulario.php:149
+msgid "Store browser identifier?"
+msgstr ""
+
+#: includes/clases/class-apg-withdrawal-help.php:143
+msgid "keeps the browser identifier, for the same reason. Both are personal data: keep them only if you are going to use them, and say so in your privacy policy."
+msgstr ""
+
+#: includes/clases/class-apg-withdrawal-help.php:144
+#: includes/formulario.php:157
+msgid "Delete all data on uninstall?"
+msgstr ""
+
+#: includes/clases/class-apg-withdrawal-help.php:144
+msgid "unchecked, uninstalling the plugin leaves the requests and the settings in place. Checked, it takes everything with it, and there is no going back."
+msgstr ""
+
+#: includes/clases/class-apg-withdrawal-help.php:149
+#: includes/formulario.php:178
+msgid "Request handling"
+msgstr ""
+
+#: includes/clases/class-apg-withdrawal-help.php:151
+msgid "What happens the moment a declaration arrives."
+msgstr ""
+
+#: includes/clases/class-apg-withdrawal-help.php:152
+#: includes/formulario.php:184
+msgid "Order status when a request is received"
+msgstr ""
+
+#: includes/clases/class-apg-withdrawal-help.php:152
+msgid "the plugin registers its own Withdrawal requested status, so those orders can be filtered, sorted and bulk-edited with the usual WooCommerce tools. Leave it as it comes and the order is not touched."
+msgstr ""
+
+#: includes/clases/class-apg-withdrawal-help.php:153
+#: includes/clases/formulario.php:697
+#: includes/formulario.php:200
+msgid "Account for the refund (IBAN)"
+msgstr ""
+
+#: includes/clases/class-apg-withdrawal-help.php:153
+msgid "asks the customer for an account when the money cannot go back the way it came. The number is checked with its international control digits, travels with the request as banking data, is included in the privacy exporter and is deleted by the eraser. Only ask for it if you really need it."
+msgstr ""
+
+#: includes/clases/class-apg-withdrawal-help.php:154
+#: includes/formulario.php:215
+msgid "Confirm guest requests by email?"
+msgstr ""
+
+#: includes/clases/class-apg-withdrawal-help.php:154
+msgid "a visitor who is not logged in gets a single-use link at the address on the order, and the request only counts once that link is opened. It keeps the date and time of the original submission, so nobody loses days of their period."
+msgstr ""
+
+#: includes/clases/class-apg-withdrawal-help.php:161
+msgid "Terminating is not withdrawing. Withdrawing undoes a purchase within its period; terminating ends a contract that is still running, and Article 23 of the proposed Digital Fairness Act will ask you to offer it online for as long as the contract lasts. It is a proposal, so nothing is required of you yet."
+msgstr ""
+
+#: includes/clases/class-apg-withdrawal-help.php:162
+#: includes/formulario.php:242
+msgid "Offer online contract termination?"
+msgstr ""
+
+#: includes/clases/class-apg-withdrawal-help.php:162
+msgid "off by default. Switch it on and the form starts answering; leave it off and the page says the shop does not offer it. It suits subscriptions and continuing services."
+msgstr ""
+
+#: includes/clases/class-apg-withdrawal-help.php:163
+#: includes/formulario.php:253
+msgid "Contract termination page"
+msgstr ""
+
+#: includes/clases/class-apg-withdrawal-help.php:163
+msgid "the page where you publish the termination form shortcode. Without a page there is no link to offer."
+msgstr ""
+
+#: includes/clases/class-apg-withdrawal-help.php:164
+#: includes/formulario.php:298
+msgid "Termination link text"
+msgstr ""
+
+#: includes/clases/class-apg-withdrawal-help.php:164
+msgid "empty for the wording the article prescribes. Whatever you write instead has to be just as plain: the customer must not have to guess what the link does."
+msgstr ""
+
+#: includes/clases/class-apg-withdrawal-help.php:169
+msgid "Automation and emails"
+msgstr ""
+
+#: includes/clases/class-apg-withdrawal-help.php:171
+msgid "A withdrawal has two lives in parallel: the request, with its own status, and the WooCommerce order. Here the two are tied together so you do not have to update both by hand."
+msgstr ""
+
+#: includes/clases/class-apg-withdrawal-help.php:172
+msgid "Mark as ... when order becomes"
+msgstr ""
+
+#: includes/clases/class-apg-withdrawal-help.php:172
+msgid "one line per request status. Choose which order status moves it, and the request follows the order on its own. A refunded order marking the request as completed is the usual one."
+msgstr ""
+
+#: includes/clases/class-apg-withdrawal-help.php:173
+msgid "Email when changed to ..."
+msgstr ""
+
+#: includes/clases/class-apg-withdrawal-help.php:173
+msgid "which status changes write to the customer. The content of those emails is edited where all the WooCommerce ones are, in WooCommerce > Settings > Emails."
+msgstr ""
+
+#: includes/clases/class-apg-withdrawal-help.php:178
+msgid "What can be withdrawn"
+msgstr ""
+
+#: includes/clases/class-apg-withdrawal-help.php:180
+msgid "The law leaves some things out of the right of withdrawal: something made to measure, something unsealed, digital content already downloaded. Each product carries its own type in the Withdrawal tab of its data, and a category can set it for everything inside it."
+msgstr ""
+
+#: includes/clases/class-apg-withdrawal-help.php:181
+msgid "Withdrawal allowed"
+msgstr ""
+
+#: includes/clases/class-apg-withdrawal-help.php:181
+msgid "the usual one, and what a product inherits when neither it nor its categories say otherwise."
+msgstr ""
+
+#: includes/clases/class-apg-withdrawal-help.php:182
+msgid "there is no right of withdrawal for this product, and the customer is told so before buying."
+msgstr ""
+
+#: includes/clases/class-apg-withdrawal-help.php:183
+msgid "the right is lost once the download starts, provided the customer accepted it beforehand. This is the type that triggers the waiver at checkout."
+msgstr ""
+
+#: includes/clases/class-apg-withdrawal-help.php:184
+msgid "made to the customer's measure, so it is excluded by law."
+msgstr ""
+
+#: includes/clases/class-apg-withdrawal-help.php:185
+msgid "neither yes nor no: the request comes in and you decide. For the cases the law leaves to the condition of the goods."
+msgstr ""
+
+#: includes/clases/class-apg-withdrawal-help.php:186
+#: includes/formulario.php:391
+msgid "Exclusion notice texts"
+msgstr ""
+
+#: includes/clases/class-apg-withdrawal-help.php:186
+msgid "what each type says to the customer, on the product page between the price and the Add to cart button, and again inside the form. Leave a field empty to keep the translated text that comes with the plugin."
+msgstr ""
+
+#: includes/clases/class-apg-withdrawal-help.php:191
+#: includes/formulario.php:417
+msgid "Digital content waiver"
+msgstr ""
+
+#: includes/clases/class-apg-withdrawal-help.php:193
+msgid "Downloadable content loses the right of withdrawal only if the customer accepted it before the download started, and the shop can prove it. This checkbox at checkout is that proof."
+msgstr ""
+
+#: includes/clases/class-apg-withdrawal-help.php:194
+#: includes/formulario.php:422
+msgid "When to show the checkbox"
+msgstr ""
+
+#: includes/clases/class-apg-withdrawal-help.php:194
+msgid "never, only on the products classified as digital content, or on every order. The middle one is the usual choice."
+msgstr ""
+
+#: includes/clases/class-apg-withdrawal-help.php:195
+#: includes/formulario.php:439
+msgid "Custom checkbox text"
+msgstr ""
+
+#: includes/clases/class-apg-withdrawal-help.php:195
+msgid "comes filled in with the acknowledgement text. Edit it to say it your way, or empty the field to go back to the one that comes with the plugin."
+msgstr ""
+
+#: includes/clases/class-apg-withdrawal-help.php:200
+msgid "The requests"
+msgstr ""
+
+#: includes/clases/class-apg-withdrawal-help.php:202
+msgid "Every declaration your customers send is kept here, with its order, its date, the products it covers and what the customer wrote. It is the log you can show if you are ever asked to prove how you handled a withdrawal."
+msgstr ""
+
+#: includes/clases/class-apg-withdrawal-help.php:203
+msgid "it has arrived and nobody has looked at it yet. It is the status every request is born in."
+msgstr ""
+
+#: includes/clases/class-apg-withdrawal-help.php:204
+msgid "the withdrawal is valid. From here the refund follows, through WooCommerce."
+msgstr ""
+
+#: includes/clases/class-apg-withdrawal-help.php:205
+msgid "out of time, excluded product or whatever the reason. Write the reason down, because the customer can ask for it."
+msgstr ""
+
+#: includes/clases/class-apg-withdrawal-help.php:206
+msgid "everything is done, refund included. If you set up the automation, a refunded order leaves its request like this on its own."
+msgstr ""
+
 #. translators: %s site name.
 #: includes/clases/emails.php:87
 #, php-format
@@ -632,6 +946,7 @@ msgstr ""
 #. translators: %s: customer name.
 #. translators: %s customer name
 #: includes/clases/emails.php:94
+#: includes/clases/terminacion.php:419
 #: includes/clases/verificacion.php:149
 #: templates/emails/apg-withdrawal-customer.php:25
 #: templates/emails/apg-withdrawal-status.php:29
@@ -696,6 +1011,7 @@ msgid "A new withdrawal request has been submitted."
 msgstr ""
 
 #: includes/clases/emails.php:169
+#: includes/clases/terminacion.php:602
 msgid "Details:"
 msgstr ""
 
@@ -708,12 +1024,12 @@ msgid "Admin edit link:"
 msgstr ""
 
 #. translators: %s withdrawal request URL.
-#: includes/clases/emails.php:244
+#: includes/clases/emails.php:260
 #, php-format
 msgid "Right of withdrawal: %s"
 msgstr ""
 
-#: includes/clases/emails.php:249
+#: includes/clases/emails.php:265
 msgid "Exercise your right of withdrawal"
 msgstr ""
 
@@ -832,10 +1148,12 @@ msgid "Customer:"
 msgstr ""
 
 #: includes/clases/formulario.php:254
+#: includes/clases/terminacion.php:596
 msgid "Email:"
 msgstr ""
 
 #: includes/clases/formulario.php:256
+#: includes/clases/terminacion.php:599
 msgid "Phone:"
 msgstr ""
 
@@ -899,6 +1217,7 @@ msgid "Withdrawal request"
 msgstr ""
 
 #: includes/clases/formulario.php:586
+#: includes/clases/terminacion.php:629
 msgid "Full name"
 msgstr ""
 
@@ -921,12 +1240,6 @@ msgstr ""
 
 #: includes/clases/formulario.php:685
 msgid "Tick the products you are withdrawing from and, if you are keeping some of the units, lower the quantity."
-msgstr ""
-
-#: includes/clases/formulario.php:697
-#: includes/clases/class-apg-withdrawal-help.php
-#: includes/formulario.php:200
-msgid "Account for the refund (IBAN)"
 msgstr ""
 
 #: includes/clases/formulario.php:701
@@ -1014,6 +1327,15 @@ msgid "There is already a withdrawal request for this entire order, so this one 
 msgstr ""
 
 #: includes/clases/formulario.php:876
+msgid "We have registered your contract termination. We have sent you an acknowledgement of receipt stating the date on which it takes effect."
+msgstr ""
+
+#: includes/clases/formulario.php:877
+#: includes/clases/formulario.php:878
+msgid "Online contract termination is not available in this shop."
+msgstr ""
+
+#: includes/clases/formulario.php:879
 msgid "An error occurred while processing the withdrawal request."
 msgstr ""
 
@@ -1040,7 +1362,7 @@ msgstr ""
 
 #. translators: 1: order number, 2: customer name.
 #. translators: 1: order number, 2: redacted marker.
-#: includes/clases/procesador.php:462
+#: includes/clases/procesador.php:486
 #: includes/clases/rgpd.php:226
 #, php-format
 msgid "Withdrawal request %1$s - %2$s"
@@ -1194,6 +1516,141 @@ msgstr ""
 msgid "Withdrawal request #%d was anonymised and retained for legal evidence. The associated WooCommerce order reference was preserved."
 msgstr ""
 
+#: includes/clases/terminacion.php:96
+msgid "Terminate the contract here"
+msgstr ""
+
+#: includes/clases/terminacion.php:109
+msgid "Confirm the contract termination"
+msgstr ""
+
+#. translators: 1: order number, 2: customer name.
+#: includes/clases/terminacion.php:246
+#, php-format
+msgid "Contract termination %1$s - %2$s"
+msgstr ""
+
+#. translators: 1: request ID, 2: date the termination takes effect.
+#: includes/clases/terminacion.php:359
+#, php-format
+msgid "Contract termination requested. Log ID: #%1$d. Takes effect: %2$s"
+msgstr ""
+
+#. translators: %s free text written by the customer.
+#: includes/clases/terminacion.php:369
+#, php-format
+msgid "Termination details: %s"
+msgstr ""
+
+#. translators: %s site name.
+#: includes/clases/terminacion.php:413
+#, php-format
+msgid "[%s] Contract termination received"
+msgstr ""
+
+#: includes/clases/terminacion.php:423
+msgid "We have received your request to terminate the contract."
+msgstr ""
+
+#. translators: %s order number.
+#: includes/clases/terminacion.php:427
+#: includes/clases/terminacion.php:492
+#, php-format
+msgid "Contract: %s"
+msgstr ""
+
+#. translators: %s date and time the declaration was submitted.
+#: includes/clases/terminacion.php:432
+#, php-format
+msgid "Submitted on: %s"
+msgstr ""
+
+#. translators: %s date the termination takes effect.
+#: includes/clases/terminacion.php:437
+#: includes/clases/terminacion.php:497
+#, php-format
+msgid "The termination takes effect on: %s"
+msgstr ""
+
+#. translators: %s customer phone number.
+#: includes/clases/terminacion.php:445
+#, php-format
+msgid "Phone: %s"
+msgstr ""
+
+#: includes/clases/terminacion.php:451
+msgid "Keep this message: it is the acknowledgement of receipt of your termination."
+msgstr ""
+
+#. translators: 1: site name, 2: order number.
+#: includes/clases/terminacion.php:473
+#, php-format
+msgid "[%1$s] Contract termination for order %2$s"
+msgstr ""
+
+#: includes/clases/terminacion.php:478
+msgid "A customer has terminated a contract."
+msgstr ""
+
+#. translators: %s customer name.
+#: includes/clases/terminacion.php:482
+#, php-format
+msgid "Customer: %s"
+msgstr ""
+
+#. translators: %s customer email address.
+#: includes/clases/terminacion.php:487
+#, php-format
+msgid "Email: %s"
+msgstr ""
+
+#. translators: %s free text written by the customer.
+#: includes/clases/terminacion.php:505
+#, php-format
+msgid "Details: %s"
+msgstr ""
+
+#: includes/clases/terminacion.php:592
+msgid "Review your contract termination"
+msgstr ""
+
+#: includes/clases/terminacion.php:593
+msgid "By sending this declaration you inform us of your decision to terminate the contract. We will send you an acknowledgement of receipt stating the date on which it takes effect."
+msgstr ""
+
+#: includes/clases/terminacion.php:595
+msgid "Name:"
+msgstr ""
+
+#: includes/clases/terminacion.php:597
+msgid "Contract:"
+msgstr ""
+
+#: includes/clases/terminacion.php:612
+#: includes/clases/terminacion.php:676
+msgid "Leave this field empty"
+msgstr ""
+
+#: includes/clases/terminacion.php:639
+msgid "Email address"
+msgstr ""
+
+#: includes/clases/terminacion.php:649
+msgid "Contract or order number"
+msgstr ""
+
+#: includes/clases/terminacion.php:652
+msgid "The number of the order the contract belongs to."
+msgstr ""
+
+#: includes/clases/terminacion.php:682
+msgid "The next step will show a confirmation screen before the termination is sent."
+msgstr ""
+
+#: includes/clases/terminacion.php:684
+msgid "Continue"
+msgstr ""
+
 #. translators: %s: site name.
 #: includes/clases/verificacion.php:142
 #, php-format
@@ -1239,22 +1696,22 @@ msgid "The applicability of the right of withdrawal on this product will be revi
 msgstr ""
 
 #. translators: 1: scope label, 2: log id.
-#: includes/clases/woocommerce.php:575
+#: includes/clases/woocommerce.php:630
 #, php-format
 msgid "Withdrawal request received (%1$s). Log ID: #%2$d"
 msgstr ""
 
 #. translators: %s customer details.
-#: includes/clases/woocommerce.php:587
+#: includes/clases/woocommerce.php:642
 #, php-format
 msgid "Withdrawal details: %s"
 msgstr ""
 
-#: includes/clases/woocommerce.php:621
+#: includes/clases/woocommerce.php:676
 msgid "Exercise the right of withdrawal"
 msgstr ""
 
-#: includes/clases/woocommerce.php:622
+#: includes/clases/woocommerce.php:677
 msgid "Use this page to exercise your right of withdrawal for WooCommerce orders."
 msgstr ""
 
@@ -1286,26 +1743,12 @@ msgstr ""
 msgid "Add to WooCommerce an online withdrawal workflow with customer form, My Account integration and admin request log."
 msgstr ""
 
-#: includes/formulario.php:32
-#: includes/clases/class-apg-withdrawal-help.php
-msgid "Notification email"
-msgstr ""
-
-#: includes/formulario.php:40
-#: includes/clases/class-apg-withdrawal-help.php
-msgid "Merchant phone (optional)"
-msgstr ""
-
 #: includes/formulario.php:45
 msgid "Phone number displayed alongside the store name, address and email in the printable Annex I.B model withdrawal form. Leave empty to omit the phone line."
 msgstr ""
 
-#: includes/formulario.php:51
-#: includes/clases/class-apg-withdrawal-help.php
-msgid "Withdrawal page"
-msgstr ""
-
 #: includes/formulario.php:62
+#: includes/formulario.php:264
 msgid "Select a page"
 msgstr ""
 
@@ -1315,32 +1758,12 @@ msgstr ""
 msgid "Page where the shortcode %s is published."
 msgstr ""
 
-#: includes/formulario.php:85
-#: includes/clases/class-apg-withdrawal-help.php
-msgid "Confirmation button text"
-msgstr ""
-
-#: includes/formulario.php:93
-#: includes/clases/class-apg-withdrawal-help.php
-msgid "Jurisdiction"
-msgstr ""
-
 #: includes/formulario.php:102
 msgid "Decides which statutory reference is shown to the customer on the confirmation screen. Spain has not transposed Directive (EU) 2023/2673 yet, so both options currently apply the same requirements; the Spanish option additionally cites the TRLGDCU and is where any national extras will be switched on once they reach the BOE."
 msgstr ""
 
-#: includes/formulario.php:108
-#: includes/clases/class-apg-withdrawal-help.php
-msgid "Withdrawal window (days)"
-msgstr ""
-
 #: includes/formulario.php:113
 msgid "Orders older than this number of days will not show the withdrawal button. The form still accepts late requests with a legal warning."
-msgstr ""
-
-#: includes/formulario.php:119
-#: includes/clases/class-apg-withdrawal-help.php
-msgid "Extra grace days"
 msgstr ""
 
 #: includes/formulario.php:132
@@ -1355,37 +1778,12 @@ msgstr ""
 msgid "Use completed date as the default legal approximation. If the order is not completed yet, the plugin will fall back automatically."
 msgstr ""
 
-#: includes/formulario.php:141
-#: includes/clases/class-apg-withdrawal-help.php
-msgid "Store IP address?"
-msgstr ""
-
-#: includes/formulario.php:149
-#: includes/clases/class-apg-withdrawal-help.php
-msgid "Store browser identifier?"
-msgstr ""
-
-#: includes/formulario.php:157
-#: includes/clases/class-apg-withdrawal-help.php
-msgid "Delete all data on uninstall?"
-msgstr ""
-
 #: includes/formulario.php:162
 msgid "If checked, all withdrawal requests, their metadata and the plugin settings will be permanently deleted when the plugin is uninstalled. Leave unchecked to keep your data."
 msgstr ""
 
-#: includes/formulario.php:178
-#: includes/clases/class-apg-withdrawal-help.php
-msgid "Request handling"
-msgstr ""
-
 #: includes/formulario.php:179
 msgid "How a withdrawal declaration is captured and what it does to the linked order."
-msgstr ""
-
-#: includes/formulario.php:184
-#: includes/clases/class-apg-withdrawal-help.php
-msgid "Order status when a request is received"
 msgstr ""
 
 #: includes/formulario.php:189
@@ -1412,104 +1810,99 @@ msgstr ""
 msgid "Useful when the amount cannot be returned through the original payment method. The number is validated with the international IBAN control digits (ISO 7064 MOD-97-10) before being accepted, is stored with the request as banking data, is included in the privacy exporter and is deleted outright by the privacy eraser. Only enable it if you actually need it."
 msgstr ""
 
-#: includes/formulario.php:215
-#: includes/clases/class-apg-withdrawal-help.php
-msgid "Confirm guest requests by email?"
-msgstr ""
-
 #: includes/formulario.php:220
 msgid "When a visitor who is not logged in submits the form, the request is held and a single-use link is sent to the email address on the order; only opening that link registers it. The request keeps the date and time of the original submission, so the customer never loses days of their withdrawal period. Logged-in customers are unaffected."
 msgstr ""
 
-#: includes/formulario.php:225
+#. translators: %s: shortcode tag.
+#: includes/formulario.php:231
+#, php-format
+msgid "Article 23 of the proposed Digital Fairness Act will require shops that let customers sign up online to let them terminate the contract online too, for as long as it lasts. It is a proposal, so nothing is required of you yet: switch it on only if you want to be ready early. Publish %s on the page you select."
+msgstr ""
+
+#: includes/formulario.php:247
+msgid "Off by default. Terminating is not withdrawing: it carries no deadline and stays available for as long as the contract does, so it suits shops with subscriptions or continuing services."
+msgstr ""
+
+#. translators: %s: shortcode tag.
+#: includes/formulario.php:286
+#, php-format
+msgid "Page where the shortcode %s is published. Link to it from your footer or your account area with the link shortcode."
+msgstr ""
+
+#: includes/formulario.php:303
+msgid "Leave it empty for the prescribed wording. Article 23 asks for \"terminate the contract here\" or an unambiguous equivalent, so anything you write here has to be just as plain."
+msgstr ""
+
+#: includes/formulario.php:308
 msgid "Automation"
 msgstr ""
 
-#: includes/formulario.php:226
+#: includes/formulario.php:309
 msgid "Automatically update withdrawal request status when the linked WooCommerce order changes status."
 msgstr ""
 
 #. translators: %s withdrawal status label.
-#: includes/formulario.php:234
+#: includes/formulario.php:317
 #, php-format
 msgid "Mark as %s when order becomes"
 msgstr ""
 
-#: includes/formulario.php:247
+#: includes/formulario.php:330
 msgid "Select order statuses&hellip;"
 msgstr ""
 
-#: includes/formulario.php:248
+#: includes/formulario.php:331
 msgid "Order status"
 msgstr ""
 
-#: includes/formulario.php:257
+#: includes/formulario.php:340
 msgid "WooCommerce order statuses not available."
 msgstr ""
 
-#: includes/formulario.php:264
+#: includes/formulario.php:347
 msgid "Customer email notifications"
 msgstr ""
 
-#: includes/formulario.php:266
+#: includes/formulario.php:349
 msgid "Send an email to the customer when the withdrawal request status changes. Configure content in"
 msgstr ""
 
-#: includes/formulario.php:267
+#: includes/formulario.php:350
 msgid "WooCommerce &rsaquo; Settings &rsaquo; Emails"
 msgstr ""
 
 #. translators: %s withdrawal status label.
-#: includes/formulario.php:277
+#: includes/formulario.php:360
 #, php-format
 msgid "Email when changed to %s"
 msgstr ""
 
-#: includes/formulario.php:301
+#: includes/formulario.php:384
 msgid "Withdrawal excluded (generic)"
 msgstr ""
 
-#: includes/formulario.php:308
-#: includes/clases/class-apg-withdrawal-help.php
-msgid "Exclusion notice texts"
-msgstr ""
-
-#: includes/formulario.php:309
+#: includes/formulario.php:392
 msgid "Text shown on the product page (between the price and the Add to Cart button) and inside the withdrawal request form for products classified with each withdrawal type. Edit any field to override the built-in default. Leave a field empty to keep the translated default text."
 msgstr ""
 
-#: includes/formulario.php:334
-#: includes/clases/class-apg-withdrawal-help.php
-msgid "Digital content waiver"
-msgstr ""
-
-#: includes/formulario.php:335
+#: includes/formulario.php:418
 msgid "Show an optional acknowledgement at checkout when the customer is buying digital content or virtual services subject to the immediate-execution waiver of the right of withdrawal. The list of products that trigger this checkbox is driven by the per-product / per-category \"Withdrawal type\" field (mark them as \"Digital content\")."
 msgstr ""
 
-#: includes/formulario.php:339
-#: includes/clases/class-apg-withdrawal-help.php
-msgid "When to show the checkbox"
-msgstr ""
-
-#: includes/formulario.php:348
+#: includes/formulario.php:431
 msgid "Never (disabled)"
 msgstr ""
 
-#: includes/formulario.php:349
+#: includes/formulario.php:432
 msgid "On products classified as digital content"
 msgstr ""
 
-#: includes/formulario.php:350
+#: includes/formulario.php:433
 msgid "On every order"
 msgstr ""
 
-#: includes/formulario.php:356
-#: includes/clases/class-apg-withdrawal-help.php
-msgid "Custom checkbox text"
-msgstr ""
-
-#: includes/formulario.php:368
+#: includes/formulario.php:451
 msgid "Pre-filled with the default acknowledgement text. Edit it to customise it, or clear the field to revert to the default at any time."
 msgstr ""
 
@@ -1556,184 +1949,4 @@ msgstr ""
 
 #: templates/emails/plain/apg-withdrawal-admin.php:48
 msgid "View withdrawal request"
-msgstr ""
-
-#: includes/clases/class-apg-withdrawal-help.php
-msgid "More help"
-msgstr ""
-
-#: includes/clases/class-apg-withdrawal-help.php
-msgid "Full documentation"
-msgstr ""
-
-#: includes/clases/class-apg-withdrawal-help.php
-msgid "The store and the form"
-msgstr ""
-
-#: includes/clases/class-apg-withdrawal-help.php
-msgid "Who receives the withdrawal declarations and where the customer writes them. These are the data that end up in the printable Annex I.B form, the model the law requires you to make available."
-msgstr ""
-
-#: includes/clases/class-apg-withdrawal-help.php
-msgid "the address that gets a copy of every request. Leave it empty and the one on the store goes."
-msgstr ""
-
-#: includes/clases/class-apg-withdrawal-help.php
-msgid "shown next to the name, the address and the email of the store in the Annex I.B form. Empty, the phone line is left out."
-msgstr ""
-
-#: includes/clases/class-apg-withdrawal-help.php
-msgid "the page where the form shortcode is published. The plugin creates it on activation, and this is where you point it somewhere else if you move it."
-msgstr ""
-
-#: includes/clases/class-apg-withdrawal-help.php
-msgid "what the button says at the end of the form, the one that registers the declaration."
-msgstr ""
-
-#: includes/clases/class-apg-withdrawal-help.php
-msgid "which law is cited to the customer on the confirmation screen. Spain has not transposed Directive (EU) 2023/2673 yet, so both options apply the same requirements today; the Spanish one also cites the TRLGDCU."
-msgstr ""
-
-#: includes/clases/class-apg-withdrawal-help.php
-msgid "The deadline and the record"
-msgstr ""
-
-#: includes/clases/class-apg-withdrawal-help.php
-msgid "How long the customer has, and what is kept of each declaration. Fourteen days is the legal minimum in the European Union: you can give more, never less."
-msgstr ""
-
-#: includes/clases/class-apg-withdrawal-help.php
-msgid "after these days the order no longer shows the withdrawal button. The form still accepts a late request, with a warning, because deciding whether it is out of time is yours to do, not the form's."
-msgstr ""
-
-#: includes/clases/class-apg-withdrawal-help.php
-msgid "days on top of the window, for the time a delivery takes or simply to be generous with your customer."
-msgstr ""
-
-#: includes/clases/class-apg-withdrawal-help.php
-msgid "the date the count starts from: the completed date, which is the closest thing to the delivery date, or the order date. With an order that is not completed yet, the plugin falls back on its own."
-msgstr ""
-
-#: includes/clases/class-apg-withdrawal-help.php
-msgid "keeps the address the declaration was sent from, as evidence of who sent it and when."
-msgstr ""
-
-#: includes/clases/class-apg-withdrawal-help.php
-msgid "keeps the browser identifier, for the same reason. Both are personal data: keep them only if you are going to use them, and say so in your privacy policy."
-msgstr ""
-
-#: includes/clases/class-apg-withdrawal-help.php
-msgid "unchecked, uninstalling the plugin leaves the requests and the settings in place. Checked, it takes everything with it, and there is no going back."
-msgstr ""
-
-#: includes/clases/class-apg-withdrawal-help.php
-msgid "What happens the moment a declaration arrives."
-msgstr ""
-
-#: includes/clases/class-apg-withdrawal-help.php
-msgid "the plugin registers its own Withdrawal requested status, so those orders can be filtered, sorted and bulk-edited with the usual WooCommerce tools. Leave it as it comes and the order is not touched."
-msgstr ""
-
-#: includes/clases/class-apg-withdrawal-help.php
-msgid "asks the customer for an account when the money cannot go back the way it came. The number is checked with its international control digits, travels with the request as banking data, is included in the privacy exporter and is deleted by the eraser. Only ask for it if you really need it."
-msgstr ""
-
-#: includes/clases/class-apg-withdrawal-help.php
-msgid "a visitor who is not logged in gets a single-use link at the address on the order, and the request only counts once that link is opened. It keeps the date and time of the original submission, so nobody loses days of their period."
-msgstr ""
-
-#: includes/clases/class-apg-withdrawal-help.php
-msgid "Automation and emails"
-msgstr ""
-
-#: includes/clases/class-apg-withdrawal-help.php
-msgid "A withdrawal has two lives in parallel: the request, with its own status, and the WooCommerce order. Here the two are tied together so you do not have to update both by hand."
-msgstr ""
-
-#: includes/clases/class-apg-withdrawal-help.php
-msgid "Mark as ... when order becomes"
-msgstr ""
-
-#: includes/clases/class-apg-withdrawal-help.php
-msgid "one line per request status. Choose which order status moves it, and the request follows the order on its own. A refunded order marking the request as completed is the usual one."
-msgstr ""
-
-#: includes/clases/class-apg-withdrawal-help.php
-msgid "Email when changed to ..."
-msgstr ""
-
-#: includes/clases/class-apg-withdrawal-help.php
-msgid "which status changes write to the customer. The content of those emails is edited where all the WooCommerce ones are, in WooCommerce > Settings > Emails."
-msgstr ""
-
-#: includes/clases/class-apg-withdrawal-help.php
-msgid "What can be withdrawn"
-msgstr ""
-
-#: includes/clases/class-apg-withdrawal-help.php
-msgid "The law leaves some things out of the right of withdrawal: something made to measure, something unsealed, digital content already downloaded. Each product carries its own type in the Withdrawal tab of its data, and a category can set it for everything inside it."
-msgstr ""
-
-#: includes/clases/class-apg-withdrawal-help.php
-msgid "Withdrawal allowed"
-msgstr ""
-
-#: includes/clases/class-apg-withdrawal-help.php
-msgid "the usual one, and what a product inherits when neither it nor its categories say otherwise."
-msgstr ""
-
-#: includes/clases/class-apg-withdrawal-help.php
-msgid "there is no right of withdrawal for this product, and the customer is told so before buying."
-msgstr ""
-
-#: includes/clases/class-apg-withdrawal-help.php
-msgid "the right is lost once the download starts, provided the customer accepted it beforehand. This is the type that triggers the waiver at checkout."
-msgstr ""
-
-#: includes/clases/class-apg-withdrawal-help.php
-msgid "made to the customer's measure, so it is excluded by law."
-msgstr ""
-
-#: includes/clases/class-apg-withdrawal-help.php
-msgid "neither yes nor no: the request comes in and you decide. For the cases the law leaves to the condition of the goods."
-msgstr ""
-
-#: includes/clases/class-apg-withdrawal-help.php
-msgid "what each type says to the customer, on the product page between the price and the Add to cart button, and again inside the form. Leave a field empty to keep the translated text that comes with the plugin."
-msgstr ""
-
-#: includes/clases/class-apg-withdrawal-help.php
-msgid "Downloadable content loses the right of withdrawal only if the customer accepted it before the download started, and the shop can prove it. This checkbox at checkout is that proof."
-msgstr ""
-
-#: includes/clases/class-apg-withdrawal-help.php
-msgid "never, only on the products classified as digital content, or on every order. The middle one is the usual choice."
-msgstr ""
-
-#: includes/clases/class-apg-withdrawal-help.php
-msgid "comes filled in with the acknowledgement text. Edit it to say it your way, or empty the field to go back to the one that comes with the plugin."
-msgstr ""
-
-#: includes/clases/class-apg-withdrawal-help.php
-msgid "The requests"
-msgstr ""
-
-#: includes/clases/class-apg-withdrawal-help.php
-msgid "Every declaration your customers send is kept here, with its order, its date, the products it covers and what the customer wrote. It is the log you can show if you are ever asked to prove how you handled a withdrawal."
-msgstr ""
-
-#: includes/clases/class-apg-withdrawal-help.php
-msgid "it has arrived and nobody has looked at it yet. It is the status every request is born in."
-msgstr ""
-
-#: includes/clases/class-apg-withdrawal-help.php
-msgid "the withdrawal is valid. From here the refund follows, through WooCommerce."
-msgstr ""
-
-#: includes/clases/class-apg-withdrawal-help.php
-msgid "out of time, excluded product or whatever the reason. Write the reason down, because the customer can ask for it."
-msgstr ""
-
-#: includes/clases/class-apg-withdrawal-help.php
-msgid "everything is done, refund included. If you set up the automation, a refunded order leaves its request like this on its own."
 msgstr ""

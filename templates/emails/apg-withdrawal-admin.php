@@ -62,7 +62,7 @@ $apg_withdrawal_scope_label = 'partial' === ( $data['scope'] ?? 'full' )
 </table>
 
 <?php
-$apg_withdrawal_edit_url = get_edit_post_link( absint( $data['post_id'] ?? 0 ), '' );
+$apg_withdrawal_edit_url = apg_withdrawal_get_request_edit_url( absint( $data['post_id'] ?? 0 ) );
 
 if ( $apg_withdrawal_edit_url ) :
 ?>

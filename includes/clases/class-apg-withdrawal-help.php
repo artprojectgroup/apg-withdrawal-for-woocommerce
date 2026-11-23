@@ -155,6 +155,16 @@ class APG_Withdrawal_Help {
 				),
 			),
 
+			'termination' => array(
+				'title' => __( 'Contract termination', 'apg-withdrawal-for-woocommerce' ),
+				'items' => array(
+					__( 'Terminating is not withdrawing. Withdrawing undoes a purchase within its period; terminating ends a contract that is still running, and Article 23 of the proposed Digital Fairness Act will ask you to offer it online for as long as the contract lasts. It is a proposal, so nothing is required of you yet.', 'apg-withdrawal-for-woocommerce' ),
+					__( 'Offer online contract termination?', 'apg-withdrawal-for-woocommerce' ) => __( 'off by default. Switch it on and the form starts answering; leave it off and the page says the shop does not offer it. It suits subscriptions and continuing services.', 'apg-withdrawal-for-woocommerce' ),
+					__( 'Contract termination page', 'apg-withdrawal-for-woocommerce' )         => __( 'the page where you publish the termination form shortcode. Without a page there is no link to offer.', 'apg-withdrawal-for-woocommerce' ),
+					__( 'Termination link text', 'apg-withdrawal-for-woocommerce' )             => __( 'empty for the wording the article prescribes. Whatever you write instead has to be just as plain: the customer must not have to guess what the link does.', 'apg-withdrawal-for-woocommerce' ),
+				),
+			),
+
 			'automation' => array(
 				'title' => __( 'Automation and emails', 'apg-withdrawal-for-woocommerce' ),
 				'items' => array(

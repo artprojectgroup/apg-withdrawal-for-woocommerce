@@ -294,12 +294,32 @@ function apg_withdrawal_find_matching_requests( $wc_order_id, $fingerprint, $exc
 	$matches = array();
 
 	foreach ( apg_withdrawal_get_active_requests_for_order( $wc_order_id, $exclude_id ) as $candidate_id ) {
+		if ( apg_withdrawal_request_is_termination( $candidate_id ) ) {
+			continue;
+		}
+
 		if ( apg_withdrawal_request_fingerprint( $candidate_id ) === $fingerprint ) {
 			$matches[] = $candidate_id;
 		}
 	}
 
 	return $matches;
+}
+
+/**
+ * Reports whether a request is a contract termination rather than a withdrawal.
+ *
+ * The two live in the same post type and share an order, an address and the
+ * `full` scope, so without this they would share a fingerprint as well, and
+ * terminating a contract would quietly make it impossible to withdraw from it.
+ * They are different declarations under different articles, and neither stands
+ * in the way of the other.
+ *
+ * @param int $post_id Request post ID.
+ * @return bool
+ */
+function apg_withdrawal_request_is_termination( $post_id ) {
+	return 'termination' === get_post_meta( $post_id, '_apg_withdrawal_kind', true );
 }
 
 /**
@@ -320,6 +340,10 @@ function apg_withdrawal_find_full_requests( $wc_order_id, $exclude_id = 0 ) {
 	$matches = array();
 
 	foreach ( apg_withdrawal_get_active_requests_for_order( $wc_order_id, $exclude_id ) as $candidate_id ) {
+		if ( apg_withdrawal_request_is_termination( $candidate_id ) ) {
+			continue;
+		}
+
 		if ( 'full' === get_post_meta( $candidate_id, '_apg_withdrawal_scope', true ) ) {
 			$matches[] = $candidate_id;
 		}

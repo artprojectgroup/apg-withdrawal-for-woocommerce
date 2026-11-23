@@ -42,7 +42,7 @@ if ( $data['details'] ?? '' ) {
 
 echo "\n";
 
-$apg_withdrawal_edit_url = get_edit_post_link( absint( $data['post_id'] ?? 0 ), '' );
+$apg_withdrawal_edit_url = apg_withdrawal_get_request_edit_url( absint( $data['post_id'] ?? 0 ) );
 
 if ( $apg_withdrawal_edit_url ) {
 	printf( esc_html__( 'View withdrawal request', 'apg-withdrawal-for-woocommerce' ) . ': %s' . "\n", esc_url( $apg_withdrawal_edit_url ) );

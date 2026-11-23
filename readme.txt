@@ -4,10 +4,10 @@ Donate link: https://artprojectgroup.com/shop/donation
 Tags: withdrawal, right of withdrawal, woocommerce, refund, consumer rights
 Requires at least: 6.0
 Tested up to: 7.2
-Stable tag: 0.8.1
+Stable tag: 0.9.0
 Requires PHP: 7.4
 WC requires at least: 7.0
-WC tested up to: 11.2.1
+WC tested up to: 11.3.1
 License: GNU General Public License v3 or later
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -26,6 +26,7 @@ Add to WooCommerce an online withdrawal workflow with customer form, My Account 
 * Admin request log with full request details (custom post type), status views with counts, bulk status changes and sortable status column.
 * Own WooCommerce order status *Withdrawal requested*, optionally applied to the order as soon as a declaration is received, so affected orders can be filtered, sorted and bulk-edited with the native tools.
 * Optional refund account (IBAN) validated with the international control digits (ISO 7064 MOD-97-10).
+* Online contract termination function (Article 23 of the proposed Digital Fairness Act): a form of its own with the wording the article prescribes, available for as long as the contract lasts and with no deadline, and an acknowledgement of receipt stating the date on which the termination takes effect. Shipped switched off, with the `apg_withdrawal_termination_effective_date` filter for shops whose contracts end on a notice period or a billing cycle.
 * Optional double opt-in for guests: the request is held until the customer opens a single-use link sent to the email address on the order, while keeping the date and time of the original submission.
 * Jurisdiction setting (EU baseline / Spain) that governs the statutory reference shown to the customer.
 * REST API under `apg-withdrawal/v1` to list, read, create and progress requests from headless storefronts and back-office integrations.
@@ -132,6 +133,13 @@ The plugin does not delete withdrawal request records automatically. As a genera
 6. Edit withdrawal screen with full request details and status history.
 
 == Changelog ==
+= 0.9.0 =
+* New online contract termination function, the one Article 23 of the proposed Digital Fairness Act will require: its own two-step form, the prescribed wording, and an acknowledgement stating the date the termination takes effect. Off by default.
+* The digital-content waiver no longer loses its tick in the classic checkout when WooCommerce refreshes the order after an address, shipping or payment change.
+* Guest confirmation by email now also governs contract terminations, so a shop that asks for it is asked for it everywhere.
+* The notification announcing a new request to the shop carries the link to open it again, which it lost whenever the customer was the one sending the form.
+* Compatibility with WooCommerce 11.3.1 verified.
+
 = 0.8.1 =
 * The links to the website, the documentation, the donation and the support now open in the language of whoever is looking at the screen.
 = 0.8.0 =
@@ -235,8 +243,8 @@ The plugin does not delete withdrawal request records automatically. As a genera
 * Initial release.
 
 == Upgrade Notice ==
-= 0.7.4 =
-* Clicking the confirmation button more than once registered one request per click. A repeated submission is now recognised and answered with the request already on file.
+= 0.9.0 =
+* Adds the online contract termination function the Digital Fairness Act will require, switched off until you want it, and stops the digital-content waiver losing its tick in the classic checkout.
 
 == Thanks ==
 Thanks to everyone who uses the plugin, helps improve it, makes a donation or encourages us with their comments.

@@ -2,7 +2,7 @@
 /*
 Plugin Name: APG Withdrawal for WooCommerce
 Requires Plugins: woocommerce
-Version: 0.8.1
+Version: 0.9.0
 Plugin URI: https://wordpress.org/plugins/apg-withdrawal-for-woocommerce/
 Description: Add to WooCommerce an online withdrawal workflow compliant with EU requirements.
 Author URI: https://artprojectgroup.es/
@@ -10,10 +10,9 @@ Author: Art Project Group
 License: GNU General Public License v3 or later
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 Requires at least: 6.0
-Tested up to: 7.2
 Requires PHP: 7.4
 WC requires at least: 7.0
-WC tested up to: 11.2.1
+WC tested up to: 11.3.1
 Text Domain: apg-withdrawal-for-woocommerce
 Domain Path: /languages
 
@@ -25,7 +24,7 @@ Domain Path: /languages
 defined( 'ABSPATH' ) || exit;
 
 define( 'apg_withdrawal_DIRECCION', plugin_basename( __FILE__ ) );
-define( 'apg_withdrawal_VERSION', '0.8.1' );
+define( 'apg_withdrawal_VERSION', '0.9.0' );
 define( 'apg_withdrawal_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 
 add_filter(
@@ -143,6 +142,7 @@ if ( is_plugin_active( 'woocommerce/woocommerce.php' ) || is_network_only_plugin
 			include_once 'includes/clases/verificacion.php';
 			include_once 'includes/clases/rest.php';
 			include_once 'includes/clases/reembolso.php';
+			include_once 'includes/clases/terminacion.php';
 		}
 
 		/**

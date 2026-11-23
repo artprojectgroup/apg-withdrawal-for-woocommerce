@@ -275,9 +275,37 @@ function apg_withdrawal_get_settings() {
 		'iban_field'                      => 'hidden',
 		'guest_verification'              => '0',
 		'order_status_on_request'         => '',
+		// Article 23 of the proposed Digital Fairness Act. Off by default: it is
+		// a proposal that applies around 2029, so an update must not put a new
+		// function on anybody's shop without them asking for it.
+		'termination_enabled'             => '0',
+		'termination_page_id'             => '0',
+		'termination_label'               => '',
 	);
 
 	return wp_parse_args( get_option( 'apg_withdrawal_settings', array() ), $defaults );
+}
+
+/**
+ * Returns the admin URL of a request, for the notifications that announce it.
+ *
+ * `get_edit_post_link()` answers for the user looking, and the user looking is
+ * the customer who just sent the form: it returns null, and the shop's own
+ * notification arrived with no way of opening what it was announcing. The URL
+ * is built directly instead. It grants nothing — whoever follows it still has
+ * to be able to edit the request once WordPress asks.
+ *
+ * @param int $post_id Withdrawal request post ID.
+ * @return string Admin URL, or empty string when there is no request.
+ */
+function apg_withdrawal_get_request_edit_url( $post_id ) {
+	$post_id = absint( $post_id );
+
+	if ( ! $post_id ) {
+		return '';
+	}
+
+	return admin_url( 'post.php?post=' . $post_id . '&action=edit' );
 }
 
 /**

@@ -155,7 +155,7 @@ function apg_withdrawal_render_notice_html( $message ) {
  * @return bool
  */
 function apg_withdrawal_notice_is_final( $message ) {
-	return in_array( $message, array( 'success', 'verify_sent', 'duplicate', 'withdrawn_in_full' ), true );
+	return in_array( $message, array( 'success', 'verify_sent', 'duplicate', 'withdrawn_in_full', 'termination_registered' ), true );
 }
 
 /**
@@ -174,7 +174,7 @@ function apg_withdrawal_print_notice( $message ) {
 		return;
 	}
 
-	if ( in_array( $message, array( 'success', 'verify_sent' ), true ) ) {
+	if ( in_array( $message, array( 'success', 'verify_sent', 'termination_registered' ), true ) ) {
 		$type = 'success';
 	} elseif ( in_array( $message, array( 'duplicate', 'withdrawn_in_full' ), true ) ) {
 		// Nothing went wrong: what the customer is sending is already on file,
@@ -873,6 +873,9 @@ function apg_withdrawal_get_notice_message( $message ) {
 		'verify_invalid' => __( 'This confirmation link is no longer valid: it may have already been used or it may have expired. Please submit the form again.', 'apg-withdrawal-for-woocommerce' ),
 		'duplicate' => __( 'We have already registered this withdrawal request, so we have not registered it again. Check your email for the acknowledgement of the first one.', 'apg-withdrawal-for-woocommerce' ),
 		'withdrawn_in_full' => __( 'There is already a withdrawal request for this entire order, so this one has not been registered. Reply to the acknowledgement you received if you need to add anything to it.', 'apg-withdrawal-for-woocommerce' ),
+		'termination_registered' => __( 'We have registered your contract termination. We have sent you an acknowledgement of receipt stating the date on which it takes effect.', 'apg-withdrawal-for-woocommerce' ),
+		'termination_disabled'   => __( 'Online contract termination is not available in this shop.', 'apg-withdrawal-for-woocommerce' ),
+		'disabled'               => __( 'Online contract termination is not available in this shop.', 'apg-withdrawal-for-woocommerce' ),
 		'general' => __( 'An error occurred while processing the withdrawal request.', 'apg-withdrawal-for-woocommerce' ),
 	);
 
